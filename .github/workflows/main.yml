@@ -23,7 +23,7 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: 4. 自動生成 Android 原生專案與三星相簿權限
+      - name: 4. 自動生成支援「終身熱更新」的 Android 專案
         run: |
           mkdir -p app/src/main/assets
           mkdir -p app/src/main/res/drawable
@@ -136,6 +136,8 @@ jobs:
           import android.os.Bundle
           import android.webkit.ValueCallback
           import android.webkit.WebChromeClient
+          import android.webkit.WebResourceError
+          import android.webkit.WebResourceRequest
           import android.webkit.WebSettings
           import android.webkit.WebView
           import android.webkit.WebViewClient
@@ -180,6 +182,16 @@ jobs:
                       override fun onPageFinished(view: WebView?, url: String?) {
                           view?.evaluateJavascript("document.body.classList.add('fullscreen-mode');", null)
                       }
+                      // 如果手機剛好沒網路，自動切換讀取內建離線版畫面
+                      override fun onReceivedError(
+                          view: WebView?,
+                          request: WebResourceRequest?,
+                          error: WebResourceError?
+                      ) {
+                          if (request?.isForMainFrame == true) {
+                              view?.loadUrl("file:///android_asset/index.html")
+                          }
+                      }
                   }
 
                   webView.webChromeClient = object : WebChromeClient() {
@@ -199,7 +211,8 @@ jobs:
                       }
                   }
 
-                  webView.loadUrl("file:///android_asset/index.html")
+                  // 直接連線至 Littlejoker0606 的專屬熱更新網址，每次打開自動抓取最新版介面！
+                  webView.loadUrl("https://littlejoker0606.github.io/my_car_app/?t=" + System.currentTimeMillis())
 
                   onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                       override fun handleOnBackPressed() {
