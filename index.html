@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>實實與寶寶收藏庫</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cloud-cream: #F3EFE7;
+    --cloud-cream-pure: #FAF8F5;
+    --frosted-blue: #C8DCE2;
+    --frosted-blue-deep: #B0C9D1;
+    --muted-jade: #829F8D;
+    --muted-jade-soft: #D7E3DC;
+    --brushed-pewter: #929795;
+    --plum-noir: #493342;
+    --plum-noir-dark: #372531;
+    --plum-noir-soft: #5D4354;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+    background: #DFDBD2;
+    color: var(--plum-noir);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top-preview-bar {
+    width: 100%;
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  .top-preview-bar button {
+    background: var(--frosted-blue);
+    color: var(--plum-noir);
+    border: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .phone-frame {
+    width: 390px;
+    height: 820px;
+    background: var(--cloud-cream);
+    border-radius: 50px;
+    border: 11px solid var(--plum-noir);
+    box-shadow: 0 28px 60px rgba(73, 51, 66, 0.25), inset 0 0 0 2px #fff;
+    margin: 24px auto;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  body.fullscreen-mode { background: var(--cloud-cream); }
+  body.fullscreen-mode .top-preview-bar { display: none; }
+  body.fullscreen-mode .phone-frame {
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .screen-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 18px 115px;
+    scrollbar-width: none;
+  }
+  .screen-scroll::-webkit-scrollbar { display: none; }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .greet-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--plum-noir);
+    margin: 0;
+  }
+  .greet-sub {
+    font-size: 12px;
+    color: var(--brushed-pewter);
+    font-weight: 600;
+    margin: 2px 0 0;
+  }
+  .header-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .bell-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--cloud-cream-pure);
+    border: 1.5px solid rgba(73,51,66,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  .user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--frosted-blue);
+    border: 2px solid var(--plum-noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .val-label {
+    font-size: 11px;
+    color: var(--brushed-pewter);
+    font-weight: 700;
+  }
+  .val-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 2px 0 14px;
+  }
+  .val-main {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--plum-noir);
+    letter-spacing: -0.8px;
+  }
+  .val-main small {
+    font-size: 20px;
+    color: var(--brushed-pewter);
+    font-weight: 700;
+  }
+  .val-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted-jade);
+  }
+
+  .dual-pill-wrap {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .dual-pill {
+    flex: 1;
+    height: 50px;
+    background: var(--cloud-cream-pure);
+    border: 1.5px solid rgba(73, 51, 66, 0.12);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--plum-noir);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(73,51,66,0.04);
+  }
+  .dual-pill .circle-arrow {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--plum-noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .dual-center-x {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--cloud-cream);
+    border: 1.5px solid rgba(73,51,66,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    margin: 0 -10px;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .chart-card {
+    background: var(--frosted-blue);
+    border-radius: 28px;
+    padding: 16px 14px 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 20px rgba(200, 220, 226, 0.45);
+  }
+  .chart-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .chart-coin-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--plum-noir);
+  }
+  .chart-coin-badge .diamond {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+  .chart-period-pills {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .period-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: var(--plum-noir);
+    cursor: pointer;
+  }
+  .period-pill.active {
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+  }
+  .more-pill {
+    background: rgba(243, 239, 231, 0.75);
+    color: var(--plum-noir);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 9px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .histogram-area {
+    position: relative;
+    height: 148px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 14px 6px 22px 28px;
+  }
+  .y-axis-lines {
+    position: absolute;
+    inset: 10px 6px 22px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .y-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+  .y-line span {
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(73, 51, 66, 0.55);
+    width: 22px;
+  }
+  .y-line i {
+    flex: 1;
+    border-bottom: 1px dashed rgba(73, 51, 66, 0.14);
+  }
+
+  .hist-col {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+  }
+  .hist-bg-bar {
+    width: 34px;
+    background: rgba(130, 159, 141, 0.35);
+    border-radius: 16px 16px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    transition: height 0.3s ease;
+  }
+  .hist-fg-bar {
+    width: 34px;
+    background: var(--plum-noir);
+    border-radius: 16px 16px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0 6px;
+    color: var(--cloud-cream);
+    box-shadow: 0 4px 10px rgba(73,51,66,0.2);
+    transition: height 0.3s ease;
+  }
+  .hist-col.peak .hist-fg-bar {
+    background: var(--plum-noir);
+    border: 1.5px solid var(--cloud-cream);
+  }
+  .hist-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(243,239,231,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    line-height: 1;
+  }
+  .hist-val {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+  .hist-date {
+    position: absolute;
+    bottom: -18px;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--plum-noir);
+    white-space: nowrap;
+  }
+
+  .chart-legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    padding: 0 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--plum-noir);
+  }
+  .legend-dots { display: flex; gap: 12px; }
+  .legend-dots span::before { content: '● '; }
+  .legend-dots span.peak-dot::before { color: var(--plum-noir); }
+  .legend-dots span.sub-dot::before { color: var(--muted-jade); }
+
+  .dark-Showcase-box {
+    background: var(--plum-noir);
+    border-radius: 30px;
+    padding: 14px;
+    color: var(--cloud-cream);
+    box-shadow: 0 12px 26px rgba(73, 51, 66, 0.22);
+  }
+  .dark-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 6px 10px;
+  }
+  .dark-box-tabs { display: flex; gap: 6px; }
+  .dark-tab {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 14px;
+    background: var(--plum-noir-dark);
+    color: var(--brushed-pewter);
+    cursor: pointer;
+  }
+  .dark-tab.active {
+    background: var(--muted-jade);
+    color: var(--cloud-cream);
+  }
+
+  .dark-row-card {
+    background: var(--plum-noir-dark);
+    border: 1px solid rgba(243, 239, 231, 0.08);
+    border-radius: 22px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .dark-row-card:active { transform: scale(0.98); }
+  .dark-row-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--plum-noir-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .dark-row-icon img { width: 100%; height: 100%; object-fit: cover; }
+  .dark-row-info { flex: 1; min-width: 0; }
+  .dark-row-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cloud-cream);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dark-row-sub {
+    font-size: 10px;
+    color: var(--brushed-pewter);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dark-row-right { text-align: right; flex-shrink: 0; }
+  .dark-row-price {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--cloud-cream);
+  }
+  .dark-row-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted-jade);
+    margin-top: 2px;
+  }
+  .view-all-row {
+    text-align: right;
+    padding: 2px 8px 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--frosted-blue);
+    cursor: pointer;
+  }
+
+  .form-card {
+    background: var(--frosted-blue);
+    border-radius: 28px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .form-card.dark-part {
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+  }
+  .f-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .f-group { margin-bottom: 10px; }
+  .f-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    opacity: 0.85;
+  }
+  .f-input, .f-select {
+    width: 100%;
+    background: var(--cloud-cream-pure);
+    border: 1.5px solid rgba(73,51,66,0.12);
+    color: var(--plum-noir);
+    padding: 9px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    outline: none;
+  }
+  .form-card.dark-part .f-input,
+  .form-card.dark-part .f-select {
+    background: var(--plum-noir-dark);
+    border-color: rgba(243,239,231,0.15);
+    color: var(--cloud-cream);
+  }
+  .chip-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+  }
+  .mini-chip {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: rgba(243,239,231,0.75);
+    color: var(--plum-noir);
+    cursor: pointer;
+  }
+  .form-card.dark-part .mini-chip {
+    background: var(--plum-noir-soft);
+    color: var(--cloud-cream);
+  }
+  .photo-upload-box {
+    border: 2px dashed rgba(243,239,231,0.3);
+    border-radius: 18px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--plum-noir-dark);
+  }
+  .photo-upload-box img {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+  .submit-pill-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: 28px;
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+    border: none;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 20px rgba(73,51,66,0.25);
+  }
+
+  .owner-tabs-box {
+    background: var(--frosted-blue);
+    padding: 6px;
+    border-radius: 22px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .owner-tab {
+    padding: 9px 6px;
+    border-radius: 17px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--plum-noir);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .owner-tab.active {
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+    box-shadow: 0 4px 10px rgba(73,51,66,0.2);
+  }
+  .filter-pills-bar {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+  }
+  .filter-pills-bar::-webkit-scrollbar { display: none; }
+  .f-pill {
+    white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 800;
+    background: var(--cloud-cream-pure);
+    color: var(--plum-noir);
+    border: 1px solid rgba(73,51,66,0.12);
+    cursor: pointer;
+  }
+  .f-pill.active {
+    background: var(--muted-jade);
+    color: var(--cloud-cream);
+    border-color: var(--muted-jade);
+  }
+
+  .trantor-dock-container {
+    position: absolute;
+    bottom: 14px;
+    left: 16px;
+    right: 16px;
+    height: 76px;
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+  }
+  body.fullscreen-mode .trantor-dock-container {
+    position: fixed;
+    max-width: 448px;
+    margin: 0 auto;
+  }
+  .trantor-dock-bg {
+    width: 100%;
+    height: 62px;
+    background: var(--plum-noir);
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    position: relative;
+    box-shadow: 0 12px 28px rgba(73, 51, 66, 0.35);
+  }
+  .trantor-center-arch {
+    position: absolute;
+    left: 50%;
+    top: -18px;
+    transform: translateX(-50%);
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: var(--cloud-cream);
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .trantor-center-btn {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--cloud-cream-pure);
+    border: 2px solid rgba(73,51,66,0.12);
+    color: var(--plum-noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(73,51,66,0.12);
+    transition: all 0.2s;
+  }
+  .trantor-center-arch.active .trantor-center-btn {
+    background: var(--muted-jade);
+    color: var(--cloud-cream);
+    border-color: var(--muted-jade);
+  }
+
+  .trantor-side-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(243, 239, 231, 0.25);
+    background: transparent;
+    color: var(--brushed-pewter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .trantor-side-btn.active {
+    border-color: var(--cloud-cream);
+    color: var(--cloud-cream);
+    background: rgba(243, 239, 231, 0.12);
+  }
+  .grid-4-icon {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    width: 16px;
+    height: 16px;
+  }
+  .grid-4-icon span {
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+  }
+
+  /* 雲端設定與通知彈窗 */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(55, 37, 49, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 950;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-panel {
+    background: var(--cloud-cream);
+    border: 2px solid var(--plum-noir);
+    border-radius: 28px;
+    padding: 20px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+
+<div class="top-preview-bar">
+  <span>🎨 圖一左機 UI ＋ 圖二莫蘭迪色票</span>
+  <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
+</div>
+
+<div class="phone-frame">
+  <div class="screen-scroll" id="screenContent"></div>
+
+  <div class="trantor-dock-container">
+    <div class="trantor-dock-bg">
+      <button class="trantor-side-btn active" id="dockLeft" onclick="switchTab('home')" title="首頁">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </button>
+
+      <div class="trantor-center-arch" id="dockCenter" onclick="switchTab('add')" title="新增收藏品">
+        <div class="trantor-center-btn">＋</div>
+      </div>
+
+      <button class="trantor-side-btn" id="dockRight" onclick="switchTab('all')" title="所有收藏品">
+        <div class="grid-4-icon">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 雲端硬碟同步設定視窗 -->
+<div class="modal-overlay" id="cloudModal">
+  <div class="modal-panel">
+    <h3 style="margin:0 0 8px;font-size:16px;">☁️ Google 雲端硬碟同步設定</h3>
+    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">
+      貼上您的 Google Apps Script 網址，即可在 S25 Ultra 與 S26 Ultra 免費同步所有資料與照片：
+    </p>
+    <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button class="submit-pill-btn" style="height:42px;font-size:13px;" onclick="saveAndPullCloud()">🔄 儲存網址並從雲端同步</button>
+      <button class="submit-pill-btn" style="height:42px;font-size:13px;background:var(--muted-jade);" onclick="pushAllToCloud()">⬆️ 將目前資料初始化上傳至雲端</button>
+      <button class="submit-pill-btn" style="height:38px;font-size:12px;background:var(--brushed-pewter);" onclick="closeCloudModal()">關閉視窗</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const INITIAL_DATA = [
+  {id:"1",name:"Alfa Romeo 33",brand:"BBR",status:"等待中",scale:"1/64",price:580,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"2",name:"Ferrari 296 Special",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"3",name:"Ferrari LaFerrari",brand:"GLAMCRAFT",status:"拿到了",scale:"1/64",price:2200,orderDate:"2026/08/29",estDate:"2026/10",actDate:"2026/09/14",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"★★★★★",buyer:"帥氣實實",category:"模型車"},
+  {id:"4",name:"大黑PA停車場 滑鼠墊",brand:"FNRC",status:"拿到了",scale:"1/64",price:599,orderDate:"2026/08/22",estDate:"2026/10",actDate:"2026/10/30",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"★★★☆☆",buyer:"帥氣實實",category:"周邊/其他"},
+  {id:"5",name:'Aston Martin DBS "Quantum of Solace"',brand:"MINI GT",status:"等待中",scale:"1/64",price:550,orderDate:"2026/08/26",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"6",name:"Bugatti Tourbillon 金色",brand:"TRANDS HABBY",status:"等待中",scale:"1/64",price:500,orderDate:"2026/08/21",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"7",name:"Bugatti Tourbillon 大西洋藍色",brand:"TRANDS HABBY",status:"等待中",scale:"1/64",price:500,orderDate:"2026/08/21",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"8",name:"Mercedes-AMG G 63 Silver Metallic",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/09/07",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"9",name:"Aston Martin Valhalla Podium Green",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/09/07",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"10",name:"DarwinPRO 720SE²NWB",brand:"CM MODEL",status:"等待中",scale:"1/64",price:810,orderDate:"2026/09/10",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"11",name:"Nissan Skyline GT-R R34",brand:"MINI GT",status:"等待中",scale:"1/64",price:590,orderDate:"2026/09/23",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"12",name:"Dodge Charger",brand:"MINI GT",status:"等待中",scale:"1/64",price:520,orderDate:"2026/09/23",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"13",name:"Porsche 992 Targa",brand:"ZINCIT MODEL",status:"等待中",scale:"1/64",price:700,orderDate:"2026/09/22",estDate:"2026/Q4",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"14",name:"Porsche 992 Targa",brand:"ZINCIT MODEL",status:"等待中",scale:"1/64",price:700,orderDate:"2026/09/22",estDate:"2026/Q4",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"15",name:"Tesla Pickup Truck",brand:"DM MODEL",status:"等待中",scale:"1/64",price:1330,orderDate:"2026/09/25",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"16",name:"Porsche 911 GT3 R",brand:"HKM",status:"等待中",scale:"1/64",price:660,orderDate:"2026/09/24",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"17",name:"Porsche 911 GT3 R",brand:"HKM",status:"等待中",scale:"1/64",price:660,orderDate:"2026/09/24",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"18",name:"Bugatti EB110",brand:"MINI GT",status:"等待中",scale:"1/64",price:370,orderDate:"2026/09/28",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"19",name:"Lamborghini Temerario",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/09/28",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"20",name:"LB-ER34",brand:"POPRACE",status:"等待中",scale:"1/64",price:600,orderDate:"2026/09/28",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"21",name:"Lamborghini Veneno",brand:"POPRACE",status:"等待中",scale:"1/64",price:600,orderDate:"2026/09/28",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"22",name:"Subaru Impreza WRX STI",brand:"KAIDO HOUSE",status:"等待中",scale:"1/64",price:630,orderDate:"2026/10/07",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"23",name:"Honda NSX Kaido House",brand:"KAIDO HOUSE",status:"等待中",scale:"1/64",price:630,orderDate:"2026/10/07",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"24",name:"LB WORKS NISSAN R35 GTR Ver.2",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/10/12",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"25",name:"Porsche 911 GT3 RS STAPLE",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/10/12",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"26",name:"Ducati Panigale V4 S",brand:"MINI GT",status:"等待中",scale:"1/64",price:510,orderDate:"2026/10/12",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"27",name:"McLaren Senna",brand:"CM MODEL",status:"等待中",scale:"1/64",price:810,orderDate:"2026/10/15",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"28",name:"Porsche 911 GT3 R",brand:"BBR",status:"等待中",scale:"1/64",price:580,orderDate:"2026/10/22",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"29",name:"Lamborghini GT EVO V5",brand:"COOL CAR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/10/25",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"30",name:"Koenigsegg One : 1",brand:"DEMON KING AUTO",status:"等待中",scale:"1/64",price:1380,orderDate:"2026/10/28",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"31",name:"Aston Martin Valkyrie",brand:"MINI GT",status:"等待中",scale:"1/64",price:370,orderDate:"2026/10/28",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"32",name:"Ferrari F50",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/11/02",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"33",name:"Ferrari F80",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/11/02",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"34",name:"Ferrari 12Cilondri",brand:"RHINO MODEL",status:"等待中",scale:"1/64",price:810,orderDate:"2026/11/03",estDate:"2027/01",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"35",name:"P1 GTR-X",brand:"INNO 64",status:"等待中",scale:"1/64",price:790,orderDate:"2026/11/04",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
+  {id:"36",name:"RWB 930",brand:"POPRACE",status:"等待中",scale:"1/64",price:580,orderDate:"2026/11/05",estDate:"2027/Q2",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
+  {id:"37",name:"Ferrari SF26 #44 巴塞隆納P1",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
+  {id:"38",name:"Ferrari SF26 #44 加拿大P2",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
+  {id:"39",name:"Ferrari SF26 #16 日本P3",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"}
+];
+
+let items = JSON.parse(localStorage.getItem('trantor_left_items')) || INITIAL_DATA;
+let gasUrl = localStorage.getItem('my_gas_url') || '';
+
+let activeTab = 'home';
+let chartMode = 'top';
+let homeRecentMode = 'preorder';
+let selectedBarInfo = '';
+
+let ownerFilter = 'ALL';
+let catFilter = 'ALL';
+let statusFilter = 'ALL';
+let searchKeyword = '';
+
+let editingId = null;
+let tempPhotoBase64 = '';
+
+function saveLocal() {
+  localStorage.setItem('trantor_left_items', JSON.stringify(items));
+}
+
+function switchTab(tab) {
+  if (tab === 'add' && activeTab !== 'add') {
+    editingId = null;
+    tempPhotoBase64 = '';
+  }
+  activeTab = tab;
+  document.getElementById('dockLeft').classList.toggle('active', tab === 'home');
+  document.getElementById('dockCenter').classList.toggle('active', tab === 'add');
+  document.getElementById('dockRight').classList.toggle('active', tab === 'all');
+  renderScreen();
+  document.getElementById('screenContent').scrollTop = 0;
+}
+
+function renderHomeTab() {
+  const totalVal = items.reduce((s, x) => s + (Number(x.price) || 0), 0);
+  const waitCnt = items.filter(x => x.status === '等待中').length;
+  const gotCnt = items.filter(x => x.status === '拿到了').length;
+
+  const dateMap = {};
+  items.forEach(it => {
+    const d = it.orderDate || '未知日期';
+    if (!dateMap[d]) dateMap[d] = { count: 0, sum: 0 };
+    dateMap[d].count += 1;
+    dateMap[d].sum += Number(it.price) || 0;
+  });
+
+  const allDates = Object.entries(dateMap);
+  let chartDates = [];
+  if (chartMode === 'top') {
+    chartDates = allDates.sort((a, b) => b[1].count - a[1].count).slice(0, 6);
+  } else {
+    chartDates = allDates.sort((a, b) => a[0].localeCompare(b[0])).slice(-6);
+  }
+  const maxDayCount = Math.max(...allDates.map(d => d[1].count), 4);
+  const bestDay = allDates.slice().sort((a, b) => b[1].count - a[1].count)[0];
+
+  let recentList = [];
+  if (homeRecentMode === 'preorder') {
+    recentList = items.filter(x => x.status === '等待中').slice(-4).reverse();
+  } else {
+    recentList = items.filter(x => x.status === '拿到了').slice(-4).reverse();
+    if (recentList.length === 0) recentList = items.slice(-3).reverse();
+  }
+
+  return `
+    <div class="header-row">
+      <div>
+        <h1 class="greet-title">Hey, 實實 & 寶寶!</h1>
+        <p class="greet-sub">Good morning! 👋</p>
+      </div>
+      <div class="header-icons">
+        <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端硬碟同步">☁️</div>
+        <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
+      </div>
+    </div>
+
+    <div class="val-label">Current Collection Value</div>
+    <div class="val-row">
+      <div class="val-main">$${totalVal.toLocaleString()}<small>.00</small></div>
+      <div class="val-badge">+ ${items.length} 件總收藏 (預購 ${waitCnt} / 現有 ${gotCnt})</div>
+    </div>
+
+    <div class="dual-pill-wrap">
+      <div class="dual-pill" onclick="jumpToAllWithStatus('等待中')">
+        <span class="circle-arrow">↑</span>
+        <span>預購等待 (${waitCnt})</span>
+      </div>
+      <div class="dual-center-x" onclick="switchTab('add')" title="新增收藏">＋</div>
+      <div class="dual-pill" onclick="jumpToAllWithStatus('拿到了')">
+        <span>現有入庫 (${gotCnt})</span>
+        <span class="circle-arrow">↓</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-top-bar">
+        <div class="chart-coin-badge">
+          <span class="diamond">📊</span>
+          <span>單日購買統計</span>
+        </div>
+        <div class="chart-period-pills">
+          <span class="period-pill ${chartMode==='top'?'active':''}" onclick="setChartMode('top')">最多購買日</span>
+          <span class="period-pill ${chartMode==='recent'?'active':''}" onclick="setChartMode('recent')">近期日期</span>
+        </div>
+        <div class="more-pill" onclick="setChartMode(chartMode==='top'?'recent':'top')">切換 ⌄</div>
+      </div>
+
+      <div class="histogram-area">
+        <div class="y-axis-lines">
+          <div class="y-line"><span>${maxDayCount}件</span><i></i></div>
+          <div class="y-line"><span>${Math.ceil(maxDayCount*0.66)}件</span><i></i></div>
+          <div class="y-line"><span>${Math.ceil(maxDayCount*0.33)}件</span><i></i></div>
+          <div class="y-line"><span>0件</span><i></i></div>
+        </div>
+
+        ${chartDates.map(([dateStr, info]) => {
+          const fgHeight = Math.max(38, Math.round((info.count / maxDayCount) * 105));
+          const bgHeight = Math.min(110, fgHeight + 18);
+          const shortDate = dateStr.length >= 10 ? dateStr.slice(5) : dateStr;
+          const isPeak = info.count === maxDayCount;
+          return `
+            <div class="hist-col ${isPeak ? 'peak' : ''}" onclick="showBarDetail('${dateStr}', ${info.count}, ${info.sum})">
+              <div class="hist-bg-bar" style="height:${bgHeight}px;">
+                <div class="hist-fg-bar" style="height:${fgHeight}px;">
+                  <div class="hist-dot">${isPeak ? '👑' : '＋'}</div>
+                  <div class="hist-val">${info.count}件</div>
+                </div>
+              </div>
+              <div class="hist-date">${shortDate}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="chart-legend">
+        <div class="legend-dots">
+          <span class="peak-dot">單日購買件數</span>
+          <span class="sub-dot">最高峰值對比</span>
+        </div>
+        <span>${selectedBarInfo || (bestDay ? '🏆 最高：' + bestDay[0].slice(5) + ' (' + bestDay[1].count + '件)' : '-')}</span>
+      </div>
+    </div>
+
+    <div class="dark-Showcase-box">
+      <div class="dark-box-header">
+        <span style="font-size:13px;font-weight:800;">✨ 最近動態追蹤</span>
+        <div class="dark-box-tabs">
+          <span class="dark-tab ${homeRecentMode==='preorder'?'active':''}" onclick="setHomeRecentMode('preorder')">最近預購</span>
+          <span class="dark-tab ${homeRecentMode==='got'?'active':''}" onclick="setHomeRecentMode('got')">最近購買/到貨</span>
+        </div>
+      </div>
+
+      ${recentList.map(it => {
+        const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
+        return `
+          <div class="dark-row-card" onclick="openEditItem('${it.id}')">
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
+            <div class="dark-row-info">
+              <div class="dark-row-name">${it.name}</div>
+              <div class="dark-row-sub">${it.brand} · ${it.orderDate} (${it.buyer})</div>
+            </div>
+            <div class="dark-row-right">
+              <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
+              <div class="dark-row-tag">${it.status === '拿到了' ? '✓ 已拿到 ' + it.rating : '預計 ' + (it.estDate || '待定')}</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+
+      <div class="view-all-row" onclick="switchTab('all')">View All 全部收藏 (${items.length}) ⌄</div>
+    </div>
+  `;
+}
+
+function renderAddTab() {
+  const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+
+  return `
+    <div class="header-row">
+      <div>
+        <h1 class="greet-title">${it ? '✏️ 編輯收藏品' : '➕ 新增收藏品'}</h1>
+        <p class="greet-sub">完整對應您的 Google 雲端試算表欄位</p>
+      </div>
+      <div class="bell-btn" onclick="switchTab('home')">✕</div>
+    </div>
+
+    <div class="form-card">
+      <div class="f-grid-2">
+        <div class="f-group">
+          <label class="f-label">收藏分類</label>
+          <select class="f-select" id="f_category">
+            <option value="模型車" ${it && it.category==='模型車'?'selected':''}>🚗 模型車</option>
+            <option value="娃娃/公仔" ${it && it.category==='娃娃/公仔'?'selected':''}>🧸 娃娃 / 公仔</option>
+            <option value="周邊/其他" ${it && it.category==='周邊/其他'?'selected':''}>🏞️ 周邊 / 場景</option>
+          </select>
+        </div>
+        <div class="f-group">
+          <label class="f-label">購買人</label>
+          <select class="f-select" id="f_buyer">
+            <option value="帥氣實實" ${!it || it.buyer==='帥氣實實'?'selected':''}>😎 帥氣實實</option>
+            <option value="可愛寶寶" ${it && it.buyer==='可愛寶寶'?'selected':''}>🥰 可愛寶寶</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="f-group">
+        <label class="f-label">車車名稱 / 娃娃收藏名稱</label>
+        <input type="text" class="f-input" id="f_name" placeholder="例如：Ferrari F80 或 吉伊卡哇娃娃" value="${it ? it.name : ''}">
+      </div>
+
+      <div class="f-grid-2">
+        <div class="f-group">
+          <label class="f-label">模型品牌 / 系列</label>
+          <input type="text" class="f-input" id="f_brand" value="${it ? it.brand : 'BBR'}">
+        </div>
+        <div class="f-group">
+          <label class="f-label">比例 / 尺寸</label>
+          <input type="text" class="f-input" id="f_scale" value="${it ? it.scale : '1/64'}">
+        </div>
+      </div>
+      <div class="chip-row" style="margin-bottom:10px;">
+        <span class="mini-chip" onclick="document.getElementById('f_brand').value='BBR'">BBR</span>
+        <span class="mini-chip" onclick="document.getElementById('f_brand').value='MINI GT'">MINI GT</span>
+        <span class="mini-chip" onclick="document.getElementById('f_brand').value='POPRACE'">POPRACE</span>
+        <span class="mini-chip" onclick="document.getElementById('f_brand').value='KAIDO HOUSE'">KAIDO HOUSE</span>
+        <span class="mini-chip" onclick="document.getElementById('f_brand').value='LOOKSMART'">LOOKSMART</span>
+      </div>
+
+      <div class="f-grid-2">
+        <div class="f-group" style="margin-bottom:0;">
+          <label class="f-label">價格合計 (NT$)</label>
+          <input type="number" class="f-input" id="f_price" placeholder="例如：820" value="${it ? it.price : ''}">
+        </div>
+        <div class="f-group" style="margin-bottom:0;">
+          <label class="f-label">車車狀態</label>
+          <select class="f-select" id="f_status">
+            <option value="等待中" ${!it || it.status==='等待中'?'selected':''}>⏳ 等待中 (預購)</option>
+            <option value="拿到了" ${it && it.status==='拿到了'?'selected':''}>✅ 拿到了 (現有)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card dark-part">
+      <div class="f-group">
+        <label class="f-label">預購店家</label>
+        <input type="text" class="f-input" id="f_store" value="${it ? it.store : 'TSAI模型車販賣鋪-楊梅實體店'}">
+        <div class="chip-row">
+          <span class="mini-chip" onclick="document.getElementById('f_store').value='TSAI模型車販賣鋪-楊梅實體店'">TSAI-楊梅實體店</span>
+          <span class="mini-chip" onclick="document.getElementById('f_store').value=\`Fred's Grage Club\`">Fred's Grage Club</span>
+          <span class="mini-chip" onclick="document.getElementById('f_store').value='CarGu 模型車預購'">CarGu 模型車預購</span>
+        </div>
+      </div>
+
+      <div class="f-grid-2">
+        <div class="f-group">
+          <label class="f-label">預購日期</label>
+          <input type="text" class="f-input" id="f_orderDate" placeholder="YYYY/MM/DD" value="${it ? it.orderDate : today}">
+        </div>
+        <div class="f-group">
+          <label class="f-label">預計到貨日期</label>
+          <input type="text" class="f-input" id="f_estDate" placeholder="如 2027/Q1" value="${it ? it.estDate : '2027/Q1'}">
+        </div>
+      </div>
+
+      <div class="f-grid-2">
+        <div class="f-group">
+          <label class="f-label">實際到貨日期</label>
+          <input type="text" class="f-input" id="f_actDate" placeholder="拿到時填寫" value="${it ? it.actDate : ''}">
+        </div>
+        <div class="f-group">
+          <label class="f-label">評分 (★)</label>
+          <select class="f-select" id="f_rating">
+            <option value="☆☆☆☆☆" ${!it || it.rating==='☆☆☆☆☆'?'selected':''}>☆☆☆☆☆</option>
+            <option value="★★★★★" ${it && it.rating==='★★★★★'?'selected':''}>★★★★★</option>
+            <option value="★★★★☆" ${it && it.rating==='★★★★☆'?'selected':''}>★★★★☆</option>
+            <option value="★★★☆☆" ${it && it.rating==='★★★☆☆'?'selected':''}>★★★☆☆</option>
+            <option value="★★☆☆☆" ${it && it.rating==='★★☆☆☆'?'selected':''}>★★☆☆☆</option>
+            <option value="★☆☆☆☆" ${it && it.rating==='★☆☆☆☆'?'selected':''}>★☆☆☆☆</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label">車車的樣子 (點擊開啟 S25U/S26U 相簿或相機)</label>
+        <label class="photo-upload-box">
+          <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoPick(event)">
+          <div id="photoPreviewHolder">
+            ${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}
+          </div>
+          <div style="text-align:left;font-size:12px;">
+            <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
+            <div style="color:var(--brushed-pewter);font-size:10px;">自動壓縮並同步至您的 Google 雲端硬碟</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <button class="submit-pill-btn" onclick="saveCollectible()">
+      <span>✓ ${it ? '儲存修改並同步雲端' : '新增至收藏庫並同步雲端'}</span>
+    </button>
+
+    ${it ? `
+      <div style="text-align:center;margin-top:12px;">
+        <span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeCollectible('${it.id}')">🗑️ 刪除此筆收藏</span>
+      </div>
+    ` : ''}
+  `;
+}
+
+function renderAllTab() {
+  const countAll = items.length;
+  const countShi = items.filter(x => x.buyer === '帥氣實實').length;
+  const countBao = items.filter(x => x.buyer === '可愛寶寶').length;
+
+  const filtered = items.filter(it => {
+    if (ownerFilter !== 'ALL' && it.buyer !== ownerFilter) return false;
+    if (catFilter !== 'ALL' && (it.category || '模型車') !== catFilter) return false;
+    if (statusFilter !== 'ALL' && it.status !== statusFilter) return false;
+    if (searchKeyword) {
+      const hay = `${it.name} ${it.brand} ${it.store} ${it.estDate} ${it.orderDate}`.toLowerCase();
+      if (!hay.includes(searchKeyword.toLowerCase())) return false;
+    }
+    return true;
+  });
+
+  const subTotal = filtered.reduce((s, x) => s + (Number(x.price) || 0), 0);
+
+  return `
+    <div class="header-row">
+      <div>
+        <h1 class="greet-title">📦 所有收藏品總覽</h1>
+        <p class="greet-sub">目前檢視共 ${filtered.length} 件 · 合計 $${subTotal.toLocaleString()}</p>
+      </div>
+      <div class="bell-btn" onclick="switchTab('add')">＋</div>
+    </div>
+
+    <div class="owner-tabs-box">
+      <div class="owner-tab ${ownerFilter==='ALL'?'active':''}" onclick="setOwnerFilter('ALL')">
+        👥 兩人一起 (${countAll})
+      </div>
+      <div class="owner-tab ${ownerFilter==='帥氣實實'?'active':''}" onclick="setOwnerFilter('帥氣實實')">
+        😎 帥氣實實 (${countShi})
+      </div>
+      <div class="owner-tab ${ownerFilter==='可愛寶寶'?'active':''}" onclick="setOwnerFilter('可愛寶寶')">
+        🥰 可愛寶寶 (${countBao})
+      </div>
+    </div>
+
+    <div class="filter-pills-bar">
+      <span class="f-pill ${catFilter==='ALL'?'active':''}" onclick="setCat('ALL')">全部類型</span>
+      <span class="f-pill ${catFilter==='模型車'?'active':''}" onclick="setCat('模型車')">🚗 模型車</span>
+      <span class="f-pill ${catFilter==='娃娃/公仔'?'active':''}" onclick="setCat('娃娃/公仔')">🧸 娃娃/公仔</span>
+      <span class="f-pill ${catFilter==='周邊/其他'?'active':''}" onclick="setCat('周邊/其他')">🏞️ 周邊</span>
+      <span class="f-pill ${statusFilter==='等待中'?'active':''}" onclick="setStat('等待中')">⏳ 預購中</span>
+      <span class="f-pill ${statusFilter==='拿到了'?'active':''}" onclick="setStat('拿到了')">✅ 已拿到</span>
+    </div>
+
+    <input type="text" class="f-input" style="margin-bottom:12px;" placeholder="🔍 搜尋車名、品牌、店家或預計到貨日 (如 2027/Q1)..." value="${searchKeyword}" oninput="handleAllSearch(this.value)">
+
+    <div class="dark-Showcase-box">
+      ${filtered.slice().reverse().map(it => {
+        const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
+        const isGot = it.status === '拿到了';
+        return `
+          <div class="dark-row-card" onclick="openEditItem('${it.id}')">
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
+            <div class="dark-row-info">
+              <div class="dark-row-name">${it.name}</div>
+              <div class="dark-row-sub">${it.brand} (${it.scale}) · ${it.store || '未填店家'}</div>
+              <div class="dark-row-sub" style="color:var(--frosted-blue);">購買人：${it.buyer} ｜ 預購日：${it.orderDate}</div>
+            </div>
+            <div class="dark-row-right">
+              <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
+              <div class="dark-row-tag" style="color:${isGot ? '#A8C9B4' : 'var(--frosted-blue)'}">
+                ${isGot ? '✓ 拿到了' : '⏳ ' + (it.estDate || '等待中')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderScreen() {
+  const container = document.getElementById('screenContent');
+  if (activeTab === 'home') container.innerHTML = renderHomeTab();
+  else if (activeTab === 'add') container.innerHTML = renderAddTab();
+  else container.innerHTML = renderAllTab();
+}
+
+function showBarDetail(dateStr, cnt, sum) {
+  selectedBarInfo = `📅 ${dateStr.slice(5)} 共 ${cnt} 件 ($${sum.toLocaleString()})`;
+  renderScreen();
+}
+
+function setChartMode(m) { chartMode = m; selectedBarInfo = ''; renderScreen(); }
+function setHomeRecentMode(m) { homeRecentMode = m; renderScreen(); }
+function setOwnerFilter(o) { ownerFilter = o; renderScreen(); }
+function setCat(c) { catFilter = (catFilter === c) ? 'ALL' : c; renderScreen(); }
+function setStat(s) { statusFilter = (statusFilter === s) ? 'ALL' : s; renderScreen(); }
+function handleAllSearch(v) { searchKeyword = v; renderScreen(); }
+
+function jumpToAllWithStatus(st) {
+  statusFilter = st;
+  switchTab('all');
+}
+
+function openEditItem(id) {
+  editingId = id;
+  tempPhotoBase64 = '';
+  switchTab('add');
+}
+
+function handlePhotoPick(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const maxW = 800;
+      const scale = img.width > maxW ? maxW / img.width : 1;
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('photoPreviewHolder').innerHTML = `<img src="${tempPhotoBase64}">`;
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveCollectible() {
+  const id = editingId || String(Date.now());
+  const old = items.find(x => String(x.id) === String(id));
+  const statusVal = document.getElementById('f_status').value;
+  let actVal = document.getElementById('f_actDate').value.trim();
+  if (statusVal === '拿到了' && !actVal) {
+    actVal = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  }
+
+  const newItem = {
+    id,
+    category: document.getElementById('f_category').value,
+    buyer: document.getElementById('f_buyer').value,
+    name: document.getElementById('f_name').value.trim() || '未命名收藏',
+    brand: document.getElementById('f_brand').value.trim(),
+    scale: document.getElementById('f_scale').value.trim(),
+    price: Number(document.getElementById('f_price').value) || 0,
+    status: statusVal,
+    store: document.getElementById('f_store').value.trim(),
+    orderDate: document.getElementById('f_orderDate').value.trim(),
+    estDate: document.getElementById('f_estDate').value.trim(),
+    actDate: actVal,
+    rating: document.getElementById('f_rating').value,
+    photo: tempPhotoBase64 || (old ? old.photo : '')
+  };
+
+  const idx = items.findIndex(x => String(x.id) === String(id));
+  if (idx > -1) items[idx] = newItem; else items.push(newItem);
+
+  saveLocal();
+  const uploadImg = tempPhotoBase64;
+  editingId = null;
+  tempPhotoBase64 = '';
+  switchTab('all');
+
+  if (gasUrl) {
+    try {
+      const res = await fetch(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveItem', item: newItem, photoBase64: uploadImg || null })
+      });
+      const data = await res.json();
+      if (data.status === 'success' && data.items) {
+        items = data.items;
+        saveLocal();
+        renderScreen();
+      }
+    } catch (e) {}
+  }
+}
+
+function removeCollectible(id) {
+  items = items.filter(x => String(x.id) !== String(id));
+  saveLocal();
+  editingId = null;
+  switchTab('all');
+  if (gasUrl) {
+    fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'deleteItem', id })
+    }).catch(() => {});
+  }
+}
+
+function openCloudModal() {
+  document.getElementById('gasUrlInput').value = gasUrl;
+  document.getElementById('cloudModal').classList.add('open');
+}
+function closeCloudModal() {
+  document.getElementById('cloudModal').classList.remove('open');
+}
+
+async function saveAndPullCloud() {
+  gasUrl = document.getElementById('gasUrlInput').value.trim();
+  localStorage.setItem('my_gas_url', gasUrl);
+  closeCloudModal();
+  if (!gasUrl) return;
+  try {
+    const res = await fetch(gasUrl);
+    const data = await res.json();
+    if (data.status === 'success' && data.items && data.items.length > 0) {
+      items = data.items;
+      saveLocal();
+      renderScreen();
+    }
+  } catch (e) {}
+}
+
+async function pushAllToCloud() {
+  gasUrl = document.getElementById('gasUrlInput').value.trim();
+  localStorage.setItem('my_gas_url', gasUrl);
+  closeCloudModal();
+  if (!gasUrl) return;
+  try {
+    await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'syncAll', items: items })
+    });
+  } catch (e) {}
+}
+
+renderScreen();
+</script>
+</body>
+</html>
