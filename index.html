@@ -143,25 +143,51 @@
   .cal-count-text { font-size: 13px; font-weight: 700; color: var(--brushed-pewter); }
   .cal-viewall-pill { background: var(--plum-noir); color: var(--cloud-cream); padding: 6px 13px; border-radius: 16px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
+  /* ====== 月曆下方日記卡片 + 多圖左右滑動輪播 ====== */
   .banff-diary-card { background: var(--cloud-cream-pure); border-radius: 26px; padding: 11px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(13,27,42,0.1); border: 1px solid rgba(13,27,42,0.07); }
-  .banff-photo-box { width: 100%; height: 205px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .banff-photo-box img { width: 100%; height: 100%; object-fit: cover; }
-  .banff-top-tags { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 6px; z-index: 2; }
-  .banff-glass-pill { background: rgba(255,255,255,0.24); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 10px; font-weight: 700; padding: 5px 11px; border-radius: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .banff-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
-  .banff-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.45); }
-  .banff-dots span.on { background: #fff; }
-  .banff-body { padding: 14px 8px 6px; }
+  .banff-photo-box { width: 100%; height: 215px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .diary-carousel-track { width: 100%; height: 100%; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .diary-carousel-track::-webkit-scrollbar { display: none; }
+  .diary-carousel-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; }
+  .diary-carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+  .banff-top-tags { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 6px; z-index: 3; pointer-events: none; }
+  /* 加深毛玻璃底色，確保在白色亮背景照片上文字依然 100% 清晰！ */
+  .banff-glass-pill { background: rgba(13, 27, 42, 0.58); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.25); color: #F4F1DE; font-size: 10px; font-weight: 700; padding: 5px 11px; border-radius: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .banff-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; background: rgba(13,27,42,0.4); padding: 4px 8px; border-radius: 12px; pointer-events: none; }
+  .banff-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.45); transition: all 0.2s; }
+  .banff-dots span.on { background: #fff; transform: scale(1.2); }
+  .banff-body { padding: 14px 8px 6px; cursor: pointer; }
   .banff-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
   .banff-title { font-size: 18px; font-weight: 800; color: var(--plum-noir-dark); margin: 0; }
   .banff-outlined-badge { border: 1.5px solid rgba(13,27,42,0.3); color: var(--plum-noir-dark); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 16px; white-space: nowrap; }
   .banff-meta { font-size: 11px; font-weight: 700; color: var(--brushed-pewter); margin-bottom: 8px; }
-  .banff-desc { font-size: 12px; color: rgba(13,27,42,0.75); line-height: 1.5; margin: 0 0 14px; white-space: pre-wrap; }
-  .banff-footer { display: flex; justify-content: space-between; align-items: center; }
-  .banff-foot-left { font-size: 15px; font-weight: 800; color: var(--plum-noir-dark); }
+  .banff-desc { font-size: 12px; color: rgba(13,27,42,0.78); line-height: 1.55; margin: 0 0 14px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .banff-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 8px 4px; }
+  .banff-foot-left { font-size: 14px; font-weight: 800; color: var(--plum-noir-dark); cursor: pointer; }
   .banff-foot-left small { font-size: 11px; font-weight: 600; color: var(--brushed-pewter); }
   .banff-action-btn { background: var(--plum-noir-dark); color: var(--cloud-cream); border: none; border-radius: 22px; padding: 6px 6px 6px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; cursor: pointer; }
   .banff-action-btn .arr-cir { width: 24px; height: 24px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
+
+  /* ====== 日記完整檢視彈出視窗 (Popup Modal) ====== */
+  .diary-modal-card {
+    background: var(--cloud-cream-pure); border: 2px solid var(--plum-noir-dark);
+    border-radius: 30px; width: 100%; max-width: 390px; max-height: 86vh;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 24px 50px rgba(0,0,0,0.45);
+  }
+  .diary-modal-gallery { width: 100%; height: 290px; background: var(--plum-noir-dark); position: relative; flex-shrink: 0; }
+  .diary-modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: rgba(13,27,42,0.65); backdrop-filter: blur(8px); color: #fff; border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; z-index: 5; }
+  .diary-modal-counter { position: absolute; top: 14px; left: 14px; background: rgba(13,27,42,0.65); backdrop-filter: blur(8px); color: #F4F1DE; padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; border: 1px solid rgba(255,255,255,0.25); z-index: 5; pointer-events: none; }
+  .diary-modal-body { padding: 18px 20px 20px; overflow-y: auto; flex: 1; }
+  .diary-modal-fulltext { font-size: 14px; color: var(--plum-noir-dark); line-height: 1.7; white-space: pre-wrap; margin: 12px 0 18px; background: rgba(212,196,168,0.25); padding: 14px; border-radius: 18px; }
+
+  /* 多圖預覽縮圖列 */
+  .multi-thumb-strip { display: flex; gap: 8px; overflow-x: auto; padding-top: 10px; scrollbar-width: none; }
+  .multi-thumb-strip::-webkit-scrollbar { display: none; }
+  .thumb-item { position: relative; width: 64px; height: 64px; border-radius: 12px; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--frosted-blue); }
+  .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb-del { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(185,28,28,0.9); color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; }
 
   .form-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px; margin-bottom: 14px; }
   .form-card.dark-part { background: var(--plum-noir); color: var(--cloud-cream); }
@@ -186,50 +212,16 @@
   .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13,27,42,0.12); cursor: pointer; }
   .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
 
-  /* ====== 全新「膠囊展開式底部導覽列」(100% 參考最新附圖設計) ====== */
-  .trantor-dock-container {
-    position: absolute; bottom: 14px; left: 14px; right: 14px; z-index: 100;
-    display: flex; justify-content: center; pointer-events: none;
-  }
+  .trantor-dock-container { position: absolute; bottom: 14px; left: 14px; right: 14px; z-index: 100; display: flex; justify-content: center; pointer-events: none; }
   body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 452px; margin: 0 auto; }
-  .pill-expand-dock {
-    pointer-events: auto; width: 100%; height: 64px;
-    background: rgba(250, 249, 240, 0.92);
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    border: 1.5px solid rgba(13, 27, 42, 0.08);
-    border-radius: 26px; padding: 8px 12px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 12px 32px rgba(13, 27, 42, 0.2);
-  }
-  .pill-tab-btn {
-    background: transparent; border: none; color: var(--plum-noir-dark);
-    height: 44px; padding: 0 12px; border-radius: 24px;
-    display: flex; align-items: center; justify-content: center; gap: 0;
-    cursor: pointer; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .pill-tab-btn svg {
-    width: 21px; height: 21px; stroke: currentColor; fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
-  }
-  .pill-tab-btn .tab-label {
-    max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-    font-size: 12px; font-weight: 800; letter-spacing: 0.3px;
-    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  /* 選中時：展開深色膠囊底色 + 顯示圖示與頁面名稱 */
-  .pill-tab-btn.active {
-    background: var(--plum-noir-dark);
-    color: var(--cloud-cream);
-    padding: 0 16px;
-    gap: 8px;
-    box-shadow: 0 4px 14px rgba(13, 27, 42, 0.25);
-  }
-  .pill-tab-btn.active .tab-label {
-    max-width: 80px;
-    opacity: 1;
-  }
+  .pill-expand-dock { pointer-events: auto; width: 100%; height: 64px; background: rgba(250, 249, 240, 0.92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1.5px solid rgba(13, 27, 42, 0.08); border-radius: 26px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 12px 32px rgba(13, 27, 42, 0.2); }
+  .pill-tab-btn { background: transparent; border: none; color: var(--plum-noir-dark); height: 44px; padding: 0 12px; border-radius: 24px; display: flex; align-items: center; justify-content: center; gap: 0; cursor: pointer; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+  .pill-tab-btn svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .pill-tab-btn .tab-label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: 800; letter-spacing: 0.3px; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+  .pill-tab-btn.active { background: var(--plum-noir-dark); color: var(--cloud-cream); padding: 0 16px; gap: 8px; box-shadow: 0 4px 14px rgba(13, 27, 42, 0.25); }
+  .pill-tab-btn.active .tab-label { max-width: 80px; opacity: 1; }
 
-  .modal-overlay { position: fixed; inset: 0; background: rgba(13,27,42,0.72); display: none; align-items: center; justify-content: center; z-index: 950; padding: 20px; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(13,27,42,0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 950; padding: 18px; }
   .modal-overlay.open { display: flex; }
   .modal-panel { background: var(--cloud-cream); border: 2px solid var(--plum-noir-dark); border-radius: 28px; padding: 20px; width: 100%; max-width: 360px; box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
 </style>
@@ -243,41 +235,31 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 膠囊展開式底部導覽列</span>
+  <span>🎨 Holst 配色 ＋ 多圖左右滑動日記彈出檢視</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
 <div class="phone-frame">
   <div class="screen-scroll home-mode" id="screenContent"></div>
 
-  <!-- 膠囊展開式底部導覽列：未選中僅顯示圖示，選中時以深色膠囊展開顯示「圖示＋名稱」 -->
   <div class="trantor-dock-container">
     <div class="pill-expand-dock">
-      <!-- 1. 首頁 -->
       <button class="pill-tab-btn active" id="dockHome" onclick="switchTab('home')">
         <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
         <span class="tab-label">首頁</span>
       </button>
-
-      <!-- 2. 所有收藏 -->
       <button class="pill-tab-btn" id="dockAll" onclick="switchTab('all')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
         <span class="tab-label">所有收藏</span>
       </button>
-
-      <!-- 3. 新增收藏 -->
       <button class="pill-tab-btn" id="dockAdd" onclick="switchTab('add')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
         <span class="tab-label">新增收藏</span>
       </button>
-
-      <!-- 4. 日曆 -->
       <button class="pill-tab-btn" id="dockCalendar" onclick="switchTab('calendar')">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span class="tab-label">日曆</span>
       </button>
-
-      <!-- 5. 日記 -->
       <button class="pill-tab-btn" id="dockDiary" onclick="switchTab('diary')">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span class="tab-label">日記</span>
@@ -286,10 +268,16 @@
   </div>
 </div>
 
+<!-- 日記完整檢視彈出視窗 (點擊月曆下方的日記時彈出，支援多圖左右滑動！) -->
+<div class="modal-overlay" id="diaryViewModal" onclick="if(event.target===this)closeDiaryViewModal()">
+  <div class="diary-modal-card" id="diaryViewModalContent"></div>
+</div>
+
+<!-- 雲端網址設定視窗 -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
     <h3 style="margin:0 0 8px;font-size:16px;">☁️ 雲端伺服器網址設定</h3>
-    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">請貼上一次您的 Google Apps Script 網址並儲存（同時支援收藏品與雙人日記雲端同步）：</p>
+    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">請貼上一次您的 Google Apps Script 網址並儲存（同時支援收藏品與雙人日記多圖雲端同步）：</p>
     <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;gap:8px;">
       <button class="submit-pill-btn" style="height:42px;font-size:13px;margin-bottom:0;" onclick="saveAndPullCloud()">💾 儲存網址並立即同步</button>
@@ -335,10 +323,22 @@ let calYear = nowDate.getFullYear();
 let calMonth = nowDate.getMonth() + 1;
 let selectedCalDate = nowDate.toISOString().slice(0,10).replace(/-/g,'/');
 let editingDiaryId = null;
-let tempDiaryPhotoBase64 = '';
+let tempDiaryPhotos = []; // 支援一篇日記存放多張照片！
 let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
+
+// 取得一篇日記的所有照片陣列（相容單張與多張格式）
+function getDiaryPhotos(d) {
+  if (!d) return [];
+  if (Array.isArray(d.photos) && d.photos.length > 0) return d.photos.filter(Boolean);
+  if (d.photo && String(d.photo).trim()) {
+    const s = String(d.photo).trim();
+    if (s.startsWith('data:image')) return [s];
+    return s.split(/\s*\|\|\s*|\s*,\s*(?=https?:)/).filter(Boolean);
+  }
+  return [];
+}
 
 function getAllBrandOptions() {
   const set = new Set(cloudBrands);
@@ -366,7 +366,7 @@ function saveLocal() {
 
 function switchTab(tab) {
   if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') { editingId = null; tempPhotoBase64 = ''; }
-  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') { editingDiaryId = null; tempDiaryPhotoBase64 = ''; }
+  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') { editingDiaryId = null; tempDiaryPhotos = []; }
   activeTab = tab;
   document.getElementById('dockHome').classList.toggle('active', tab === 'home');
   document.getElementById('dockAll').classList.toggle('active', tab === 'all' || tab === 'detail');
@@ -729,6 +729,7 @@ function renderAllTab() {
   `;
 }
 
+/* ====== ④ 互動月曆頁面 (點擊日記會彈出完整檢視視窗 + 支援多張照片左右滑動！) ====== */
 function renderCalendarTab() {
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const weekNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -793,9 +794,12 @@ function renderCalendarTab() {
         <div style="font-size:11px;color:var(--brushed-pewter);margin-bottom:14px;">點擊下方按鈕，紀錄實實與寶寶今天去哪裡、做了什麼吧！</div>
         <button class="banff-action-btn" style="margin:0 auto;" onclick="openNewDiaryForDate('${selectedCalDate}')"><span>立即新增當日日記</span><span class="arr-cir">↗</span></button>
       </div>
-    ` : dayDiaries.map(d => `
+    ` : dayDiaries.map(d => {
+      const photos = getDiaryPhotos(d);
+      const dotsCount = Math.max(photos.length, 1);
+      return `
       <div class="banff-diary-card">
-        <div class="banff-photo-box" onclick="openEditDiary('${d.id}')">
+        <div class="banff-photo-box">
           <div class="banff-top-tags">
             <div style="display:flex;gap:6px;overflow:hidden;">
               <span class="banff-glass-pill">👥 ${d.withWho || '實實 & 寶寶'}</span>
@@ -803,24 +807,87 @@ function renderCalendarTab() {
             </div>
             <span class="banff-glass-pill">🕒 ${d.timePoint || '全天'}</span>
           </div>
-          ${d.photo ? `<img src="${d.photo}" alt="diary">` : `<span style="font-size:52px;">📸</span>`}
-          <div class="banff-dots"><span class="on"></span><span></span><span></span><span></span></div>
+          ${photos.length > 0 ? `
+            <div class="diary-carousel-track" onscroll="updateCarouselDots(this)">
+              ${photos.map(url => `<div class="diary-carousel-slide" onclick="openDiaryViewModal('${d.id}')"><img src="${url}" alt="diary"></div>`).join('')}
+            </div>
+          ` : `<div class="diary-carousel-slide" onclick="openDiaryViewModal('${d.id}')"><span style="font-size:52px;">📸</span></div>`}
+          <div class="banff-dots">
+            ${Array.from({length: dotsCount}).map((_, idx) => `<span class="${idx===0?'on':''}"></span>`).join('')}
+          </div>
         </div>
-        <div class="banff-body">
+        <div class="banff-body" onclick="openDiaryViewModal('${d.id}')">
           <div class="banff-title-row">
             <h3 class="banff-title">${d.location || '美好回憶'}</h3>
             <span class="banff-outlined-badge">${d.withWho || '實實 & 寶寶'}</span>
           </div>
-          <div class="banff-meta">${d.date} · ${d.timePoint || '美好時刻'}</div>
+          <div class="banff-meta">${d.date} · ${d.timePoint || '美好時刻'} ${photos.length > 1 ? `· 📷 共 ${photos.length} 張照片 (可左右滑動)` : ''}</div>
           <p class="banff-desc">${d.content || '（尚未填寫詳細內容）'}</p>
-          <div class="banff-footer">
-            <div class="banff-foot-left">${d.timePoint || 'Memory'} <small>/ ${d.date.slice(5)}</small></div>
-            <button class="banff-action-btn" onclick="openEditDiary('${d.id}')"><span>編輯日記</span><span class="arr-cir">↗</span></button>
-          </div>
         </div>
-      </div>
-    `).join('')}
+        <div class="banff-footer">
+          <div class="banff-foot-left" onclick="openDiaryViewModal('${d.id}')">${d.timePoint || 'Memory'} <small>/ 點擊檢視全文</small></div>
+          <button class="banff-action-btn" onclick="openEditDiary('${d.id}')"><span>編輯日記</span><span class="arr-cir">↗</span></button>
+        </div>
+      </div>`;
+    }).join('')}
   `;
+}
+
+// 當手指左右滑動照片時，即時更新下方圓點與張數指示器
+function updateCarouselDots(trackEl, counterId) {
+  const idx = Math.round(trackEl.scrollLeft / trackEl.clientWidth);
+  const dotsBox = trackEl.parentElement.querySelector('.banff-dots');
+  if (dotsBox) {
+    Array.from(dotsBox.children).forEach((dot, i) => dot.classList.toggle('on', i === idx));
+  }
+  if (counterId) {
+    const cEl = document.getElementById(counterId);
+    const total = trackEl.children.length;
+    if (cEl) cEl.textContent = `📷 ${idx + 1} / ${total}`;
+  }
+}
+
+// 點擊日記時彈出「完整日記檢視視窗」
+function openDiaryViewModal(id) {
+  const d = diaries.find(x => String(x.id) === String(id));
+  if (!d) return;
+  const photos = getDiaryPhotos(d);
+  const box = document.getElementById('diaryViewModalContent');
+
+  box.innerHTML = `
+    <div class="diary-modal-gallery">
+      ${photos.length > 0 ? `<div class="diary-modal-counter" id="modalPhotoCounter">📷 1 / ${photos.length} (左右滑動)</div>` : ''}
+      <div class="diary-modal-close" onclick="closeDiaryViewModal()">✕</div>
+      ${photos.length > 0 ? `
+        <div class="diary-carousel-track" onscroll="updateCarouselDots(this, 'modalPhotoCounter')">
+          ${photos.map(url => `<div class="diary-carousel-slide"><img src="${url}" alt="diary"></div>`).join('')}
+        </div>
+        <div class="banff-dots">
+          ${photos.map((_, idx) => `<span class="${idx===0?'on':''}"></span>`).join('')}
+        </div>
+      ` : `<div class="diary-carousel-slide"><span style="font-size:64px;">📖</span></div>`}
+    </div>
+
+    <div class="diary-modal-body">
+      <div class="banff-title-row">
+        <h2 class="banff-title" style="font-size:21px;">📍 ${d.location || '美好回憶'}</h2>
+        <span class="banff-outlined-badge">👥 ${d.withWho || '實實 & 寶寶'}</span>
+      </div>
+      <div class="banff-meta" style="margin-top:4px;">📅 ${d.date} ｜ 🕒 ${d.timePoint || '全天'}</div>
+
+      <div class="diary-modal-fulltext">${d.content || '（無文字內容）'}</div>
+
+      <div style="display:flex;gap:10px;">
+        <button class="submit-pill-btn" style="height:44px;font-size:13px;margin-bottom:0;background:var(--brushed-pewter);flex:0.8;" onclick="closeDiaryViewModal()">關閉</button>
+        <button class="submit-pill-btn" style="height:44px;font-size:13px;margin-bottom:0;flex:1.2;" onclick="closeDiaryViewModal();openEditDiary('${d.id}')">✏️ 編輯此篇日記 / 新增照片</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('diaryViewModal').classList.add('open');
+}
+
+function closeDiaryViewModal() {
+  document.getElementById('diaryViewModal').classList.remove('open');
 }
 
 function changeCalMonth(delta) {
@@ -830,8 +897,13 @@ function changeCalMonth(delta) {
   renderScreen();
 }
 function selectCalendarDate(dateStr) { selectedCalDate = dateStr; renderScreen(); }
-function openNewDiaryForDate(dateStr) { selectedCalDate = dateStr; editingDiaryId = null; tempDiaryPhotoBase64 = ''; switchTab('diary'); }
-function openEditDiary(id) { editingDiaryId = id; tempDiaryPhotoBase64 = ''; switchTab('diary'); }
+function openNewDiaryForDate(dateStr) { selectedCalDate = dateStr; editingDiaryId = null; tempDiaryPhotos = []; switchTab('diary'); }
+function openEditDiary(id) {
+  editingDiaryId = id;
+  const d = diaries.find(x => String(x.id) === String(id));
+  tempDiaryPhotos = d ? getDiaryPhotos(d).slice() : [];
+  switchTab('diary');
+}
 
 function renderDiaryTab() {
   const d = editingDiaryId ? diaries.find(x => String(x.id) === String(editingDiaryId)) : null;
@@ -839,13 +911,13 @@ function renderDiaryTab() {
 
   return `
     <div class="header-row">
-      <div><h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1><p class="greet-sub">紀錄與誰、去哪裡、時間點與美好照片（雙機雲端同步）</p></div>
+      <div><h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1><p class="greet-sub">支援多張照片上傳與雙機 Google 雲端硬碟同步</p></div>
       <div class="bell-btn" onclick="switchTab('calendar')">✕</div>
     </div>
     <div class="form-card">
       <div class="f-grid-2">
         <div class="f-group"><label class="f-label">📅 日記日期</label><input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}"></div>
-        <div class="f-group"><label class="f-label">🕒 時間點</label><input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '14:00'}"></div>
+        <div class="f-group"><label class="f-label">🕒 時間點</label><input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '晚上 19:00'}"></div>
       </div>
       <div class="chip-row" style="margin-bottom:10px;">
         <span class="mini-chip" onclick="document.getElementById('d_time').value='早上 10:00'">早上 10:00</span>
@@ -856,7 +928,7 @@ function renderDiaryTab() {
       </div>
       <div class="f-group">
         <label class="f-label">👥 與誰 (With Whom)</label>
-        <input type="text" class="f-input" id="d_who" value="${d ? d.withWho : '實實 & 寶寶'}">
+        <input type="text" class="f-input" id="d_who" value="${d ? d.withWho : '可愛寶寶'}">
         <div class="chip-row">
           <span class="mini-chip" onclick="document.getElementById('d_who').value='實實 & 寶寶'">👩‍❤️‍👨 實實 & 寶寶</span>
           <span class="mini-chip" onclick="document.getElementById('d_who').value='帥氣實實'">😎 帥氣實實</span>
@@ -864,17 +936,23 @@ function renderDiaryTab() {
           <span class="mini-chip" onclick="document.getElementById('d_who').value='與朋友們'">🎉 與朋友們</span>
         </div>
       </div>
-      <div class="f-group" style="margin-bottom:0;"><label class="f-label">📍 去哪裡 (Location / 地點)</label><input type="text" class="f-input" id="d_location" placeholder="例如：桃園楊梅 / 台北信義區 / 水族館" value="${d ? d.location : ''}"></div>
+      <div class="f-group" style="margin-bottom:0;"><label class="f-label">📍 去哪裡 (Location / 地點)</label><input type="text" class="f-input" id="d_location" placeholder="例如：實實心裡 / 桃園楊梅 / 台北約會" value="${d ? d.location : ''}"></div>
     </div>
     <div class="form-card dark-part">
-      <div class="f-group"><label class="f-label">📝 做什麼 / 日記內容</label><textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、吃了什麼好料...">${d ? d.content : ''}</textarea></div>
+      <div class="f-group"><label class="f-label">📝 做什麼 / 今日心情日記</label><textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、心情、吃了什麼好料...">${d ? d.content : ''}</textarea></div>
       <div class="f-group" style="margin-bottom:0;">
-        <label class="f-label">📸 附上一張照片 (點擊開啟 S25U/S26U 相簿或相機)</label>
+        <label class="f-label">📸 回憶照片（可連續點選新增多張照片，閱讀時可左右滑動！）</label>
         <label class="photo-upload-box">
-          <input type="file" accept="image/*" style="display:none;" onchange="handleDiaryPhotoPick(event)">
-          <div id="diaryPhotoPreviewHolder">${d && d.photo ? `<img src="${d.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
-          <div style="text-align:left;font-size:12px;"><div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳回憶照片</div><div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並存進您的 Google 雲端硬碟雙機同步</div></div>
+          <input type="file" accept="image/*" multiple style="display:none;" onchange="handleDiaryPhotoPick(event)">
+          <span style="font-size:24px;">➕</span>
+          <div style="text-align:left;font-size:12px;">
+            <div style="font-weight:800;color:var(--frosted-blue);">點擊新增照片（目前已選 <span id="diaryPhotoCount">${tempDiaryPhotos.length}</span> 張）</div>
+            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">想要多張照片可重複點擊此處加入，自動同步至 Google 雲端</div>
+          </div>
         </label>
+        <div class="multi-thumb-strip" id="diaryMultiThumbStrip">
+          ${renderDiaryThumbStripHtml()}
+        </div>
       </div>
     </div>
     <button class="submit-pill-btn" onclick="saveDiaryEntry()"><span>✓ ${d ? '儲存日記修改並同步雲端' : '儲存日記並同步至雲端'}</span></button>
@@ -882,49 +960,83 @@ function renderDiaryTab() {
   `;
 }
 
+function renderDiaryThumbStripHtml() {
+  return tempDiaryPhotos.map((src, idx) => `
+    <div class="thumb-item">
+      <img src="${src}">
+      <div class="thumb-del" onclick="removeTempDiaryPhoto(${idx})">✕</div>
+    </div>
+  `).join('');
+}
+
+function removeTempDiaryPhoto(idx) {
+  tempDiaryPhotos.splice(idx, 1);
+  const strip = document.getElementById('diaryMultiThumbStrip');
+  const cnt = document.getElementById('diaryPhotoCount');
+  if (strip) strip.innerHTML = renderDiaryThumbStripHtml();
+  if (cnt) cnt.textContent = tempDiaryPhotos.length;
+}
+
 function handleDiaryPhotoPick(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    const img = new Image();
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const maxW = 900; const scale = img.width > maxW ? maxW / img.width : 1;
-      canvas.width = img.width * scale; canvas.height = img.height * scale;
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      tempDiaryPhotoBase64 = canvas.toDataURL('image/jpeg', 0.82);
-      document.getElementById('diaryPhotoPreviewHolder').innerHTML = `<img src="${tempDiaryPhotoBase64}">`;
+  const files = Array.from(e.target.files || []);
+  if (files.length === 0) return;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const maxW = 900; const scale = img.width > maxW ? maxW / img.width : 1;
+        canvas.width = img.width * scale; canvas.height = img.height * scale;
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        tempDiaryPhotos.push(canvas.toDataURL('image/jpeg', 0.82));
+        const strip = document.getElementById('diaryMultiThumbStrip');
+        const cnt = document.getElementById('diaryPhotoCount');
+        if (strip) strip.innerHTML = renderDiaryThumbStripHtml();
+        if (cnt) cnt.textContent = tempDiaryPhotos.length;
+      };
+      img.src = evt.target.result;
     };
-    img.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
 }
 
 async function saveDiaryEntry() {
   const id = editingDiaryId || ('diary_' + Date.now());
-  const old = diaries.find(x => String(x.id) === String(id));
   const dateVal = document.getElementById('d_date').value.trim() || selectedCalDate;
+  const photosCopy = tempDiaryPhotos.slice();
+
   const newDiary = {
     id, date: dateVal,
     timePoint: document.getElementById('d_time').value.trim() || '全天',
     withWho: document.getElementById('d_who').value.trim() || '實實 & 寶寶',
     location: document.getElementById('d_location').value.trim() || '美好回憶',
     content: document.getElementById('d_content').value.trim(),
-    photo: tempDiaryPhotoBase64 || (old ? old.photo : '')
+    photos: photosCopy,
+    photo: photosCopy[0] || ''
   };
   const idx = diaries.findIndex(x => String(x.id) === String(id));
   if (idx > -1) diaries[idx] = newDiary; else diaries.push(newDiary);
   saveLocal();
-  const uploadImg = tempDiaryPhotoBase64;
-  editingDiaryId = null; tempDiaryPhotoBase64 = ''; selectedCalDate = dateVal;
+  editingDiaryId = null; tempDiaryPhotos = []; selectedCalDate = dateVal;
   const parts = dateVal.split('/');
   if (parts.length >= 2) { calYear = Number(parts[0]) || calYear; calMonth = Number(parts[1]) || calMonth; }
   switchTab('calendar');
 
   if (gasUrl) {
-    showAutoPopup('🔄', '正在同步日記...', '上傳至 Google 雲端硬碟中', 0);
+    showAutoPopup('🔄', '正在同步日記...', `上傳 ${photosCopy.length} 張照片至雲端`, 0);
     try {
-      const res = await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveDiary', diary: newDiary, photoBase64: uploadImg || null }) });
+      const res = await fetch(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'saveDiary',
+          diary: newDiary,
+          photoBase64: (photosCopy[0] && photosCopy[0].startsWith('data:image')) ? photosCopy[0] : null,
+          photosList: photosCopy
+        })
+      });
       const data = await res.json();
       if (data.status === 'success') {
         if (Array.isArray(data.diaries)) diaries = data.diaries;
