@@ -33,11 +33,27 @@
   .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; word-break: break-word; line-height: 1.45; }
   .hud-close-pill { margin-top: 6px; background: var(--frosted-blue); color: var(--plum-noir-dark); font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 16px; display: none; }
 
-  /* 新增收藏頁頂部：仿導覽列膠囊切換開關 */
   .add-mode-dock { background: rgba(250, 249, 240, 0.94); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1.5px solid rgba(13, 27, 42, 0.1); border-radius: 26px; padding: 6px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 8px 22px rgba(13, 27, 42, 0.1); }
   .add-mode-dock .pill-tab-btn { height: 40px; padding: 0 12px; }
   .add-mode-dock .pill-tab-btn.active { padding: 0 16px; gap: 7px; }
   .add-mode-dock .pill-tab-btn.active .tab-label { max-width: 110px; opacity: 1; }
+
+  /* ====== Holst 小巧懸浮下拉選單 ＋ Google 試算表彩色膠囊標籤 ====== */
+  .holst-select-wrap { position: relative; width: 100%; user-select: none; }
+  .holst-select-trigger { width: 100%; min-height: 41px; background: var(--cloud-cream-pure); border: 1.5px solid rgba(13,27,42,0.14); color: var(--plum-noir-dark); padding: 7px 11px; border-radius: 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; transition: border-color 0.18s, box-shadow 0.18s; }
+  .holst-select-wrap.open .holst-select-trigger { border-color: var(--plum-noir-dark); box-shadow: 0 0 0 2px rgba(13,27,42,0.12); }
+  .holst-select-arrow { font-size: 11px; color: var(--brushed-pewter); transition: transform 0.2s ease; flex-shrink: 0; }
+  .holst-select-wrap.open .holst-select-arrow { transform: rotate(180deg); color: var(--plum-noir-dark); }
+  .holst-select-menu { position: absolute; top: calc(100% + 6px); left: 0; min-width: 100%; width: max-content; max-width: 250px; max-height: 225px; overflow-y: auto; background: var(--cloud-cream-pure); border: 2px solid var(--plum-noir-dark); border-radius: 18px; padding: 6px; box-shadow: 0 14px 30px rgba(13,27,42,0.26); z-index: 600; display: none; flex-direction: column; gap: 4px; scrollbar-width: thin; }
+  .holst-select-wrap.open .holst-select-menu { display: flex; }
+  .holst-select-item { padding: 7px 10px; border-radius: 12px; font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+  .holst-select-item:active { transform: scale(0.98); }
+  .holst-select-item.selected { background: rgba(212,196,168,0.45); }
+  .holst-select-item .sel-check { font-size: 12px; font-weight: 900; color: var(--plum-noir-dark); opacity: 0; flex-shrink: 0; }
+  .holst-select-item.selected .sel-check { opacity: 1; }
+  .brand-color-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.2; border: 1px solid transparent; max-width: 185px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brand-color-chip .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .custom-brand-option { border-top: 1px dashed rgba(13,27,42,0.18); margin-top: 2px; padding-top: 8px; color: var(--brushed-pewter); }
 
   .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg'); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
@@ -252,7 +268,7 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 預購/現有雙模式開關 ＋ 報錯保留機制</span>
+  <span>🎨 Holst 配色 ＋ 彩色品牌膠囊選單 ＋ 模型車/娃娃品牌分流</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -305,7 +321,71 @@
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
-// 將星星與試算表 L 欄驗證數字 (0~5) 雙向自動轉換
+// Google 試算表風格：各品牌專屬高辨識度彩色膠囊配色表
+const BRAND_COLOR_MAP = {
+  "BBR":             { bg: "#FDE8E8", text: "#9B1C1C", border: "#F8B4B4", dot: "#E02424" },
+  "MINI GT":         { bg: "#E1EFFE", text: "#1E429F", border: "#A4CAFE", dot: "#1C64F2" },
+  "POPRACE":         { bg: "#FEECDC", text: "#9C4221", border: "#FDBA8C", dot: "#FF5A1F" },
+  "KAIDO HOUSE":     { bg: "#EDEBFE", text: "#5521B5", border: "#CABFFD", dot: "#7E3AF2" },
+  "LOOKSMART":       { bg: "#DEF7EC", text: "#03543F", border: "#84E1BC", dot: "#0E9F6E" },
+  "π MODEL":         { bg: "#FEF3C7", text: "#92400E", border: "#FCD34D", dot: "#D97706" },
+  "INNO 64":         { bg: "#D5F5F6", text: "#05505C", border: "#7EDCE2", dot: "#0694A2" },
+  "CM MODEL":        { bg: "#FCE8F3", text: "#99154B", border: "#F8B4D9", dot: "#E74694" },
+  "HKM":             { bg: "#E0E7FF", text: "#3730A3", border: "#A5B4FC", dot: "#4F46E5" },
+  "GLAMCRAFT":       { bg: "#ECFCCB", text: "#3F6212", border: "#BEF264", dot: "#65A30D" },
+  "ZINCIT MODEL":    { bg: "#E0F2FE", text: "#075985", border: "#7DD3FC", dot: "#0284C7" },
+  "DM MODEL":        { bg: "#FAE8FF", text: "#86198F", border: "#F0ABFC", dot: "#C026D3" },
+  "TRANDS HABBY":    { bg: "#FFEDD5", text: "#9A3412", border: "#FDBA74", dot: "#EA580C" },
+  "COOL CAR":        { bg: "#D1FAE5", text: "#065F46", border: "#6EE7B7", dot: "#10B981" },
+  "DEMON KING AUTO": { bg: "#E5E7EB", text: "#1F2937", border: "#9CA3AF", dot: "#374151" },
+  "RHINO MODEL":     { bg: "#F5EBE6", text: "#5D4037", border: "#D7CCC8", dot: "#8D6E63" },
+  "FNRC":            { bg: "#F3E8FF", text: "#6B21A8", border: "#D8B4FE", dot: "#9333EA" }
+};
+
+const FALLBACK_CHIP_PALETTE = [
+  { bg: "#FCE7F3", text: "#9D174D", border: "#F9A8D4", dot: "#DB2777" },
+  { bg: "#E0F2FE", text: "#0369A1", border: "#7DD3FC", dot: "#0284C7" },
+  { bg: "#FEF9C3", text: "#854D0E", border: "#FDE047", dot: "#CA8A04" },
+  { bg: "#DCFCE7", text: "#166534", border: "#86EFAC", dot: "#16A34A" },
+  { bg: "#EDE9FE", text: "#5B21B6", border: "#C4B5FD", dot: "#7C3AED" },
+  { bg: "#FFEDD5", text: "#9A3412", border: "#FDBA74", dot: "#EA580C" },
+  { bg: "#CCFBF1", text: "#115E59", border: "#5EEAD4", dot: "#0D9488" },
+  { bg: "#FFE4E6", text: "#9F1239", border: "#FDA4AF", dot: "#E11D48" }
+];
+
+function getBrandChipStyle(brandName) {
+  const key = String(brandName || '').trim().toUpperCase();
+  for (const [k, v] of Object.entries(BRAND_COLOR_MAP)) {
+    if (k.toUpperCase() === key) return v;
+  }
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  return FALLBACK_CHIP_PALETTE[hash % FALLBACK_CHIP_PALETTE.length];
+}
+
+function renderBrandChipHtml(brandName) {
+  if (!brandName || brandName === '__CUSTOM__') {
+    return `<span class="brand-color-chip" style="background:#FAF9F0;color:#415A77;border-color:#D4C4A8;">✏️ 手動輸入新品牌...</span>`;
+  }
+  const st = getBrandChipStyle(brandName);
+  return `<span class="brand-color-chip" style="background:${st.bg};color:${st.text};border-color:${st.border};"><i class="chip-dot" style="background:${st.dot};"></i>${brandName}</span>`;
+}
+
+// 點擊空白處自動收起所有開啟的懸浮選單
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.holst-select-wrap')) {
+    document.querySelectorAll('.holst-select-wrap.open').forEach(el => el.classList.remove('open'));
+  }
+});
+
+function toggleHolstSelect(wrapId) {
+  const target = document.getElementById(wrapId);
+  if (!target) return;
+  const isOpen = target.classList.contains('open');
+  document.querySelectorAll('.holst-select-wrap.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) target.classList.add('open');
+}
+
 function starsToSheetNum(r) {
   if (r === undefined || r === null || r === '') return '0';
   const s = String(r).trim();
@@ -329,6 +409,7 @@ function loadSavedItems() {
 let items = loadSavedItems();
 let diaries = JSON.parse(localStorage.getItem('my_couple_diaries') || '[]');
 let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
+let dollBrands = JSON.parse(localStorage.getItem('my_doll_brands') || '[]');
 let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
 let activeTab = 'home';
@@ -343,7 +424,7 @@ let statusFilter = 'ALL';
 let searchKeyword = '';
 let editingId = null;
 let tempPhotoBase64 = '';
-let addMode = '等待中'; // '等待中' (預購) 或 '拿到了' (現有)
+let addMode = '等待中';
 
 const nowDate = new Date();
 let calYear = nowDate.getFullYear();
@@ -393,10 +474,33 @@ function closeFullLightbox() {
   document.getElementById('fullPhotoLightbox').classList.remove('open');
 }
 
-function getAllBrandOptions() {
-  const set = new Set(cloudBrands);
+// 取得「娃娃 / 公仔」專屬品牌清單（與模型車完全分開）
+function getDollBrandOptions() {
+  const set = new Set(dollBrands.filter(Boolean));
+  items.forEach(it => {
+    if (it.category === '娃娃/公仔') {
+      const b = String(it.brand || '').trim();
+      if (b && !DEFAULT_BRANDS.includes(b)) set.add(b);
+    }
+  });
+  return Array.from(set);
+}
+
+// 取得「模型車 / 周邊」專屬品牌清單
+function getCarBrandOptions() {
+  const dollSet = new Set(getDollBrandOptions());
+  const set = new Set();
   DEFAULT_BRANDS.forEach(b => set.add(b));
-  items.forEach(it => { const b = String(it.brand || '').trim(); if (b) set.add(b); });
+  cloudBrands.forEach(b => {
+    const s = String(b || '').trim();
+    if (s && (!dollSet.has(s) || DEFAULT_BRANDS.includes(s))) set.add(s);
+  });
+  items.forEach(it => {
+    if (it.category !== '娃娃/公仔') {
+      const b = String(it.brand || '').trim();
+      if (b) set.add(b);
+    }
+  });
   return Array.from(set);
 }
 
@@ -406,7 +510,6 @@ function hideAutoPopup() {
   if (hudTimer) { clearTimeout(hudTimer); hudTimer = null; }
 }
 
-// 智慧型 HUD：若是報錯 (⚠️ / ❌)，永久保留在畫面上直到使用者截完圖手動點擊才關閉！
 function showAutoPopup(icon, title, sub, duration = 1600) {
   const hud = document.getElementById('autoPopupHud');
   const closePill = document.getElementById('hudClosePill');
@@ -420,7 +523,6 @@ function showAutoPopup(icon, title, sub, duration = 1600) {
   const isError = (icon === '⚠️' || icon === '❌');
   if (isError) {
     if (closePill) closePill.style.display = 'inline-block';
-    // 報錯時不設定自動消失計時器，保留至手動點擊消除
   } else {
     if (closePill) closePill.style.display = 'none';
     if (duration > 0) {
@@ -452,6 +554,7 @@ function saveLocal() {
   localStorage.setItem('trantor_left_items_v2', JSON.stringify(items));
   localStorage.setItem('my_couple_diaries', JSON.stringify(diaries));
   localStorage.setItem('my_cloud_brands', JSON.stringify(cloudBrands));
+  localStorage.setItem('my_doll_brands', JSON.stringify(dollBrands));
 }
 
 function switchTab(tab) {
@@ -686,7 +789,6 @@ async function toggleDetailStatus(id) {
   }
 }
 
-// 切換「新增預購」與「新增現有」模式（無閃爍保留已填內容）
 function setAddMode(mode) {
   addMode = mode;
   const isGotMode = (mode === '拿到了');
@@ -703,7 +805,6 @@ function setAddMode(mode) {
       : '⏳ 預購登記模式 · 記錄預購店家、下單時間與預計到貨日';
   }
 
-  // 現有收藏才顯示評分；預購階段隱藏評分
   const ratingGroup = document.getElementById('ratingFieldGroup');
   const priceRatingGrid = document.getElementById('priceRatingGrid');
   if (ratingGroup && priceRatingGrid) {
@@ -711,7 +812,6 @@ function setAddMode(mode) {
     priceRatingGrid.style.gridTemplateColumns = isGotMode ? '1fr 1fr' : '1fr';
   }
 
-  // 現有收藏隱藏預購店家、預購日期、到貨日期
   const preorderBox = document.getElementById('preorderFieldsBox');
   if (preorderBox) {
     preorderBox.style.display = isGotMode ? 'none' : 'block';
@@ -723,8 +823,41 @@ function setAddMode(mode) {
   }
 }
 
-// 切換「收藏分類」時，動態顯示/隱藏「比例 / 尺寸」（娃娃/公仔不顯示比例）
-function onCategorySelectChange(catVal) {
+// 渲染品牌下拉選單內部 HTML（含 Google 試算表彩色膠囊 + 手動輸入新品牌）
+function buildBrandMenuItemsHtml(brandList, selectedVal) {
+  const itemsHtml = brandList.map(b => {
+    const isSel = (b === selectedVal);
+    const safeB = b.replace(/'/g, "\\'");
+    return `
+      <div class="holst-select-item ${isSel ? 'selected' : ''}" onclick="selectHolstBrand('${safeB}')">
+        ${renderBrandChipHtml(b)}
+        <span class="sel-check">✓</span>
+      </div>
+    `;
+  }).join('');
+
+  const isCustomSel = (selectedVal === '__CUSTOM__');
+  const emptyHint = brandList.length === 0
+    ? `<div style="font-size:11px;color:var(--brushed-pewter);padding:6px 8px;font-weight:700;">🧸 尚無已存的娃娃品牌，請點選下方新增：</div>`
+    : '';
+
+  return `
+    ${emptyHint}
+    ${itemsHtml}
+    <div class="holst-select-item custom-brand-option ${isCustomSel ? 'selected' : ''}" onclick="selectHolstBrand('__CUSTOM__')">
+      ${renderBrandChipHtml('__CUSTOM__')}
+      <span class="sel-check">✓</span>
+    </div>
+  `;
+}
+
+// 選擇「收藏分類」時：動態切換比例欄位 ＋ 切換「模型車品牌」或「娃娃專屬品牌」選單
+function selectHolstCategory(catVal, labelHtml) {
+  document.getElementById('f_category').value = catVal;
+  document.getElementById('catTriggerLabel').innerHTML = labelHtml;
+  document.getElementById('catSelectWrap').classList.remove('open');
+
+  const isDoll = (catVal === '娃娃/公仔');
   const showScale = (catVal === '模型車' || catVal === '周邊/其他');
   const scaleGroup = document.getElementById('scaleFieldGroup');
   const brandScaleGrid = document.getElementById('brandScaleGrid');
@@ -732,6 +865,58 @@ function onCategorySelectChange(catVal) {
     scaleGroup.style.display = showScale ? 'block' : 'none';
     brandScaleGrid.style.gridTemplateColumns = showScale ? '1fr 1fr' : '1fr';
   }
+
+  const brandLabelEl = document.getElementById('brandFieldLabel');
+  if (brandLabelEl) {
+    brandLabelEl.textContent = isDoll ? '娃娃品牌 / 系列' : '模型品牌 / 系列';
+  }
+
+  const targetBrands = isDoll ? getDollBrandOptions() : getCarBrandOptions();
+  const nextBrand = targetBrands.length > 0 ? targetBrands[0] : '__CUSTOM__';
+  const menuEl = document.getElementById('brandMenuContainer');
+  if (menuEl) {
+    menuEl.innerHTML = buildBrandMenuItemsHtml(targetBrands, nextBrand);
+  }
+  selectHolstBrand(nextBrand, true);
+}
+
+function selectHolstBuyer(buyerVal, labelHtml) {
+  document.getElementById('f_buyer').value = buyerVal;
+  document.getElementById('buyerTriggerLabel').innerHTML = labelHtml;
+  document.getElementById('buyerSelectWrap').classList.remove('open');
+}
+
+function selectHolstBrand(brandVal, skipClose) {
+  document.getElementById('f_brand_select').value = brandVal;
+  document.getElementById('brandTriggerLabel').innerHTML = renderBrandChipHtml(brandVal);
+  if (!skipClose) {
+    const wrap = document.getElementById('brandSelectWrap');
+    if (wrap) wrap.classList.remove('open');
+  }
+
+  // 更新選單內部打勾狀態
+  const catVal = document.getElementById('f_category') ? document.getElementById('f_category').value : '模型車';
+  const list = (catVal === '娃娃/公仔') ? getDollBrandOptions() : getCarBrandOptions();
+  if (brandVal !== '__CUSTOM__' && !list.includes(brandVal)) list.unshift(brandVal);
+  const menuEl = document.getElementById('brandMenuContainer');
+  if (menuEl) menuEl.innerHTML = buildBrandMenuItemsHtml(list, brandVal);
+
+  const customBox = document.getElementById('customBrandBox');
+  if (customBox) {
+    if (brandVal === '__CUSTOM__') {
+      customBox.style.display = 'block';
+      const inp = document.getElementById('f_brand_custom');
+      if (inp && !skipClose) setTimeout(() => inp.focus(), 50);
+    } else {
+      customBox.style.display = 'none';
+    }
+  }
+}
+
+function selectHolstRating(starsVal, labelHtml) {
+  document.getElementById('f_rating').value = starsVal;
+  document.getElementById('ratingTriggerLabel').innerHTML = labelHtml;
+  document.getElementById('ratingSelectWrap').classList.remove('open');
 }
 
 function renderAddTab() {
@@ -741,11 +926,35 @@ function renderAddTab() {
 
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
   const currentCat = it ? (it.category || '模型車') : '模型車';
+  const isDoll = (currentCat === '娃娃/公仔');
   const showScale = (currentCat === '模型車' || currentCat === '周邊/其他');
-  const currentBrand = it ? it.brand : 'BBR';
+  const currentBuyer = (!it || it.buyer === '帥氣實實') ? '帥氣實實' : '可愛寶寶';
   const currentStars = it ? formatRatingStars(it.rating) : '★★★★★';
-  const brandOptions = getAllBrandOptions();
-  if (currentBrand && !brandOptions.includes(currentBrand)) brandOptions.unshift(currentBrand);
+
+  const brandOptions = isDoll ? getDollBrandOptions() : getCarBrandOptions();
+  let currentBrand = it ? it.brand : (brandOptions.length > 0 ? brandOptions[0] : '__CUSTOM__');
+  if (currentBrand && currentBrand !== '__CUSTOM__' && !brandOptions.includes(currentBrand)) {
+    brandOptions.unshift(currentBrand);
+  }
+  const isCustomBrand = (currentBrand === '__CUSTOM__');
+
+  const catLabels = {
+    '模型車': '🚗 模型車',
+    '娃娃/公仔': '🧸 娃娃 / 公仔',
+    '周邊/其他': '🏞️ 周邊 / 場景'
+  };
+  const buyerLabels = {
+    '帥氣實實': '😎 帥氣實實',
+    '可愛寶寶': '🥰 可愛寶寶'
+  };
+  const ratingOptions = [
+    { val: '★★★★★', label: '★★★★★ (5星)' },
+    { val: '★★★★☆', label: '★★★★☆ (4星)' },
+    { val: '★★★☆☆', label: '★★★☆☆ (3星)' },
+    { val: '★★☆☆☆', label: '★★☆☆☆ (2星)' },
+    { val: '★☆☆☆☆', label: '★☆☆☆☆ (1星)' },
+    { val: '☆☆☆☆☆', label: '☆☆☆☆☆ (0星)' }
+  ];
 
   return `
     <div class="header-row" style="margin-bottom:6px;">
@@ -769,43 +978,70 @@ function renderAddTab() {
       <div class="f-grid-2">
         <div class="f-group">
           <label class="f-label">收藏分類</label>
-          <select class="f-select" id="f_category" onchange="onCategorySelectChange(this.value)">
-            <option value="模型車" ${currentCat==='模型車'?'selected':''}>🚗 模型車</option>
-            <option value="娃娃/公仔" ${currentCat==='娃娃/公仔'?'selected':''}>🧸 娃娃 / 公仔</option>
-            <option value="周邊/其他" ${currentCat==='周邊/其他'?'selected':''}>🏞️ 周邊 / 場景</option>
-          </select>
+          <input type="hidden" id="f_category" value="${currentCat}">
+          <div class="holst-select-wrap" id="catSelectWrap">
+            <div class="holst-select-trigger" onclick="toggleHolstSelect('catSelectWrap')">
+              <span id="catTriggerLabel">${catLabels[currentCat] || '🚗 模型車'}</span>
+              <span class="holst-select-arrow">▾</span>
+            </div>
+            <div class="holst-select-menu">
+              ${Object.entries(catLabels).map(([val, lab]) => `
+                <div class="holst-select-item ${val===currentCat?'selected':''}" onclick="selectHolstCategory('${val}', '${lab}')">
+                  <span>${lab}</span><span class="sel-check">✓</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
         </div>
+
         <div class="f-group">
           <label class="f-label">購買人</label>
-          <select class="f-select" id="f_buyer">
-            <option value="帥氣實實" ${!it || it.buyer==='帥氣實實'?'selected':''}>😎 帥氣實實</option>
-            <option value="可愛寶寶" ${it && it.buyer==='可愛寶寶'?'selected':''}>🥰 可愛寶寶</option>
-          </select>
+          <input type="hidden" id="f_buyer" value="${currentBuyer}">
+          <div class="holst-select-wrap" id="buyerSelectWrap">
+            <div class="holst-select-trigger" onclick="toggleHolstSelect('buyerSelectWrap')">
+              <span id="buyerTriggerLabel">${buyerLabels[currentBuyer]}</span>
+              <span class="holst-select-arrow">▾</span>
+            </div>
+            <div class="holst-select-menu">
+              ${Object.entries(buyerLabels).map(([val, lab]) => `
+                <div class="holst-select-item ${val===currentBuyer?'selected':''}" onclick="selectHolstBuyer('${val}', '${lab}')">
+                  <span>${lab}</span><span class="sel-check">✓</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="f-group">
         <label class="f-label">車車名稱 / 娃娃收藏名稱</label>
-        <input type="text" class="f-input" id="f_name" placeholder="例如：Lamborghini Huracan GT 或 娃娃" value="${it ? it.name : ''}">
+        <input type="text" class="f-input" id="f_name" placeholder="例如：Lamborghini Huracan GT 或 吉伊卡哇" value="${it ? it.name : ''}">
       </div>
 
       <div class="f-grid-2" id="brandScaleGrid" style="grid-template-columns: ${showScale ? '1fr 1fr' : '1fr'};">
         <div class="f-group">
-          <label class="f-label">模型品牌 / 系列</label>
-          <select class="f-select" id="f_brand_select" onchange="onBrandSelectChange(this.value)">
-            ${brandOptions.map(b => `<option value="${b}" ${b === currentBrand ? 'selected' : ''}>${b}</option>`).join('')}
-            <option value="__CUSTOM__">✏️ 手動輸入新品牌...</option>
-          </select>
+          <label class="f-label" id="brandFieldLabel">${isDoll ? '娃娃品牌 / 系列' : '模型品牌 / 系列'}</label>
+          <input type="hidden" id="f_brand_select" value="${currentBrand}">
+          <div class="holst-select-wrap" id="brandSelectWrap">
+            <div class="holst-select-trigger" onclick="toggleHolstSelect('brandSelectWrap')">
+              <span id="brandTriggerLabel" style="overflow:hidden;">${renderBrandChipHtml(currentBrand)}</span>
+              <span class="holst-select-arrow">▾</span>
+            </div>
+            <div class="holst-select-menu" id="brandMenuContainer">
+              ${buildBrandMenuItemsHtml(brandOptions, currentBrand)}
+            </div>
+          </div>
         </div>
+
         <div class="f-group" id="scaleFieldGroup" style="display: ${showScale ? 'block' : 'none'};">
           <label class="f-label">比例 / 尺寸</label>
           <input type="text" class="f-input" id="f_scale" value="${it && it.scale ? it.scale : '1/64'}">
         </div>
       </div>
 
-      <div class="f-group" id="customBrandBox" style="display:none;">
-        <label class="f-label">輸入新品牌名稱</label>
-        <input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新品牌名稱">
+      <div class="f-group" id="customBrandBox" style="display: ${isCustomBrand ? 'block' : 'none'};">
+        <label class="f-label">✏️ 輸入新品牌名稱（儲存後將自動加入專屬彩色選單）</label>
+        <input type="text" class="f-input" id="f_brand_custom" placeholder="例如：POP MART / 三麗鷗 / 新車模品牌">
       </div>
 
       <div class="f-grid-2" id="priceRatingGrid" style="grid-template-columns: ${isGotMode ? '1fr 1fr' : '1fr'};">
@@ -815,14 +1051,20 @@ function renderAddTab() {
         </div>
         <div class="f-group" id="ratingFieldGroup" style="margin-bottom:0; display: ${isGotMode ? 'block' : 'none'};">
           <label class="f-label">評分 (★)</label>
-          <select class="f-select" id="f_rating">
-            <option value="★★★★★" ${currentStars==='★★★★★'?'selected':''}>★★★★★ (5星)</option>
-            <option value="★★★★☆" ${currentStars==='★★★★☆'?'selected':''}>★★★★☆ (4星)</option>
-            <option value="★★★☆☆" ${currentStars==='★★★☆☆'?'selected':''}>★★★☆☆ (3星)</option>
-            <option value="★★☆☆☆" ${currentStars==='★★☆☆☆'?'selected':''}>★★☆☆☆ (2星)</option>
-            <option value="★☆☆☆☆" ${currentStars==='★☆☆☆☆'?'selected':''}>★☆☆☆☆ (1星)</option>
-            <option value="☆☆☆☆☆" ${currentStars==='☆☆☆☆☆'?'selected':''}>☆☆☆☆☆ (0星)</option>
-          </select>
+          <input type="hidden" id="f_rating" value="${currentStars}">
+          <div class="holst-select-wrap" id="ratingSelectWrap">
+            <div class="holst-select-trigger" onclick="toggleHolstSelect('ratingSelectWrap')">
+              <span id="ratingTriggerLabel" style="color:#D97706;font-weight:900;">${currentStars}</span>
+              <span class="holst-select-arrow">▾</span>
+            </div>
+            <div class="holst-select-menu" style="right:0;left:auto;">
+              ${ratingOptions.map(ro => `
+                <div class="holst-select-item ${ro.val===currentStars?'selected':''}" onclick="selectHolstRating('${ro.val}', '${ro.val}')">
+                  <span style="color:#D97706;font-weight:900;">${ro.label}</span><span class="sel-check">✓</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -862,12 +1104,6 @@ function renderAddTab() {
     </button>
     ${it ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeCollectible('${it.id}')">🗑️ 刪除此筆收藏</span></div>` : ''}
   `;
-}
-
-function onBrandSelectChange(val) {
-  const customBox = document.getElementById('customBrandBox');
-  if (val === '__CUSTOM__') { customBox.style.display = 'block'; document.getElementById('f_brand_custom').focus(); }
-  else { customBox.style.display = 'none'; }
 }
 
 function renderAllTab() {
@@ -1309,16 +1545,25 @@ function handlePhotoPick(e) {
 async function saveCollectible() {
   const id = editingId || String(Date.now());
   const old = items.find(x => String(x.id) === String(id));
-  const statusVal = addMode; // '等待中' 或 '拿到了'
+  const statusVal = addMode;
   const isGotMode = (statusVal === '拿到了');
 
   const catVal = document.getElementById('f_category').value;
+  const isDoll = (catVal === '娃娃/公仔');
   const hasScale = (catVal === '模型車' || catVal === '周邊/其他');
   const scaleVal = hasScale ? document.getElementById('f_scale').value.trim() : '';
 
   const brandSel = document.getElementById('f_brand_select').value;
   const finalBrand = brandSel === '__CUSTOM__' ? (document.getElementById('f_brand_custom').value.trim() || '其他') : brandSel;
-  if (finalBrand && !cloudBrands.includes(finalBrand)) cloudBrands.push(finalBrand);
+
+  // 根據「娃娃/公仔」或「模型車/周邊」分別儲存至各自的專屬品牌庫
+  if (finalBrand) {
+    if (isDoll) {
+      if (!dollBrands.includes(finalBrand)) dollBrands.push(finalBrand);
+    } else {
+      if (!cloudBrands.includes(finalBrand)) cloudBrands.push(finalBrand);
+    }
+  }
 
   const storeVal = isGotMode ? (old && editingId ? old.store : '') : document.getElementById('f_store').value.trim();
   const orderDateVal = isGotMode ? (old && editingId ? old.orderDate : '') : document.getElementById('f_orderDate').value.trim();
@@ -1354,7 +1599,6 @@ async function saveCollectible() {
   if (gasUrl) {
     showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中', 0);
     try {
-      // 將 rating 轉為 '0' ~ '5' 數字字串，完美通過試算表 L 欄資料驗證規則
       const cloudItemPayload = {
         ...newItem,
         rating: starsToSheetNum(newItem.rating),
