@@ -3,197 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>實實與寶寶收藏庫</title>
+<title>實實與寶寶收藏與日記庫</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cloud-cream: #F3EFE7; --cloud-cream-pure: #FAF8F5;
-    --frosted-blue: #C8DCE2; --frosted-blue-deep: #B0C9D1;
-    --muted-jade: #829F8D; --muted-jade-soft: #D7E3DC;
-    --brushed-pewter: #929795; --plum-noir: #493342;
-    --plum-noir-dark: #372531; --plum-noir-soft: #5D4354;
+    /* Holst 指定 6 色票系統 */
+    --cloud-cream: #F4F1DE;       /* 奶油象牙白 (主背景) */
+    --cloud-cream-pure: #FAF9F0;  /* 亮白卡片底 */
+    --frosted-blue: #D4C4A8;      /* 暖沙金 (次要主卡底色) */
+    --frosted-blue-deep: #C2B092;
+    --muted-jade: #778D7A;        /* 鼠尾草綠 (強調色/已入庫/導覽列左漸層) */
+    --muted-jade-soft: #E1E7E2;
+    --brushed-pewter: #415A77;    /* 岩石鋼藍 (副標題/導覽列右漸層) */
+    --plum-noir: #1B263B;         /* 深牛津藍 (深色主卡/主要深色字) */
+    --plum-noir-dark: #0D1B2A;    /* 午夜深海藍 (最深底色/內層深色卡) */
+    --plum-noir-soft: #415A77;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { margin: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; background: #DFDBD2; color: var(--plum-noir); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-  .top-preview-bar { width: 100%; background: var(--plum-noir); color: var(--cloud-cream); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; position: sticky; top: 0; z-index: 999; }
-  .top-preview-bar button { background: var(--frosted-blue); color: var(--plum-noir); border: none; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; cursor: pointer; }
+  body { margin: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; background: #D4C4A8; color: var(--plum-noir-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+  .top-preview-bar { width: 100%; background: var(--plum-noir-dark); color: var(--cloud-cream); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; position: sticky; top: 0; z-index: 999; }
+  .top-preview-bar button { background: var(--frosted-blue); color: var(--plum-noir-dark); border: none; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; cursor: pointer; }
 
-  .phone-frame { width: 390px; height: 820px; background: var(--cloud-cream); border-radius: 50px; border: 11px solid var(--plum-noir); box-shadow: 0 28px 60px rgba(73,51,66,0.25), inset 0 0 0 2px #fff; margin: 24px auto; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .phone-frame { width: 390px; height: 820px; background: var(--cloud-cream); border-radius: 50px; border: 11px solid var(--plum-noir-dark); box-shadow: 0 28px 60px rgba(13,27,42,0.3), inset 0 0 0 2px #fff; margin: 24px auto; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   body.fullscreen-mode { background: var(--cloud-cream); }
   body.fullscreen-mode .top-preview-bar { display: none; }
   body.fullscreen-mode .phone-frame { width: 100%; max-width: 480px; height: 100vh; margin: 0; border: none; border-radius: 0; box-shadow: none; }
 
-  .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 145px; scrollbar-width: none; background: var(--cloud-cream); }
+  .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 150px; scrollbar-width: none; background: var(--cloud-cream); }
   .screen-scroll.home-mode { padding-top: 0; background: var(--cloud-cream); }
-  .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: #2E1F29; }
+  .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: var(--plum-noir-dark); }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
   /* 1.5秒自動消失的中央提示小視窗 */
-  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(55,37,49,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(200,220,226,0.3); box-shadow: 0 18px 40px rgba(0,0,0,0.38); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
+  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(13,27,42,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(212,196,168,0.35); box-shadow: 0 18px 40px rgba(0,0,0,0.4); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
   .auto-popup-hud.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   .auto-popup-hud .hud-icon { font-size: 30px; line-height: 1; }
   .auto-popup-hud .hud-title { font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
   .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; }
 
-  /* 首頁頂部：DSC00224.jpg 滿版延伸至狀態列 + 漸層過渡 */
+  /* 首頁頂部：DSC00224.jpg + Holst 奶油白漸層過渡 */
   .home-hero-banner {
     margin: 0 -18px 8px; min-height: 335px;
-    background-image: linear-gradient(180deg, rgba(243,239,231,0.02) 0%, rgba(243,239,231,0.16) 44%, rgba(243,239,231,0.85) 79%, #F3EFE7 100%), url('DSC00224.jpg');
+    background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg');
     background-size: cover; background-position: center 22%;
     padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative;
   }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
-  .hero-quote-mark { font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.88); line-height: 1; text-shadow: 0 2px 10px rgba(73,51,66,0.35); user-select: none; }
+  .hero-quote-mark { font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; text-shadow: 0 2px 10px rgba(13,27,42,0.4); user-select: none; }
   .home-hero-bottom { margin-top: 118px; }
 
   .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .greet-title { font-size: 22px; font-weight: 900; color: var(--plum-noir); margin: 0; letter-spacing: -0.3px; text-shadow: 0 2px 12px rgba(243,239,231,0.9); }
-  .greet-sub { font-size: 12px; color: var(--plum-noir-soft); font-weight: 700; margin: 2px 0 6px; }
+  .greet-title { font-size: 22px; font-weight: 900; color: var(--plum-noir-dark); margin: 0; letter-spacing: -0.3px; text-shadow: 0 2px 12px rgba(244,241,222,0.9); }
+  .greet-sub { font-size: 12px; color: var(--brushed-pewter); font-weight: 700; margin: 2px 0 6px; }
   .header-icons { display: flex; align-items: center; gap: 10px; }
-  .bell-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(250,248,245,0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(73,51,66,0.14); color: var(--plum-noir); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .bell-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(250,249,240,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(13,27,42,0.14); color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
   .bell-btn:active { transform: scale(0.92); }
   @keyframes spinSync { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   .bell-btn.spinning svg { animation: spinSync 0.8s linear infinite; }
-  .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(200,220,226,0.9); backdrop-filter: blur(8px); border: 2px solid var(--plum-noir); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(212,196,168,0.92); backdrop-filter: blur(8px); border: 2px solid var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-  .val-label { font-size: 11px; color: var(--plum-noir-soft); font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; }
+  .val-label { font-size: 11px; color: var(--brushed-pewter); font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; }
   .val-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 2px 0 10px; }
-  .val-main { font-size: 34px; font-weight: 900; color: var(--plum-noir); letter-spacing: -0.8px; }
+  .val-main { font-size: 34px; font-weight: 900; color: var(--plum-noir-dark); letter-spacing: -0.8px; }
   .val-main small { font-size: 20px; color: var(--brushed-pewter); font-weight: 700; }
   .val-badge { font-size: 11px; font-weight: 800; color: var(--muted-jade); }
 
   .dual-pill-wrap { display: flex; align-items: center; margin-bottom: 16px; }
-  .dual-pill { flex: 1; height: 48px; background: var(--cloud-cream-pure); border: 1.5px solid rgba(73,51,66,0.12); border-radius: 28px; display: flex; align-items: center; justify-content: center; padding: 0 14px; font-size: 13px; font-weight: 800; color: var(--plum-noir); cursor: pointer; box-shadow: 0 4px 12px rgba(73,51,66,0.04); }
-  .dual-center-x { width: 34px; height: 34px; border-radius: 50%; background: var(--cloud-cream); border: 1.5px solid rgba(73,51,66,0.18); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 -10px; z-index: 2; cursor: pointer; }
+  .dual-pill { flex: 1; height: 48px; background: var(--cloud-cream-pure); border: 1.5px solid rgba(13,27,42,0.12); border-radius: 28px; display: flex; align-items: center; justify-content: center; padding: 0 14px; font-size: 13px; font-weight: 800; color: var(--plum-noir-dark); cursor: pointer; box-shadow: 0 4px 12px rgba(13,27,42,0.04); }
+  .dual-center-x { width: 34px; height: 34px; border-radius: 50%; background: var(--cloud-cream); border: 1.5px solid rgba(13,27,42,0.18); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 -10px; z-index: 2; cursor: pointer; }
 
-  .chart-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px 14px 14px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(200,220,226,0.45); }
+  .chart-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px 14px 14px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(212,196,168,0.45); }
   .chart-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .chart-coin-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--plum-noir); }
-  .chart-coin-badge .diamond { width: 22px; height: 22px; border-radius: 50%; background: var(--plum-noir); color: var(--cloud-cream); display: flex; align-items: center; justify-content: center; font-size: 11px; }
+  .chart-coin-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); }
+  .chart-coin-badge .diamond { width: 22px; height: 22px; border-radius: 50%; background: var(--plum-noir-dark); color: var(--cloud-cream); display: flex; align-items: center; justify-content: center; font-size: 11px; }
   .chart-period-pills { display: flex; gap: 4px; align-items: center; }
-  .period-pill { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; color: var(--plum-noir); cursor: pointer; }
-  .period-pill.active { background: var(--plum-noir); color: var(--cloud-cream); }
-  .more-pill { background: rgba(243,239,231,0.75); color: var(--plum-noir); font-size: 10px; font-weight: 800; padding: 4px 9px; border-radius: 12px; cursor: pointer; }
+  .period-pill { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; color: var(--plum-noir-dark); cursor: pointer; }
+  .period-pill.active { background: var(--plum-noir-dark); color: var(--cloud-cream); }
+  .more-pill { background: rgba(244,241,222,0.75); color: var(--plum-noir-dark); font-size: 10px; font-weight: 800; padding: 4px 9px; border-radius: 12px; cursor: pointer; }
 
   .histogram-wrapper { display: flex; align-items: stretch; height: 152px; position: relative; }
-  .y-axis-fixed { width: 28px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0 24px; font-size: 9px; font-weight: 700; color: rgba(73,51,66,0.55); z-index: 3; }
+  .y-axis-fixed { width: 28px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0 24px; font-size: 9px; font-weight: 700; color: rgba(13,27,42,0.6); z-index: 3; }
   .hist-scroll-viewport { flex: 1; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; position: relative; }
   .hist-scroll-viewport::-webkit-scrollbar { display: none; }
   .hist-track { display: inline-flex; align-items: flex-end; min-width: 100%; height: 100%; padding: 14px 6px 24px; gap: 12px; position: relative; }
   .y-grid-lines { position: absolute; inset: 14px 0 24px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; z-index: 1; }
-  .y-grid-lines i { display: block; width: 100%; border-bottom: 1px dashed rgba(73,51,66,0.14); }
+  .y-grid-lines i { display: block; width: 100%; border-bottom: 1px dashed rgba(13,27,42,0.15); }
   .hist-col { flex: 0 0 42px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; z-index: 2; cursor: pointer; }
-  .hist-bg-bar { width: 34px; background: rgba(130,159,141,0.35); border-radius: 16px 16px 10px 10px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
-  .hist-fg-bar { width: 34px; background: var(--plum-noir); border-radius: 16px 16px 10px 10px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 5px 0 6px; color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(73,51,66,0.2); }
-  .hist-col.peak .hist-fg-bar { border: 1.5px solid var(--cloud-cream); }
-  .hist-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(243,239,231,0.5); display: flex; align-items: center; justify-content: center; font-size: 9px; line-height: 1; }
+  .hist-bg-bar { width: 34px; background: rgba(119,141,122,0.4); border-radius: 16px 16px 10px 10px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .hist-fg-bar { width: 34px; background: var(--plum-noir); border-radius: 16px 16px 10px 10px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 5px 0 6px; color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(13,27,42,0.22); }
+  .hist-col.peak .hist-fg-bar { background: var(--plum-noir-dark); border: 1.5px solid var(--cloud-cream); }
+  .hist-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(244,241,222,0.5); display: flex; align-items: center; justify-content: center; font-size: 9px; line-height: 1; }
   .hist-val { font-size: 9px; font-weight: 800; letter-spacing: -0.3px; }
-  .hist-date { position: absolute; bottom: -19px; font-size: 9px; font-weight: 800; color: var(--plum-noir); white-space: nowrap; }
-  .chart-legend { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 0 4px; font-size: 10px; font-weight: 700; color: var(--plum-noir); }
+  .hist-date { position: absolute; bottom: -19px; font-size: 9px; font-weight: 800; color: var(--plum-noir-dark); white-space: nowrap; }
+  .chart-legend { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 0 4px; font-size: 10px; font-weight: 700; color: var(--plum-noir-dark); }
   .legend-dots { display: flex; gap: 10px; }
-  .legend-dots span::before { content: '● '; color: var(--plum-noir); }
+  .legend-dots span::before { content: '● '; color: var(--plum-noir-dark); }
 
-  .dark-Showcase-box { background: var(--plum-noir); border-radius: 30px; padding: 14px; color: var(--cloud-cream); box-shadow: 0 12px 26px rgba(73,51,66,0.22); }
+  .dark-Showcase-box { background: var(--plum-noir); border-radius: 30px; padding: 14px; color: var(--cloud-cream); box-shadow: 0 12px 26px rgba(13,27,42,0.24); }
   .dark-box-header { display: flex; justify-content: space-between; align-items: center; padding: 2px 6px 10px; }
   .dark-box-tabs { display: flex; gap: 6px; }
-  .dark-tab { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 14px; background: var(--plum-noir-dark); color: var(--brushed-pewter); cursor: pointer; }
+  .dark-tab { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 14px; background: var(--plum-noir-dark); color: var(--frosted-blue); cursor: pointer; }
   .dark-tab.active { background: var(--muted-jade); color: var(--cloud-cream); }
-  .dark-row-card { background: var(--plum-noir-dark); border: 1px solid rgba(243,239,231,0.08); border-radius: 22px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; cursor: pointer; }
+  .dark-row-card { background: var(--plum-noir-dark); border: 1px solid rgba(244,241,222,0.08); border-radius: 22px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; cursor: pointer; }
   .dark-row-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--plum-noir-soft); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; overflow: hidden; }
   .dark-row-icon img { width: 100%; height: 100%; object-fit: cover; }
   .dark-row-info { flex: 1; min-width: 0; }
   .dark-row-name { font-size: 13px; font-weight: 700; color: var(--cloud-cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dark-row-sub { font-size: 10px; color: var(--brushed-pewter); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dark-row-sub { font-size: 10px; color: rgba(212,196,168,0.75); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dark-row-right { text-align: right; flex-shrink: 0; }
   .dark-row-price { font-size: 13px; font-weight: 800; color: var(--cloud-cream); }
   .dark-row-tag { font-size: 10px; font-weight: 700; color: var(--muted-jade); margin-top: 2px; }
   .view-all-row { text-align: right; padding: 2px 8px 0; font-size: 11px; font-weight: 700; color: var(--frosted-blue); cursor: pointer; }
 
-  /* 物品詳細頁：上半部滿版延伸至狀態列 + 下半部深色100%延伸到底部無空白 */
-  .detail-page-wrap { margin: 0 -18px; display: flex; flex-direction: column; min-height: 100vh; background: #2E1F29; }
-  .detail-top-photo { width: 100%; height: 350px; background: #E8E3DA; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+  /* 物品詳細頁 (Holst 深海午夜藍漸層) */
+  .detail-page-wrap { margin: 0 -18px; display: flex; flex-direction: column; min-height: 100vh; background: var(--plum-noir-dark); }
+  .detail-top-photo { width: 100%; height: 350px; background: #E5DEC9; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
   .detail-top-photo img { width: 100%; height: 100%; object-fit: cover; }
   .detail-top-photo .fallback-emoji { font-size: 84px; }
   .detail-floating-nav { position: absolute; top: 44px; left: 18px; right: 18px; display: flex; justify-content: space-between; z-index: 10; }
-  .detail-glass-btn { width: 40px; height: 40px; border-radius: 13px; background: rgba(73,51,66,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.28); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+  .detail-glass-btn { width: 40px; height: 40px; border-radius: 13px; background: rgba(13,27,42,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.28); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
 
   .detail-sheet-card {
     flex: 1; margin-top: -34px; border-radius: 34px 34px 0 0;
-    background: linear-gradient(165deg, #5A4050 0%, #372531 55%, #2E1F29 100%);
-    border-top: 1.5px solid rgba(243,239,231,0.22);
+    background: linear-gradient(165deg, #415A77 0%, #1B263B 50%, #0D1B2A 100%);
+    border-top: 1.5px solid rgba(244,241,222,0.22);
     padding: 26px 22px 135px; color: var(--cloud-cream); position: relative; z-index: 5;
-    box-shadow: 0 -12px 32px rgba(55,37,49,0.28);
+    box-shadow: 0 -12px 32px rgba(13,27,42,0.35);
   }
   .detail-title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
   .detail-car-title { font-size: 22px; font-weight: 800; color: #fff; margin: 0; line-height: 1.25; }
-  .status-switch-pill { width: 52px; height: 28px; border-radius: 20px; background: rgba(243,239,231,0.25); padding: 3px; display: flex; align-items: center; cursor: pointer; flex-shrink: 0; transition: background 0.25s; }
+  .status-switch-pill { width: 52px; height: 28px; border-radius: 20px; background: rgba(244,241,222,0.25); padding: 3px; display: flex; align-items: center; cursor: pointer; flex-shrink: 0; }
   .status-switch-pill.got { background: var(--cloud-cream); justify-content: flex-end; }
-  .status-switch-knob { width: 22px; height: 22px; border-radius: 50%; background: var(--frosted-blue); box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+  .status-switch-knob { width: 22px; height: 22px; border-radius: 50%; background: var(--frosted-blue); }
   .status-switch-pill.got .status-switch-knob { background: var(--muted-jade); }
-  .detail-desc-text { font-size: 13px; color: rgba(243,239,231,0.78); line-height: 1.55; margin: 0 0 16px; }
+  .detail-desc-text { font-size: 13px; color: rgba(244,241,222,0.8); line-height: 1.55; margin: 0 0 16px; }
   .detail-desc-text u { color: #fff; font-weight: 700; text-underline-offset: 3px; }
-  .detail-hero-metric { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid rgba(243,239,231,0.14); margin-bottom: 18px; }
+  .detail-hero-metric { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid rgba(244,241,222,0.14); margin-bottom: 18px; }
   .detail-big-price { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
   .detail-big-price small { font-size: 14px; font-weight: 600; color: var(--frosted-blue); margin-left: 4px; }
   .detail-stars { font-size: 16px; color: #FBBF24; letter-spacing: 2px; }
   .detail-sec-head { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 14px; }
   .detail-capsules-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
-  .spec-capsule { background: rgba(243,239,231,0.12); border: 1px solid rgba(243,239,231,0.16); border-radius: 42px; padding: 10px 6px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .spec-cap-circle { width: 46px; height: 46px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir); display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+  .spec-capsule { background: rgba(244,241,222,0.12); border: 1px solid rgba(244,241,222,0.16); border-radius: 42px; padding: 10px 6px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .spec-cap-circle { width: 46px; height: 46px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 10px; }
   .spec-cap-label { font-size: 11px; font-weight: 800; color: #fff; margin-bottom: 3px; }
-  .spec-cap-val { font-size: 10px; font-weight: 600; color: rgba(243,239,231,0.72); word-break: break-word; padding: 0 4px; }
-  .detail-extra-box { background: rgba(0,0,0,0.22); border: 1px solid rgba(243,239,231,0.1); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
-  .detail-extra-row { display: flex; justify-content: space-between; color: rgba(243,239,231,0.75); }
+  .spec-cap-val { font-size: 10px; font-weight: 600; color: rgba(244,241,222,0.75); word-break: break-word; padding: 0 4px; }
+  .detail-extra-box { background: rgba(13,27,42,0.45); border: 1px solid rgba(244,241,222,0.1); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+  .detail-extra-row { display: flex; justify-content: space-between; color: rgba(244,241,222,0.75); }
   .detail-extra-row strong { color: #fff; }
 
+  /* ====== 第 4 頁：互動式月曆頁面 (參考 月歷參考.jpg) ====== */
+  .cal-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .cal-month-pill { background: rgba(65,90,119,0.14); padding: 7px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--plum-noir-dark); }
+  .cal-month-arrow { cursor: pointer; padding: 0 4px; font-size: 15px; user-select: none; }
+  .cal-board-card { background: var(--cloud-cream-pure); border-radius: 30px; padding: 18px 14px; box-shadow: 0 10px 26px rgba(13,27,42,0.07); border: 1px solid rgba(13,27,42,0.06); margin-bottom: 18px; }
+  .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; font-weight: 800; color: var(--brushed-pewter); margin-bottom: 12px; }
+  .cal-days-grid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 10px; column-gap: 4px; justify-items: center; }
+  .cal-day-cell { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--plum-noir-dark); background: rgba(65,90,119,0.1); cursor: pointer; position: relative; transition: all 0.18s; }
+  .cal-day-cell.muted { background: transparent; color: rgba(65,90,119,0.32); pointer-events: none; }
+  .cal-day-cell.today-ring { background: var(--cloud-cream-pure); border: 1.8px solid var(--plum-noir-dark); }
+  /* 有寫日記的日子：鼠尾草綠底色 + 右上角小圖標 */
+  .cal-day-cell.has-diary { background: var(--muted-jade); color: var(--cloud-cream); font-weight: 800; }
+  .cal-day-cell.has-diary::after { content: '✦'; position: absolute; top: -3px; right: -2px; font-size: 10px; color: var(--plum-noir-dark); background: var(--frosted-blue); width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
+  /* 目前點選查看的日子：深海午夜藍實心圓 */
+  .cal-day-cell.selected { background: var(--plum-noir-dark) !important; color: var(--cloud-cream) !important; transform: scale(1.06); box-shadow: 0 4px 10px rgba(13,27,42,0.25); }
+
+  .cal-today-summary { display: flex; justify-content: space-between; align-items: center; padding: 0 6px 12px; border-left: 3px solid rgba(65,90,119,0.25); margin-left: 4px; padding-left: 12px; margin-bottom: 14px; }
+  .cal-big-day { font-size: 28px; font-weight: 900; color: var(--plum-noir-dark); line-height: 1; }
+  .cal-day-sub { font-size: 11px; font-weight: 700; color: var(--brushed-pewter); margin-top: 3px; }
+  .cal-count-text { font-size: 13px; font-weight: 700; color: var(--brushed-pewter); }
+  .cal-viewall-pill { background: var(--plum-noir); color: var(--cloud-cream); padding: 6px 13px; border-radius: 16px; font-size: 11px; font-weight: 800; cursor: pointer; }
+
+  /* ====== 月曆下方日記卡片 (100% 參考 月曆下方ui參考.png Banff 卡片設計) ====== */
+  .banff-diary-card { background: var(--cloud-cream-pure); border-radius: 26px; padding: 11px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(13,27,42,0.1); border: 1px solid rgba(13,27,42,0.07); }
+  .banff-photo-box { width: 100%; height: 205px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .banff-photo-box img { width: 100%; height: 100%; object-fit: cover; }
+  .banff-top-tags { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 6px; z-index: 2; }
+  .banff-glass-pill { background: rgba(255,255,255,0.24); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 10px; font-weight: 700; padding: 5px 11px; border-radius: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .banff-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
+  .banff-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.45); }
+  .banff-dots span.on { background: #fff; }
+  .banff-body { padding: 14px 8px 6px; }
+  .banff-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .banff-title { font-size: 18px; font-weight: 800; color: var(--plum-noir-dark); margin: 0; }
+  .banff-outlined-badge { border: 1.5px solid rgba(13,27,42,0.3); color: var(--plum-noir-dark); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 16px; white-space: nowrap; }
+  .banff-meta { font-size: 11px; font-weight: 700; color: var(--brushed-pewter); margin-bottom: 8px; }
+  .banff-desc { font-size: 12px; color: rgba(13,27,42,0.75); line-height: 1.5; margin: 0 0 14px; white-space: pre-wrap; }
+  .banff-footer { display: flex; justify-content: space-between; align-items: center; }
+  .banff-foot-left { font-size: 15px; font-weight: 800; color: var(--plum-noir-dark); }
+  .banff-foot-left small { font-size: 11px; font-weight: 600; color: var(--brushed-pewter); }
+  .banff-action-btn { background: var(--plum-noir-dark); color: var(--cloud-cream); border: none; border-radius: 22px; padding: 6px 6px 6px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; cursor: pointer; }
+  .banff-action-btn .arr-cir { width: 24px; height: 24px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
+
+  /* 表單與所有收藏品樣式 */
   .form-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px; margin-bottom: 14px; }
   .form-card.dark-part { background: var(--plum-noir); color: var(--cloud-cream); }
   .f-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .f-group { margin-bottom: 10px; }
-  .f-label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 4px; opacity: 0.85; }
-  .f-input, .f-select { width: 100%; background: var(--cloud-cream-pure); border: 1.5px solid rgba(73,51,66,0.12); color: var(--plum-noir); padding: 10px 12px; border-radius: 14px; font-size: 13px; font-weight: 700; outline: none; }
-  .form-card.dark-part .f-input, .form-card.dark-part .f-select { background: var(--plum-noir-dark); border-color: rgba(243,239,231,0.15); color: var(--cloud-cream); }
+  .f-label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 4px; opacity: 0.88; }
+  .f-input, .f-select, .f-textarea { width: 100%; background: var(--cloud-cream-pure); border: 1.5px solid rgba(13,27,42,0.12); color: var(--plum-noir-dark); padding: 10px 12px; border-radius: 14px; font-size: 13px; font-weight: 700; outline: none; font-family: inherit; }
+  .f-textarea { min-height: 82px; resize: vertical; }
+  .form-card.dark-part .f-input, .form-card.dark-part .f-select, .form-card.dark-part .f-textarea { background: var(--plum-noir-dark); border-color: rgba(244,241,222,0.15); color: var(--cloud-cream); }
   .chip-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
-  .mini-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(243,239,231,0.75); color: var(--plum-noir); cursor: pointer; }
+  .mini-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(244,241,222,0.8); color: var(--plum-noir-dark); cursor: pointer; }
   .form-card.dark-part .mini-chip { background: var(--plum-noir-soft); color: var(--cloud-cream); }
-  .photo-upload-box { border: 2px dashed rgba(243,239,231,0.3); border-radius: 18px; padding: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--plum-noir-dark); }
+  .photo-upload-box { border: 2px dashed rgba(244,241,222,0.3); border-radius: 18px; padding: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--plum-noir-dark); }
   .photo-upload-box img { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; }
-  .submit-pill-btn { width: 100%; height: 52px; border-radius: 28px; background: var(--plum-noir); color: var(--cloud-cream); border: none; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 18px; box-shadow: 0 8px 20px rgba(73,51,66,0.25); }
+  .submit-pill-btn { width: 100%; height: 52px; border-radius: 28px; background: var(--plum-noir-dark); color: var(--cloud-cream); border: none; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 18px; box-shadow: 0 8px 20px rgba(13,27,42,0.25); }
 
   .owner-tabs-box { background: var(--frosted-blue); padding: 6px; border-radius: 22px; display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 5px; margin-bottom: 12px; }
-  .owner-tab { padding: 9px 6px; border-radius: 17px; text-align: center; font-size: 11px; font-weight: 800; color: var(--plum-noir); cursor: pointer; transition: all 0.2s; }
-  .owner-tab.active { background: var(--plum-noir); color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(73,51,66,0.2); }
+  .owner-tab { padding: 9px 6px; border-radius: 17px; text-align: center; font-size: 11px; font-weight: 800; color: var(--plum-noir-dark); cursor: pointer; transition: all 0.2s; }
+  .owner-tab.active { background: var(--plum-noir-dark); color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(13,27,42,0.2); }
   .filter-pills-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
   .filter-pills-bar::-webkit-scrollbar { display: none; }
-  .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir); border: 1px solid rgba(73,51,66,0.12); cursor: pointer; }
+  .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13,27,42,0.12); cursor: pointer; }
   .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
 
-  /* 半透明毛玻璃底部導覽列 */
-  .trantor-dock-container { position: absolute; bottom: 14px; left: 16px; right: 16px; height: 76px; z-index: 100; display: flex; align-items: flex-end; pointer-events: none; }
-  body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 448px; margin: 0 auto; }
-  .trantor-dock-bg {
-    pointer-events: auto; width: 100%; height: 62px;
-    background: rgba(73, 51, 66, 0.72);
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(243, 239, 231, 0.2);
-    border-radius: 30px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; position: relative;
-    box-shadow: 0 12px 28px rgba(35, 22, 31, 0.32);
+  /* ====== 全新 5 鍵式「中間U型凹槽漸層底部導覽列」(100% 復刻第 2 張附圖造型) ====== */
+  .trantor-dock-container { position: absolute; bottom: 12px; left: 14px; right: 14px; height: 84px; z-index: 100; display: flex; align-items: flex-end; pointer-events: none; }
+  body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 452px; margin: 0 auto; }
+  .concave-dock-bar {
+    pointer-events: auto; width: 100%; height: 64px;
+    /* 採用 Holst 鼠尾草綠 (#778D7A) 到 岩石鋼藍 (#415A77) 半透明漸層，完美契合第 2 張圖！ */
+    background: linear-gradient(90deg, rgba(119, 141, 122, 0.92) 0%, rgba(65, 90, 119, 0.92) 100%);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    /* 使用 radial-gradient 在正中央上方切出平滑的 U 型凹陷弧形缺口 */
+    -webkit-mask-image: radial-gradient(circle 38px at 50% 0px, transparent 37px, black 38px);
+    mask-image: radial-gradient(circle 38px at 50% 0px, transparent 37px, black 38px);
+    border-radius: 16px 16px 32px 32px;
+    display: grid; grid-template-columns: 1fr 1fr 76px 1fr 1fr; align-items: center; justify-items: center;
+    padding: 0 6px; box-shadow: 0 12px 28px rgba(13, 27, 42, 0.28);
   }
-  .trantor-center-arch {
-    position: absolute; left: 50%; top: -18px; transform: translateX(-50%); width: 74px; height: 74px; border-radius: 50%;
-    background: rgba(243, 239, 231, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    padding: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  .dock-nav-item {
+    background: transparent; border: none; color: rgba(244, 241, 222, 0.68);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    font-size: 9px; font-weight: 800; cursor: pointer; padding: 6px; transition: all 0.2s;
   }
-  .trantor-center-btn { width: 100%; height: 100%; border-radius: 50%; background: rgba(250,248,245,0.92); border: 2px solid rgba(73,51,66,0.12); color: var(--plum-noir); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; box-shadow: 0 4px 12px rgba(73,51,66,0.15); transition: all 0.2s; }
-  .trantor-center-arch.active .trantor-center-btn { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
-  .trantor-side-btn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(243,239,231,0.3); background: transparent; color: rgba(243,239,231,0.65); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
-  .trantor-side-btn.active { border-color: var(--cloud-cream); color: var(--cloud-cream); background: rgba(243,239,231,0.16); }
-  .grid-4-icon { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 16px; height: 16px; }
-  .grid-4-icon span { border: 1.5px solid currentColor; border-radius: 3px; }
+  .dock-nav-item.active { color: #fff; transform: translateY(-2px); }
+  .dock-nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  .modal-overlay { position: fixed; inset: 0; background: rgba(55,37,49,0.7); display: none; align-items: center; justify-content: center; z-index: 950; padding: 20px; }
+  /* 懸浮在 U 型凹槽正中央的漸層大圓鈕 */
+  .concave-center-fab {
+    pointer-events: auto; position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+    width: 62px; height: 62px; border-radius: 50%;
+    background: linear-gradient(135deg, #778D7A 0%, #415A77 100%);
+    color: var(--cloud-cream); border: 2px solid rgba(244, 241, 222, 0.65);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px rgba(13, 27, 42, 0.32); cursor: pointer; transition: all 0.2s;
+  }
+  .concave-center-fab.active { background: var(--plum-noir-dark); border-color: var(--frosted-blue); transform: translateX(-50%) scale(1.05); }
+  .concave-center-fab svg { width: 26px; height: 26px; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(13,27,42,0.72); display: none; align-items: center; justify-content: center; z-index: 950; padding: 20px; }
   .modal-overlay.open { display: flex; }
-  .modal-panel { background: var(--cloud-cream); border: 2px solid var(--plum-noir); border-radius: 28px; padding: 20px; width: 100%; max-width: 360px; box-shadow: 0 18px 40px rgba(0,0,0,0.3); }
+  .modal-panel { background: var(--cloud-cream); border: 2px solid var(--plum-noir-dark); border-radius: 28px; padding: 20px; width: 100%; max-width: 360px; box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
 </style>
 </head>
 <body>
@@ -205,23 +268,46 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 雲端純淨版（無寫死預設資料，100% 同步 Google 試算表）</span>
+  <span>🎨 Holst 配色 ＋ 5鍵凹槽導覽列 ＋ 互動月曆與雙人日記</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
 <div class="phone-frame">
   <div class="screen-scroll home-mode" id="screenContent"></div>
 
+  <!-- 第 2 張附圖造型：5 鍵式 U 型凹槽漸層底部導覽列 -->
   <div class="trantor-dock-container">
-    <div class="trantor-dock-bg">
-      <button class="trantor-side-btn active" id="dockLeft" onclick="switchTab('home')" title="首頁">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    <!-- 正中間懸浮圓形按鈕 (③ 新增收藏品) -->
+    <div class="concave-center-fab" id="dockAdd" onclick="switchTab('add')" title="新增收藏品">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </div>
+
+    <div class="concave-dock-bar">
+      <!-- ① 首頁 (左一：儀表板圖示) -->
+      <button class="dock-nav-item active" id="dockHome" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+        <span>首頁</span>
       </button>
-      <div class="trantor-center-arch" id="dockCenter" onclick="switchTab('add')" title="新增收藏品">
-        <div class="trantor-center-btn">＋</div>
-      </div>
-      <button class="trantor-side-btn" id="dockRight" onclick="switchTab('all')" title="所有收藏品">
-        <div class="grid-4-icon"><span></span><span></span><span></span><span></span></div>
+
+      <!-- ② 所有收藏品 (左二：收藏大樓圖示) -->
+      <button class="dock-nav-item" id="dockAll" onclick="switchTab('all')">
+        <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
+        <span>所有收藏</span>
+      </button>
+
+      <!-- 中央凹槽佔位 -->
+      <div></div>
+
+      <!-- ④ 日曆 (右二：互動月曆圖示) -->
+      <button class="dock-nav-item" id="dockCalendar" onclick="switchTab('calendar')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>日曆</span>
+      </button>
+
+      <!-- ⑤ 日記 (最右：寫日記圖示) -->
+      <button class="dock-nav-item" id="dockDiary" onclick="switchTab('diary')">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>日記</span>
       </button>
     </div>
   </div>
@@ -230,7 +316,7 @@
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
     <h3 style="margin:0 0 8px;font-size:16px;">☁️ 雲端伺服器網址設定</h3>
-    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">請貼上一次您的 Google Apps Script 網址並儲存，之後直接點右上角的「🔄」即可一鍵更新：</p>
+    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">請貼上一次您的 Google Apps Script 網址並儲存（同時支援收藏品與雙人日記雲端同步）：</p>
     <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;gap:8px;">
       <button class="submit-pill-btn" style="height:42px;font-size:13px;margin-bottom:0;" onclick="saveAndPullCloud()">💾 儲存網址並立即同步</button>
@@ -245,7 +331,6 @@ const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4X
 
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
-// 已完全移除寫死的 40 筆預設資料，100% 讀取雲端同步快取！
 function loadSavedItems() {
   const v1 = JSON.parse(localStorage.getItem('trantor_left_items') || 'null');
   const v2 = JSON.parse(localStorage.getItem('trantor_left_items_v2') || 'null');
@@ -255,10 +340,11 @@ function loadSavedItems() {
 }
 
 let items = loadSavedItems();
+let diaries = JSON.parse(localStorage.getItem('my_couple_diaries') || '[]');
 let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
 let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
-let activeTab = 'home';
+let activeTab = 'home'; // 'home' | 'all' | 'add' | 'calendar' | 'diary' | 'detail'
 let previousTab = 'all';
 let viewingDetailId = null;
 let chartMode = 'recent';
@@ -268,8 +354,19 @@ let ownerFilter = 'ALL';
 let catFilter = 'ALL';
 let statusFilter = 'ALL';
 let searchKeyword = '';
+
+// 收藏品編輯狀態
 let editingId = null;
 let tempPhotoBase64 = '';
+
+// 日曆與日記狀態
+const nowDate = new Date();
+let calYear = nowDate.getFullYear();
+let calMonth = nowDate.getMonth() + 1; // 1~12
+let selectedCalDate = nowDate.toISOString().slice(0,10).replace(/-/g,'/');
+let editingDiaryId = null;
+let tempDiaryPhotoBase64 = '';
+
 let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
@@ -294,6 +391,7 @@ function showAutoPopup(icon, title, sub, duration = 1600) {
 function saveLocal() {
   localStorage.setItem('trantor_left_items', JSON.stringify(items));
   localStorage.setItem('trantor_left_items_v2', JSON.stringify(items));
+  localStorage.setItem('my_couple_diaries', JSON.stringify(diaries));
   localStorage.setItem('my_cloud_brands', JSON.stringify(cloudBrands));
 }
 
@@ -301,10 +399,15 @@ function switchTab(tab) {
   if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') {
     editingId = null; tempPhotoBase64 = '';
   }
+  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') {
+    editingDiaryId = null; tempDiaryPhotoBase64 = '';
+  }
   activeTab = tab;
-  document.getElementById('dockLeft').classList.toggle('active', tab === 'home');
-  document.getElementById('dockCenter').classList.toggle('active', tab === 'add');
-  document.getElementById('dockRight').classList.toggle('active', tab === 'all' || tab === 'detail');
+  document.getElementById('dockHome').classList.toggle('active', tab === 'home');
+  document.getElementById('dockAll').classList.toggle('active', tab === 'all' || tab === 'detail');
+  document.getElementById('dockAdd').classList.toggle('active', tab === 'add');
+  document.getElementById('dockCalendar').classList.toggle('active', tab === 'calendar');
+  document.getElementById('dockDiary').classList.toggle('active', tab === 'diary');
 
   const scrollBox = document.getElementById('screenContent');
   scrollBox.className = 'screen-scroll';
@@ -320,6 +423,7 @@ function openDetailView(id) {
   switchTab('detail');
 }
 
+/* ====== ① 首頁 ====== */
 function renderHomeTab() {
   const totalVal = items.reduce((s, x) => s + (Number(x.price) || 0), 0);
   const waitCnt = items.filter(x => x.status === '等待中').length;
@@ -420,7 +524,7 @@ function renderHomeTab() {
           <span class="dark-tab ${homeRecentMode==='got'?'active':''}" onclick="setHomeRecentMode('got')">最近購買/到貨</span>
         </div>
       </div>
-      ${recentList.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--brushed-pewter);">☁️ 尚無資料，請點選右上角「☁️」設定網址或「🔄」同步</div>` : ''}
+      ${recentList.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--frosted-blue);">☁️ 尚無資料，請點選右上角「☁️」設定網址或「🔄」同步</div>` : ''}
       ${recentList.map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         return `
@@ -441,6 +545,7 @@ function renderHomeTab() {
   `;
 }
 
+/* ====== 物品詳細頁 ====== */
 function renderDetailTab() {
   const it = items.find(x => String(x.id) === String(viewingDetailId)) || items[0];
   if (!it) return '';
@@ -505,6 +610,7 @@ async function toggleDetailStatus(id) {
   }
 }
 
+/* ====== ③ 新增 / 編輯收藏品介面 ====== */
 function renderAddTab() {
   const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
@@ -608,7 +714,7 @@ function renderAddTab() {
           <div id="photoPreviewHolder">${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
           <div style="text-align:left;font-size:12px;">
             <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
-            <div style="color:var(--brushed-pewter);font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div>
+            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div>
           </div>
         </label>
       </div>
@@ -624,6 +730,7 @@ function onBrandSelectChange(val) {
   else { customBox.style.display = 'none'; }
 }
 
+/* ====== ② 所有收藏品總覽 ====== */
 function renderAllTab() {
   const countAll = items.length;
   const countShi = items.filter(x => x.buyer === '帥氣實實').length;
@@ -668,7 +775,7 @@ function renderAllTab() {
     </div>
     <input type="text" class="f-input" style="margin-bottom:12px;" placeholder="🔍 搜尋車名、品牌、店家或預計到貨日 (如 2027/Q1)..." value="${searchKeyword}" oninput="handleAllSearch(this.value)">
     <div class="dark-Showcase-box">
-      ${filtered.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--brushed-pewter);">尚無符合條件的收藏品</div>` : ''}
+      ${filtered.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--frosted-blue);">尚無符合條件的收藏品</div>` : ''}
       ${filtered.slice().reverse().map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         const isGot = it.status === '拿到了';
@@ -690,11 +797,323 @@ function renderAllTab() {
   `;
 }
 
+/* ====== ④ 互動式日曆頁面 (參考 月歷參考.jpg + 月曆下方ui參考.png) ====== */
+function renderCalendarTab() {
+  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const weekNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+  // 統計哪些日期有日記紀錄
+  const diaryDateMap = {};
+  diaries.forEach(d => {
+    const dt = String(d.date || '').trim();
+    if (dt) diaryDateMap[dt] = (diaryDateMap[dt] || 0) + 1;
+  });
+
+  const firstDayObj = new Date(calYear, calMonth - 1, 1);
+  // 轉為週一為第一欄 (Mo Tu We Th Fr Sa Su)
+  const startOffset = (firstDayObj.getDay() + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const prevMonthDays = new Date(calYear, calMonth - 1, 0).getDate();
+  const todayStr = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+
+  const cellsHtml = [];
+  // 上個月尾端淡化日期
+  for (let i = startOffset - 1; i >= 0; i--) {
+    cellsHtml.push(`<div class="cal-day-cell muted">${prevMonthDays - i}</div>`);
+  }
+  // 本月每一天
+  for (let d = 1; d <= daysInMonth; d++) {
+    const fullStr = `${calYear}/${String(calMonth).padStart(2,'0')}/${String(d).padStart(2,'0')}`;
+    const hasDiary = !!diaryDateMap[fullStr];
+    const isSel = fullStr === selectedCalDate;
+    const isToday = fullStr === todayStr;
+    const cls = [
+      'cal-day-cell',
+      hasDiary ? 'has-diary' : '',
+      isToday && !isSel ? 'today-ring' : '',
+      isSel ? 'selected' : ''
+    ].join(' ');
+    cellsHtml.push(`<div class="${cls}" onclick="selectCalendarDate('${fullStr}')">${d}</div>`);
+  }
+  // 補齊下個月初淡化日期
+  const totalCells = startOffset + daysInMonth;
+  const remain = (7 - (totalCells % 7)) % 7;
+  for (let n = 1; n <= remain; n++) {
+    cellsHtml.push(`<div class="cal-day-cell muted">${n}</div>`);
+  }
+
+  const selParts = selectedCalDate.split('/');
+  const selDayNum = selParts[2] || '01';
+  const selDateObj = new Date(Number(selParts[0]), Number(selParts[1]) - 1, Number(selParts[2]));
+  const selWeekName = weekNames[selDateObj.getDay()] || '';
+  const dayDiaries = diaries.filter(d => String(d.date || '').trim() === selectedCalDate);
+
+  return `
+    <div class="cal-top-bar">
+      <div class="cal-month-pill">
+        <span class="cal-month-arrow" onclick="changeCalMonth(-1)">‹</span>
+        <span>📅 ${monthNames[calMonth - 1]} ${calYear}</span>
+        <span class="cal-month-arrow" onclick="changeCalMonth(1)">›</span>
+      </div>
+      <div class="header-icons">
+        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="同步日記與收藏">${SYNC_SVG}</div>
+        <div class="bell-btn" onclick="openCloudModal()">☁️</div>
+        <div class="bell-btn" onclick="openNewDiaryForDate('${selectedCalDate}')" title="新增當日日記">＋</div>
+      </div>
+    </div>
+
+    <!-- 互動月曆面板 (參考 月歷參考.jpg) -->
+    <div class="cal-board-card">
+      <div class="cal-weekdays">
+        <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+      </div>
+      <div class="cal-days-grid">
+        ${cellsHtml.join('')}
+      </div>
+    </div>
+
+    <!-- 選中日期標題列 -->
+    <div class="cal-today-summary">
+      <div>
+        <div style="font-size:10px;font-weight:800;color:var(--brushed-pewter);letter-spacing:0.5px;">SELECTED DATE</div>
+        <div class="cal-big-day">${selDayNum}</div>
+        <div class="cal-day-sub">${selWeekName} · ${selectedCalDate}</div>
+      </div>
+      <div class="cal-count-text">${dayDiaries.length} 篇日記紀錄</div>
+      <div class="cal-viewall-pill" onclick="openNewDiaryForDate('${selectedCalDate}')">＋ 寫日記</div>
+    </div>
+
+    <!-- 當日日記卡片清單 (100% 參考 月曆下方ui參考.png Banff 卡片設計) -->
+    ${dayDiaries.length === 0 ? `
+      <div class="banff-diary-card" style="text-align:center;padding:28px 16px;">
+        <div style="font-size:32px;margin-bottom:8px;">📖</div>
+        <div style="font-size:14px;font-weight:800;color:var(--plum-noir-dark);margin-bottom:4px;">${selectedCalDate} 尚無日記紀錄</div>
+        <div style="font-size:11px;color:var(--brushed-pewter);margin-bottom:14px;">點擊下方按鈕，紀錄實實與寶寶今天去哪裡、做了什麼吧！</div>
+        <button class="banff-action-btn" style="margin:0 auto;" onclick="openNewDiaryForDate('${selectedCalDate}')">
+          <span>立即新增當日日記</span><span class="arr-cir">↗</span>
+        </button>
+      </div>
+    ` : dayDiaries.map(d => `
+      <div class="banff-diary-card">
+        <div class="banff-photo-box" onclick="openEditDiary('${d.id}')">
+          <div class="banff-top-tags">
+            <div style="display:flex;gap:6px;overflow:hidden;">
+              <span class="banff-glass-pill">👥 ${d.withWho || '實實 & 寶寶'}</span>
+              <span class="banff-glass-pill">📍 ${d.location || '美好時光'}</span>
+            </div>
+            <span class="banff-glass-pill">🕒 ${d.timePoint || '全天'}</span>
+          </div>
+          ${d.photo ? `<img src="${d.photo}" alt="diary">` : `<span style="font-size:52px;">📸</span>`}
+          <div class="banff-dots"><span class="on"></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="banff-body">
+          <div class="banff-title-row">
+            <h3 class="banff-title">${d.location || '美好回憶'}</h3>
+            <span class="banff-outlined-badge">${d.withWho || '實實 & 寶寶'}</span>
+          </div>
+          <div class="banff-meta">${d.date} · ${d.timePoint || '美好時刻'}</div>
+          <p class="banff-desc">${d.content || '（尚未填寫詳細內容）'}</p>
+          <div class="banff-footer">
+            <div class="banff-foot-left">${d.timePoint || 'Memory'} <small>/ ${d.date.slice(5)}</small></div>
+            <button class="banff-action-btn" onclick="openEditDiary('${d.id}')">
+              <span>編輯日記</span>
+              <span class="arr-cir">↗</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function changeCalMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1) { calMonth = 12; calYear--; }
+  renderScreen();
+}
+
+function selectCalendarDate(dateStr) {
+  selectedCalDate = dateStr;
+  renderScreen();
+}
+
+function openNewDiaryForDate(dateStr) {
+  selectedCalDate = dateStr;
+  editingDiaryId = null;
+  tempDiaryPhotoBase64 = '';
+  switchTab('diary');
+}
+
+function openEditDiary(id) {
+  editingDiaryId = id;
+  tempDiaryPhotoBase64 = '';
+  switchTab('diary');
+}
+
+/* ====== ⑤ 導覽列最右方：寫日記介面 (與誰、去哪裡、時間點、做什麼、附上一張照片) ====== */
+function renderDiaryTab() {
+  const d = editingDiaryId ? diaries.find(x => String(x.id) === String(editingDiaryId)) : null;
+  const defaultDate = d ? d.date : selectedCalDate;
+
+  return `
+    <div class="header-row">
+      <div>
+        <h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1>
+        <p class="greet-sub">紀錄與誰、去哪裡、時間點與美好照片（雙機雲端同步）</p>
+      </div>
+      <div class="bell-btn" onclick="switchTab('calendar')">✕</div>
+    </div>
+
+    <div class="form-card">
+      <div class="f-grid-2">
+        <div class="f-group">
+          <label class="f-label">📅 日記日期</label>
+          <input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}">
+        </div>
+        <div class="f-group">
+          <label class="f-label">🕒 時間點</label>
+          <input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '14:00'}">
+        </div>
+      </div>
+      <div class="chip-row" style="margin-bottom:10px;">
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='早上 10:00'">早上 10:00</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='中午 12:30'">中午 12:30</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='下午 15:30'">下午 15:30</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='晚上 19:00'">晚上 19:00</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='全天約會'">全天約會</span>
+      </div>
+
+      <div class="f-group">
+        <label class="f-label">👥 與誰 (With Whom)</label>
+        <input type="text" class="f-input" id="d_who" placeholder="例如：實實 & 寶寶" value="${d ? d.withWho : '實實 & 寶寶'}">
+        <div class="chip-row">
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='實實 & 寶寶'">👩‍❤️‍👨 實實 & 寶寶</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='帥氣實實'">😎 帥氣實實</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='可愛寶寶'">🥰 可愛寶寶</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='與朋友們'">🎉 與朋友們</span>
+        </div>
+      </div>
+
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label">📍 去哪裡 (Location / 地點)</label>
+        <input type="text" class="f-input" id="d_location" placeholder="例如：桃園楊梅 / 台北信義區 / 水族館" value="${d ? d.location : ''}">
+      </div>
+    </div>
+
+    <div class="form-card dark-part">
+      <div class="f-group">
+        <label class="f-label">📝 做什麼 / 日記內容</label>
+        <textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、吃了什麼好料、或是買了哪台新車車與娃娃...">${d ? d.content : ''}</textarea>
+      </div>
+
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label">📸 附上一張照片 (點擊開啟 S25U/S26U 相簿或相機)</label>
+        <label class="photo-upload-box">
+          <input type="file" accept="image/*" style="display:none;" onchange="handleDiaryPhotoPick(event)">
+          <div id="diaryPhotoPreviewHolder">${d && d.photo ? `<img src="${d.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
+          <div style="text-align:left;font-size:12px;">
+            <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳回憶照片</div>
+            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並存進您的 Google 雲端硬碟雙機同步</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <button class="submit-pill-btn" onclick="saveDiaryEntry()">
+      <span>✓ ${d ? '儲存日記修改並同步雲端' : '儲存日記並同步至雲端'}</span>
+    </button>
+
+    ${d ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeDiaryEntry('${d.id}')">🗑️ 刪除此篇日記</span></div>` : ''}
+  `;
+}
+
+function handleDiaryPhotoPick(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const maxW = 900; const scale = img.width > maxW ? maxW / img.width : 1;
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      tempDiaryPhotoBase64 = canvas.toDataURL('image/jpeg', 0.82);
+      document.getElementById('diaryPhotoPreviewHolder').innerHTML = `<img src="${tempDiaryPhotoBase64}">`;
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveDiaryEntry() {
+  const id = editingDiaryId || ('diary_' + Date.now());
+  const old = diaries.find(x => String(x.id) === String(id));
+  const dateVal = document.getElementById('d_date').value.trim() || selectedCalDate;
+
+  const newDiary = {
+    id,
+    date: dateVal,
+    timePoint: document.getElementById('d_time').value.trim() || '全天',
+    withWho: document.getElementById('d_who').value.trim() || '實實 & 寶寶',
+    location: document.getElementById('d_location').value.trim() || '美好回憶',
+    content: document.getElementById('d_content').value.trim(),
+    photo: tempDiaryPhotoBase64 || (old ? old.photo : '')
+  };
+
+  const idx = diaries.findIndex(x => String(x.id) === String(id));
+  if (idx > -1) diaries[idx] = newDiary; else diaries.push(newDiary);
+
+  saveLocal();
+  const uploadImg = tempDiaryPhotoBase64;
+  editingDiaryId = null;
+  tempDiaryPhotoBase64 = '';
+  selectedCalDate = dateVal;
+  const parts = dateVal.split('/');
+  if (parts.length >= 2) {
+    calYear = Number(parts[0]) || calYear;
+    calMonth = Number(parts[1]) || calMonth;
+  }
+  switchTab('calendar');
+
+  if (gasUrl) {
+    showAutoPopup('🔄', '正在同步日記...', '上傳至 Google 雲端硬碟中', 0);
+    try {
+      const res = await fetch(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveDiary', diary: newDiary, photoBase64: uploadImg || null })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        if (Array.isArray(data.diaries)) diaries = data.diaries;
+        saveLocal(); renderScreen();
+        showAutoPopup('✅', '日記同步完成', `${newDiary.date} · ${newDiary.location}`, 1500);
+      }
+    } catch (e) {
+      showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600);
+    }
+  } else {
+    showAutoPopup('✅', '日記已儲存', `${newDiary.date} · ${newDiary.location}`, 1500);
+  }
+}
+
+function removeDiaryEntry(id) {
+  diaries = diaries.filter(x => String(x.id) !== String(id));
+  saveLocal(); editingDiaryId = null; switchTab('calendar');
+  if (gasUrl) {
+    fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
+  }
+}
+
 function renderScreen() {
   const container = document.getElementById('screenContent');
   if (activeTab === 'home') container.innerHTML = renderHomeTab();
   else if (activeTab === 'detail') container.innerHTML = renderDetailTab();
   else if (activeTab === 'add') container.innerHTML = renderAddTab();
+  else if (activeTab === 'calendar') container.innerHTML = renderCalendarTab();
+  else if (activeTab === 'diary') container.innerHTML = renderDiaryTab();
   else container.innerHTML = renderAllTab();
 }
 
@@ -759,6 +1178,7 @@ async function saveCollectible() {
       const data = await res.json();
       if (data.status === 'success' && data.items) {
         items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+        if (Array.isArray(data.diaries)) diaries = data.diaries;
         saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
       }
     } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600); }
@@ -777,13 +1197,16 @@ function closeCloudModal() { document.getElementById('cloudModal').classList.rem
 async function triggerDirectSync() {
   if (!gasUrl) { showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800); return; }
   const syncBtn = document.getElementById('topSyncBtn'); if (syncBtn) syncBtn.classList.add('spinning');
-  showAutoPopup('🔄', '資料更新中...', '正在讀取 Google 試算表', 0);
+  showAutoPopup('🔄', '資料更新中...', '正在同步收藏與日記', 0);
   try {
     const res = await fetch(gasUrl + '?t=' + Date.now());
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items)) {
-      items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
-      saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `共 ${items.length} 筆收藏已同步`, 1500);
+      items = data.items;
+      if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+      if (Array.isArray(data.diaries)) diaries = data.diaries;
+      saveLocal(); renderScreen();
+      showAutoPopup('✅', '資料更新完成', `已同步 ${items.length} 筆收藏 · ${diaries.length} 篇日記`, 1500);
     } else { showAutoPopup('❌', '資料更新失敗', '雲端回傳格式異常', 1600); }
   } catch (e) { showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 1600); }
   finally { const btnAfter = document.getElementById('topSyncBtn'); if (btnAfter) btnAfter.classList.remove('spinning'); }
@@ -795,20 +1218,13 @@ async function silentStartupSync() {
     const res = await fetch(gasUrl + '?t=' + Date.now());
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items)) {
-      items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+      items = data.items;
+      if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+      if (Array.isArray(data.diaries)) diaries = data.diaries;
       saveLocal(); renderScreen();
     }
   } catch (e) {}
 }
 
 async function saveAndPullCloud() {
-  gasUrl = document.getElementById('gasUrlInput').value.trim();
-  localStorage.setItem('my_gas_url', gasUrl);
-  closeCloudModal(); await triggerDirectSync();
-}
-
-renderScreen();
-silentStartupSync();
-</script>
-</body>
-</html>
+  gasUrl = document.getElementById('gasUrlInput').value.
