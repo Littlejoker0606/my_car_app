@@ -21,7 +21,7 @@
   body.fullscreen-mode { background: var(--cloud-cream); }
   body.fullscreen-mode .top-preview-bar { display: none; }
   body.fullscreen-mode .phone-frame { width: 100%; max-width: 480px; height: 100vh; margin: 0; border: none; border-radius: 0; box-shadow: none; }
-  .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 150px; scrollbar-width: none; background: var(--cloud-cream); }
+  .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 140px; scrollbar-width: none; background: var(--cloud-cream); }
   .screen-scroll.home-mode { padding-top: 0; background: var(--cloud-cream); }
   .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: var(--plum-noir-dark); }
   .screen-scroll::-webkit-scrollbar { display: none; }
@@ -186,24 +186,48 @@
   .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13,27,42,0.12); cursor: pointer; }
   .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
 
-  .trantor-dock-container { position: absolute; bottom: 12px; left: 14px; right: 14px; height: 84px; z-index: 100; display: flex; align-items: flex-end; pointer-events: none; }
-  body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 452px; margin: 0 auto; }
-  .concave-dock-bar {
-    pointer-events: auto; width: 100%; height: 64px;
-    background: linear-gradient(90deg, rgba(119, 141, 122, 0.92) 0%, rgba(65, 90, 119, 0.92) 100%);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    -webkit-mask-image: radial-gradient(circle 38px at 50% 0px, transparent 37px, black 38px);
-    mask-image: radial-gradient(circle 38px at 50% 0px, transparent 37px, black 38px);
-    border-radius: 16px 16px 32px 32px;
-    display: grid; grid-template-columns: 1fr 1fr 76px 1fr 1fr; align-items: center; justify-items: center;
-    padding: 0 6px; box-shadow: 0 12px 28px rgba(13, 27, 42, 0.28);
+  /* ====== 全新「膠囊展開式底部導覽列」(100% 參考最新附圖設計) ====== */
+  .trantor-dock-container {
+    position: absolute; bottom: 14px; left: 14px; right: 14px; z-index: 100;
+    display: flex; justify-content: center; pointer-events: none;
   }
-  .dock-nav-item { background: transparent; border: none; color: rgba(244, 241, 222, 0.68); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9px; font-weight: 800; cursor: pointer; padding: 6px; transition: all 0.2s; }
-  .dock-nav-item.active { color: #fff; transform: translateY(-2px); }
-  .dock-nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .concave-center-fab { pointer-events: auto; position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); width: 62px; height: 62px; border-radius: 50%; background: linear-gradient(135deg, #778D7A 0%, #415A77 100%); color: var(--cloud-cream); border: 2px solid rgba(244, 241, 222, 0.65); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(13, 27, 42, 0.32); cursor: pointer; transition: all 0.2s; }
-  .concave-center-fab.active { background: var(--plum-noir-dark); border-color: var(--frosted-blue); transform: translateX(-50%) scale(1.05); }
-  .concave-center-fab svg { width: 26px; height: 26px; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+  body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 452px; margin: 0 auto; }
+  .pill-expand-dock {
+    pointer-events: auto; width: 100%; height: 64px;
+    background: rgba(250, 249, 240, 0.92);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid rgba(13, 27, 42, 0.08);
+    border-radius: 26px; padding: 8px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 12px 32px rgba(13, 27, 42, 0.2);
+  }
+  .pill-tab-btn {
+    background: transparent; border: none; color: var(--plum-noir-dark);
+    height: 44px; padding: 0 12px; border-radius: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 0;
+    cursor: pointer; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .pill-tab-btn svg {
+    width: 21px; height: 21px; stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+  }
+  .pill-tab-btn .tab-label {
+    max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.3px;
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  /* 選中時：展開深色膠囊底色 + 顯示圖示與頁面名稱 */
+  .pill-tab-btn.active {
+    background: var(--plum-noir-dark);
+    color: var(--cloud-cream);
+    padding: 0 16px;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(13, 27, 42, 0.25);
+  }
+  .pill-tab-btn.active .tab-label {
+    max-width: 80px;
+    opacity: 1;
+  }
 
   .modal-overlay { position: fixed; inset: 0; background: rgba(13,27,42,0.72); display: none; align-items: center; justify-content: center; z-index: 950; padding: 20px; }
   .modal-overlay.open { display: flex; }
@@ -219,34 +243,44 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 5鍵凹槽導覽列 ＋ 互動月曆與雙人日記</span>
+  <span>🎨 Holst 配色 ＋ 膠囊展開式底部導覽列</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
 <div class="phone-frame">
   <div class="screen-scroll home-mode" id="screenContent"></div>
 
+  <!-- 膠囊展開式底部導覽列：未選中僅顯示圖示，選中時以深色膠囊展開顯示「圖示＋名稱」 -->
   <div class="trantor-dock-container">
-    <div class="concave-center-fab" id="dockAdd" onclick="switchTab('add')" title="新增收藏品">
-      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-    </div>
-    <div class="concave-dock-bar">
-      <button class="dock-nav-item active" id="dockHome" onclick="switchTab('home')">
-        <svg viewBox="0 0 24 24"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
-        <span>首頁</span>
+    <div class="pill-expand-dock">
+      <!-- 1. 首頁 -->
+      <button class="pill-tab-btn active" id="dockHome" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><line x1="12" y1="16" x2="12" y2="21"/></svg>
+        <span class="tab-label">首頁</span>
       </button>
-      <button class="dock-nav-item" id="dockAll" onclick="switchTab('all')">
-        <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
-        <span>所有收藏</span>
+
+      <!-- 2. 所有收藏 -->
+      <button class="pill-tab-btn" id="dockAll" onclick="switchTab('all')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span class="tab-label">所有收藏</span>
       </button>
-      <div></div>
-      <button class="dock-nav-item" id="dockCalendar" onclick="switchTab('calendar')">
+
+      <!-- 3. 新增收藏 -->
+      <button class="pill-tab-btn" id="dockAdd" onclick="switchTab('add')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <span class="tab-label">新增收藏</span>
+      </button>
+
+      <!-- 4. 日曆 -->
+      <button class="pill-tab-btn" id="dockCalendar" onclick="switchTab('calendar')">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span>日曆</span>
+        <span class="tab-label">日曆</span>
       </button>
-      <button class="dock-nav-item" id="dockDiary" onclick="switchTab('diary')">
+
+      <!-- 5. 日記 -->
+      <button class="pill-tab-btn" id="dockDiary" onclick="switchTab('diary')">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>日記</span>
+        <span class="tab-label">日記</span>
       </button>
     </div>
   </div>
