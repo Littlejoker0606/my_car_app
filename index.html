@@ -104,7 +104,6 @@
     display: none;
   }
 
-  /* 頂部問候與右上角三顆等距按鈕 */
   .header-row {
     display: flex;
     justify-content: space-between;
@@ -126,7 +125,7 @@
   .header-icons {
     display: flex;
     align-items: center;
-    gap: 10px; /* 與隔壁圖標保持完全一致的 10px 間距 */
+    gap: 10px;
   }
   .bell-btn {
     width: 38px;
@@ -194,7 +193,6 @@
     color: var(--muted-jade);
   }
 
-  /* 雙膠囊按鈕（已移除多餘的上下箭頭圓圈，文字完美置中） */
   .dual-pill-wrap {
     display: flex;
     align-items: center;
@@ -234,7 +232,6 @@
     cursor: pointer;
   }
 
-  /* 直方圖卡片（支援左右滑動查看所有購買日期！） */
   .chart-card {
     background: var(--frosted-blue);
     border-radius: 28px;
@@ -294,7 +291,6 @@
     cursor: pointer;
   }
 
-  /* 左側固定刻度 + 右側可橫向滑動直方圖軌道 */
   .histogram-wrapper {
     display: flex;
     align-items: stretch;
@@ -423,7 +419,6 @@
   .legend-dots { display: flex; gap: 10px; }
   .legend-dots span::before { content: '● '; }
   .legend-dots span.peak-dot::before { color: var(--plum-noir); }
-  .legend-dots span.sub-dot::before { color: var(--muted-jade); }
 
   .dark-Showcase-box {
     background: var(--plum-noir);
@@ -868,11 +863,20 @@ const INITIAL_DATA = [
   {id:"40",name:"PEUGEOT 406 Taxi",brand:"π MODEL",status:"等待中",scale:"1/64",price:800,orderDate:"2026/11/06",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"}
 ];
 
-let items = JSON.parse(localStorage.getItem('trantor_left_items_v2')) || INITIAL_DATA;
+// 優先讀取原本已經有 40 張照片的 trantor_left_items 快取！
+function loadSavedItems() {
+  const v1 = JSON.parse(localStorage.getItem('trantor_left_items') || 'null');
+  const v2 = JSON.parse(localStorage.getItem('trantor_left_items_v2') || 'null');
+  if (v1 && v1.some(x => x.photo)) return v1;
+  if (v2 && v2.some(x => x.photo)) return v2;
+  return v1 || v2 || INITIAL_DATA;
+}
+
+let items = loadSavedItems();
 let gasUrl = localStorage.getItem('my_gas_url') || '';
 
 let activeTab = 'home';
-let chartMode = 'recent'; // 預設顯示可左右滑動的近期購買日期
+let chartMode = 'recent';
 let homeRecentMode = 'preorder';
 let selectedBarInfo = '';
 
@@ -884,7 +888,6 @@ let searchKeyword = '';
 let editingId = null;
 let tempPhotoBase64 = '';
 
-// 共用 SVG 獨立同步圖示
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
 
 function showToast(msg, duration = 2200) {
@@ -895,6 +898,7 @@ function showToast(msg, duration = 2200) {
 }
 
 function saveLocal() {
+  localStorage.setItem('trantor_left_items', JSON.stringify(items));
   localStorage.setItem('trantor_left_items_v2', JSON.stringify(items));
 }
 
@@ -925,12 +929,10 @@ function renderHomeTab() {
   });
 
   const allDates = Object.entries(dateMap);
-  // 完整保留所有日期，不截斷，供使用者左右滑動查看！
   let chartDates = [];
   if (chartMode === 'top') {
     chartDates = allDates.slice().sort((a, b) => b[1].count - a[1].count || b[0].localeCompare(a[0]));
   } else {
-    // 近期日期：由最新日期排到最舊，往右滑即可查看過去每一天的購買紀錄
     chartDates = allDates.slice().sort((a, b) => b[0].localeCompare(a[0]));
   }
   const maxDayCount = Math.max(...allDates.map(d => d[1].count), 4);
@@ -951,7 +953,6 @@ function renderHomeTab() {
         <p class="greet-sub">Good morning! 👋</p>
       </div>
       <div class="header-icons">
-        <!-- 新增獨立同步按鈕：位於雲朵左側，間隔與隔壁完全一致 -->
         <div class="bell-btn" id="topSyncBtn" onclick="autoPullFromCloud(true)" title="立即同步最新資料">${SYNC_SVG}</div>
         <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端硬碟設定">☁️</div>
         <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
@@ -964,7 +965,6 @@ function renderHomeTab() {
       <div class="val-badge">+ ${items.length} 件總收藏 (預購 ${waitCnt} / 現有 ${gotCnt})</div>
     </div>
 
-    <!-- 已移除左右兩側的上下箭頭圓圈，文字完美置中 -->
     <div class="dual-pill-wrap">
       <div class="dual-pill" onclick="jumpToAllWithStatus('等待中')">
         <span>預購等待 (${waitCnt})</span>
@@ -975,7 +975,6 @@ function renderHomeTab() {
       </div>
     </div>
 
-    <!-- 可左右滑動的直方圖區塊 -->
     <div class="chart-card">
       <div class="chart-top-bar">
         <div class="chart-coin-badge">
@@ -1045,7 +1044,7 @@ function renderHomeTab() {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         return `
           <div class="dark-row-card" onclick="openEditItem('${it.id}')">
-            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}" referrerpolicy="no-referrer">` : icon}</div>
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
               <div class="dark-row-sub">${it.brand} · ${it.orderDate} (${it.buyer})</div>
@@ -1178,7 +1177,7 @@ function renderAddTab() {
         <label class="photo-upload-box">
           <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoPick(event)">
           <div id="photoPreviewHolder">
-            ${it && it.photo ? `<img src="${it.photo}" referrerpolicy="no-referrer">` : '<span style="font-size:24px;">📸</span>'}
+            ${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}
           </div>
           <div style="text-align:left;font-size:12px;">
             <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
@@ -1260,7 +1259,7 @@ function renderAllTab() {
         const isGot = it.status === '拿到了';
         return `
           <div class="dark-row-card" onclick="openEditItem('${it.id}')">
-            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}" referrerpolicy="no-referrer">` : icon}</div>
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
               <div class="dark-row-sub">${it.brand} (${it.scale}) · ${it.store || '未填店家'}</div>
