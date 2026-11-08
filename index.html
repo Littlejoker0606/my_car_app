@@ -26,11 +26,11 @@
   .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: var(--plum-noir-dark); }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
-  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(13,27,42,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(212,196,168,0.35); box-shadow: 0 18px 40px rgba(0,0,0,0.4); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
-  .auto-popup-hud.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(13,27,42,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(212,196,168,0.35); box-shadow: 0 18px 40px rgba(0,0,0,0.4); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; max-width: 310px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
+  .auto-popup-hud.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; cursor: pointer; }
   .auto-popup-hud .hud-icon { font-size: 30px; line-height: 1; }
   .auto-popup-hud .hud-title { font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
-  .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; }
+  .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; word-break: break-word; }
 
   .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg'); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
@@ -149,7 +149,6 @@
   .diary-carousel-track::-webkit-scrollbar { display: none; }
   .diary-carousel-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; position: relative; }
   .diary-carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
-  /* 在日記彈出視窗內，圖片改用 contain 完整顯示不裁切，並可點擊全螢幕放大！ */
   .diary-modal-gallery .diary-carousel-slide img { object-fit: contain; cursor: zoom-in; }
 
   .banff-top-tags { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 6px; z-index: 3; pointer-events: none; }
@@ -176,12 +175,7 @@
   .diary-modal-body { padding: 18px 20px 20px; overflow-y: auto; flex: 1; }
   .diary-modal-fulltext { font-size: 14px; color: var(--plum-noir-dark); line-height: 1.7; white-space: pre-wrap; margin: 12px 0 18px; background: rgba(212,196,168,0.25); padding: 14px; border-radius: 18px; }
 
-  /* ====== 全螢幕完整照片檢視器 (Lightbox) ====== */
-  .lightbox-overlay {
-    position: fixed; inset: 0; background: rgba(5, 10, 16, 0.96);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    z-index: 4500; display: none; flex-direction: column; justify-content: center; align-items: center;
-  }
+  .lightbox-overlay { position: fixed; inset: 0; background: rgba(5, 10, 16, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 4500; display: none; flex-direction: column; justify-content: center; align-items: center; }
   .lightbox-overlay.open { display: flex; }
   .lightbox-top-bar { position: absolute; top: 44px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
   .lightbox-track { width: 100vw; height: 82vh; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; align-items: center; }
@@ -234,13 +228,12 @@
 </head>
 <body>
 
-<div class="auto-popup-hud" id="autoPopupHud">
+<div class="auto-popup-hud" id="autoPopupHud" onclick="hideAutoPopup()">
   <div class="hud-icon" id="hudIcon">✅</div>
   <div class="hud-title" id="hudTitle">資料更新完成</div>
   <div class="hud-sub" id="hudSub">已與雲端試算表同步</div>
 </div>
 
-<!-- 全螢幕完整照片檢視器 (點擊照片即可打開看無裁切完整大圖 + 支援左右滑動) -->
 <div class="lightbox-overlay" id="fullPhotoLightbox" onclick="if(event.target===this)closeFullLightbox()">
   <div class="lightbox-top-bar">
     <div class="diary-modal-counter" id="lightboxCounter" style="position:static;">📷 1 / 1</div>
@@ -352,7 +345,6 @@ function getDiaryPhotos(d) {
   return [];
 }
 
-// 開啟全螢幕完整無裁切照片檢視器
 function openFullLightbox(photosArr, startIndex = 0) {
   if (!Array.isArray(photosArr) || photosArr.length === 0) return;
   currentLightboxPhotos = photosArr;
@@ -386,6 +378,12 @@ function getAllBrandOptions() {
   return Array.from(set);
 }
 
+function hideAutoPopup() {
+  const hud = document.getElementById('autoPopupHud');
+  if (hud) hud.classList.remove('show');
+  if (hudTimer) clearTimeout(hudTimer);
+}
+
 function showAutoPopup(icon, title, sub, duration = 1600) {
   const hud = document.getElementById('autoPopupHud');
   document.getElementById('hudIcon').textContent = icon;
@@ -393,7 +391,21 @@ function showAutoPopup(icon, title, sub, duration = 1600) {
   document.getElementById('hudSub').textContent = sub || '';
   hud.classList.add('show');
   if (hudTimer) clearTimeout(hudTimer);
-  if (duration > 0) hudTimer = setTimeout(() => hud.classList.remove('show'), duration);
+  const safeDuration = duration > 0 ? duration : 25000;
+  hudTimer = setTimeout(() => hud.classList.remove('show'), safeDuration);
+}
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(id);
+    return res;
+  } catch (err) {
+    clearTimeout(id);
+    throw err;
+  }
 }
 
 function saveLocal() {
@@ -550,10 +562,11 @@ function renderDetailTab() {
   if (!it) return '';
   const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
   const isGot = it.status === '拿到了';
+  window._currentDetailPhoto = it.photo ? [it.photo] : [];
 
   return `
     <div class="detail-page-wrap">
-      <div class="detail-top-photo" onclick="${it.photo ? `openFullLightbox(['${it.photo}'], 0)` : ''}">
+      <div class="detail-top-photo" onclick="${it.photo ? `openFullLightbox(window._currentDetailPhoto, 0)` : ''}">
         <div class="detail-floating-nav" onclick="event.stopPropagation()">
           <div class="detail-glass-btn" onclick="switchTab('${previousTab}')">‹</div>
           <div class="detail-glass-btn" onclick="openEditItem('${it.id}')">⚙️</div>
@@ -600,7 +613,15 @@ async function toggleDetailStatus(id) {
   saveLocal(); renderScreen();
   showAutoPopup('✅', `已切換為：${it.status}`, it.name, 1400);
   if (gasUrl) {
-    try { await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveItem', item: it }) }); } catch (e) {}
+    try {
+      const isB64 = it.photo && String(it.photo).startsWith('data:image');
+      const payloadItem = { ...it, photo: isB64 ? '' : (it.photo || '') };
+      await fetchWithTimeout(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveItem', item: payloadItem, photoBase64: isB64 ? it.photo : null })
+      });
+    } catch (e) {}
   }
 }
 
@@ -884,7 +905,6 @@ function updateCarouselDots(trackEl, counterId) {
   }
 }
 
-// 點擊日記彈出「完整日記檢視視窗」（內部照片完整不裁切，再點照片可開啟全螢幕檢視器！）
 function openDiaryViewModal(id) {
   const d = diaries.find(x => String(x.id) === String(id));
   if (!d) return;
@@ -1072,24 +1092,26 @@ async function saveDiaryEntry() {
   switchTab('calendar');
 
   if (gasUrl) {
-    showAutoPopup('🔄', '正在同步日記...', `上傳 ${photosCopy.length} 張照片至雲端`, 0);
+    showAutoPopup('🔄', '正在同步日記...', `上傳 ${photosCopy.length} 張照片至雲端`, 25000);
     try {
-      const res = await fetch(gasUrl, {
+      const cleanDiary = { ...newDiary, photos: [], photo: '' };
+      const res = await fetchWithTimeout(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           action: 'saveDiary',
-          diary: newDiary,
-          photoBase64: (photosCopy[0] && photosCopy[0].startsWith('data:image')) ? photosCopy[0] : null,
+          diary: cleanDiary,
           photosList: photosCopy
         })
-      });
+      }, 35000);
       const data = await res.json();
       if (data.status === 'success') {
         if (Array.isArray(data.diaries)) diaries = data.diaries;
         saveLocal(); renderScreen(); showAutoPopup('✅', '日記同步完成', `${newDiary.date} · ${newDiary.location}`, 1500);
+      } else {
+        showAutoPopup('⚠️', '已存於手機 (雲端異常)', data.message || '請確認雲端腳本權限', 2800);
       }
-    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600); }
+    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端連線逾時或失敗', 2200); }
   } else {
     showAutoPopup('✅', '日記已儲存', `${newDiary.date} · ${newDiary.location}`, 1500);
   }
@@ -1098,7 +1120,7 @@ async function saveDiaryEntry() {
 function removeDiaryEntry(id) {
   diaries = diaries.filter(x => String(x.id) !== String(id));
   saveLocal(); editingDiaryId = null; switchTab('calendar');
-  if (gasUrl) fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
+  if (gasUrl) fetchWithTimeout(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
 }
 
 function renderScreen() {
@@ -1150,40 +1172,60 @@ async function saveCollectible() {
   const finalBrand = brandSel === '__CUSTOM__' ? (document.getElementById('f_brand_custom').value.trim() || '其他') : brandSel;
   if (finalBrand && !cloudBrands.includes(finalBrand)) cloudBrands.push(finalBrand);
 
+  const localPhoto = tempPhotoBase64 || (old ? old.photo : '');
   const newItem = {
     id, category: document.getElementById('f_category').value, buyer: document.getElementById('f_buyer').value,
     name: document.getElementById('f_name').value.trim() || '未命名收藏', brand: finalBrand,
     scale: document.getElementById('f_scale').value.trim(), price: Number(document.getElementById('f_price').value) || 0,
     status: statusVal, store: document.getElementById('f_store').value.trim(),
     orderDate: document.getElementById('f_orderDate').value.trim(), estDate: document.getElementById('f_estDate').value.trim(),
-    actDate: actVal, rating: document.getElementById('f_rating').value, photo: tempPhotoBase64 || (old ? old.photo : '')
+    actDate: actVal, rating: document.getElementById('f_rating').value, photo: localPhoto
   };
 
   const idx = items.findIndex(x => String(x.id) === String(id));
   if (idx > -1) items[idx] = newItem; else items.push(newItem);
   saveLocal();
-  const uploadImg = tempPhotoBase64; editingId = null; tempPhotoBase64 = ''; viewingDetailId = id;
+  const uploadImg = tempPhotoBase64 || (localPhoto && localPhoto.startsWith('data:image') ? localPhoto : '');
+  editingId = null; tempPhotoBase64 = ''; viewingDetailId = id;
   switchTab('detail');
 
   if (gasUrl) {
-    showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中', 0);
+    showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中 (點此可隱藏)', 25000);
     try {
-      const res = await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveItem', item: newItem, photoBase64: uploadImg || null }) });
+      const cloudItemPayload = {
+        ...newItem,
+        photo: (localPhoto && localPhoto.startsWith('http')) ? localPhoto : ''
+      };
+      const res = await fetchWithTimeout(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveItem', item: cloudItemPayload, photoBase64: uploadImg || null })
+      }, 25000);
       const data = await res.json();
-      if (data.status === 'success' && data.items) {
+      if (data.status === 'success' && Array.isArray(data.items)) {
         items = data.items;
         if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
         if (Array.isArray(data.diaries)) diaries = data.diaries;
+        const latestSaved = items[items.length - 1];
+        if (latestSaved && viewingDetailId === id && !items.some(x => String(x.id) === String(id))) {
+          viewingDetailId = latestSaved.id;
+        }
         saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
+      } else {
+        showAutoPopup('⚠️', '已存於手機 (雲端異常)', data.message || '請檢查試算表驗證或部署權限', 3000);
       }
-    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600); }
+    } catch (e) {
+      showAutoPopup('⚠️', '已儲存於手機', '雲端連線逾時或失敗', 2200);
+    }
+  } else {
+    showAutoPopup('✅', '已儲存於手機', newItem.name, 1500);
   }
 }
 
 function removeCollectible(id) {
   items = items.filter(x => String(x.id) !== String(id));
   saveLocal(); editingId = null; switchTab('all');
-  if (gasUrl) fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteItem', id }) }).catch(() => {});
+  if (gasUrl) fetchWithTimeout(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteItem', id }) }).catch(() => {});
 }
 
 function openCloudModal() { document.getElementById('gasUrlInput').value = gasUrl; document.getElementById('cloudModal').classList.add('open'); }
@@ -1192,9 +1234,9 @@ function closeCloudModal() { document.getElementById('cloudModal').classList.rem
 async function triggerDirectSync() {
   if (!gasUrl) { showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800); return; }
   const syncBtn = document.getElementById('topSyncBtn'); if (syncBtn) syncBtn.classList.add('spinning');
-  showAutoPopup('🔄', '資料更新中...', '正在同步收藏與日記', 0);
+  showAutoPopup('🔄', '資料更新中...', '正在同步收藏與日記', 25000);
   try {
-    const res = await fetch(gasUrl + '?t=' + Date.now());
+    const res = await fetchWithTimeout(gasUrl + '?t=' + Date.now(), {}, 25000);
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items)) {
       items = data.items;
@@ -1202,15 +1244,15 @@ async function triggerDirectSync() {
       if (Array.isArray(data.diaries)) diaries = data.diaries;
       saveLocal(); renderScreen();
       showAutoPopup('✅', '資料更新完成', `已同步 ${items.length} 筆收藏 · ${diaries.length} 篇日記`, 1500);
-    } else { showAutoPopup('❌', '資料更新失敗', '雲端回傳格式異常', 1600); }
-  } catch (e) { showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 1600); }
+    } else { showAutoPopup('❌', '資料更新失敗', data.message || '雲端回傳格式異常', 2200); }
+  } catch (e) { showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 2200); }
   finally { const btnAfter = document.getElementById('topSyncBtn'); if (btnAfter) btnAfter.classList.remove('spinning'); }
 }
 
 async function silentStartupSync() {
   if (!gasUrl) return;
   try {
-    const res = await fetch(gasUrl + '?t=' + Date.now());
+    const res = await fetchWithTimeout(gasUrl + '?t=' + Date.now(), {}, 20000);
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items)) {
       items = data.items;
