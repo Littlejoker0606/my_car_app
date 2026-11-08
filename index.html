@@ -80,15 +80,16 @@
     box-shadow: none;
   }
 
+  /* 加大底部留白至 150px，避免送出按鈕被底部導覽列遮住 */
   .screen-scroll {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 18px 115px;
+    padding: 20px 18px 150px;
     scrollbar-width: none;
   }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
-  /* 1.5~2秒自動消失的中央提示小視窗 (免手動關閉) */
+  /* 1.5~2秒自動消失的中央提示小視窗 */
   .auto-popup-hud {
     position: fixed;
     top: 50%;
@@ -109,7 +110,7 @@
     min-width: 190px;
     text-align: center;
     opacity: 0;
-    pointer-events: none; /* 不阻擋手指操作，時間到自動消失 */
+    pointer-events: none;
     transition: opacity 0.22s ease, transform 0.22s ease;
   }
   .auto-popup-hud.show {
@@ -567,7 +568,7 @@
     background: var(--cloud-cream-pure);
     border: 1.5px solid rgba(73,51,66,0.12);
     color: var(--plum-noir);
-    padding: 9px 12px;
+    padding: 10px 12px;
     border-radius: 14px;
     font-size: 13px;
     font-weight: 700;
@@ -630,6 +631,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    margin-bottom: 18px;
     box-shadow: 0 8px 20px rgba(73,51,66,0.25);
   }
 
@@ -799,7 +801,6 @@
 </head>
 <body>
 
-<!-- 自動在 1.5 秒後消失的中央狀態小視窗 (免手動關閉) -->
 <div class="auto-popup-hud" id="autoPopupHud">
   <div class="hud-icon" id="hudIcon">✅</div>
   <div class="hud-title" id="hudTitle">資料更新完成</div>
@@ -835,7 +836,7 @@
   </div>
 </div>
 
-<!-- 雲端網址設定視窗 (只有點選 ☁️ 圖示時才會開啟) -->
+<!-- 雲端網址設定視窗 -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
     <h3 style="margin:0 0 8px;font-size:16px;">☁️ 雲端伺服器網址設定</h3>
@@ -844,15 +845,23 @@
     </p>
     <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button class="submit-pill-btn" style="height:42px;font-size:13px;" onclick="saveAndPullCloud()">💾 儲存網址並立即同步</button>
-      <button class="submit-pill-btn" style="height:38px;font-size:12px;background:var(--brushed-pewter);" onclick="closeCloudModal()">關閉視窗</button>
+      <button class="submit-pill-btn" style="height:42px;font-size:13px;margin-bottom:0;" onclick="saveAndPullCloud()">💾 儲存網址並立即同步</button>
+      <button class="submit-pill-btn" style="height:38px;font-size:12px;background:var(--brushed-pewter);margin-bottom:0;" onclick="closeCloudModal()">關閉視窗</button>
     </div>
   </div>
 </div>
 
 <script>
-// 💡 您也可以直接把您的 https://script.google.com/.../exec 網址貼在下方雙引號內，這樣兩支手機就永遠不用手動貼網址了！
+// 💡 您可以把 https://script.google.com/.../exec 網址貼在下方雙引號內：
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
+
+// 預設與您 Google 表格完全一致的模型品牌清單
+const DEFAULT_BRANDS = [
+  "BBR", "MINI GT", "POPRACE", "KAIDO HOUSE", "LOOKSMART",
+  "π MODEL", "INNO 64", "CM MODEL", "HKM", "GLAMCRAFT",
+  "ZINCIT MODEL", "DM MODEL", "TRANDS HABBY", "COOL CAR",
+  "DEMON KING AUTO", "RHINO MODEL", "FNRC"
+];
 
 const INITIAL_DATA = [
   {id:"1",name:"Alfa Romeo 33",brand:"BBR",status:"等待中",scale:"1/64",price:580,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
@@ -906,6 +915,7 @@ function loadSavedItems() {
 }
 
 let items = loadSavedItems();
+let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
 let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
 let activeTab = 'home';
@@ -924,7 +934,17 @@ let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
 
-// 顯示 1.5 秒後自動消失的中央提示小視窗 (免手動關閉)
+// 自動彙整「Google表格下拉選單品牌」＋「所有現有收藏出現過的品牌」
+function getAllBrandOptions() {
+  const set = new Set(cloudBrands);
+  DEFAULT_BRANDS.forEach(b => set.add(b));
+  items.forEach(it => {
+    const b = String(it.brand || '').trim();
+    if (b) set.add(b);
+  });
+  return Array.from(set);
+}
+
 function showAutoPopup(icon, title, sub, duration = 1600) {
   const hud = document.getElementById('autoPopupHud');
   document.getElementById('hudIcon').textContent = icon;
@@ -942,6 +962,7 @@ function showAutoPopup(icon, title, sub, duration = 1600) {
 function saveLocal() {
   localStorage.setItem('trantor_left_items', JSON.stringify(items));
   localStorage.setItem('trantor_left_items_v2', JSON.stringify(items));
+  localStorage.setItem('my_cloud_brands', JSON.stringify(cloudBrands));
 }
 
 function switchTab(tab) {
@@ -995,7 +1016,6 @@ function renderHomeTab() {
         <p class="greet-sub">Good morning! 👋</p>
       </div>
       <div class="header-icons">
-        <!-- 獨立更新按鈕：按下直接執行同步並跳出自動消失小視窗，絕不跳出二級菜單 -->
         <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
         <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端網址設定">☁️</div>
         <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
@@ -1108,6 +1128,11 @@ function renderHomeTab() {
 function renderAddTab() {
   const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  const currentBrand = it ? it.brand : 'BBR';
+  const brandOptions = getAllBrandOptions();
+  if (currentBrand && !brandOptions.includes(currentBrand)) {
+    brandOptions.unshift(currentBrand);
+  }
 
   return `
     <div class="header-row">
@@ -1145,19 +1170,21 @@ function renderAddTab() {
       <div class="f-grid-2">
         <div class="f-group">
           <label class="f-label">模型品牌 / 系列</label>
-          <input type="text" class="f-input" id="f_brand" value="${it ? it.brand : 'BBR'}">
+          <select class="f-select" id="f_brand_select" onchange="onBrandSelectChange(this.value)">
+            ${brandOptions.map(b => `<option value="${b}" ${b === currentBrand ? 'selected' : ''}>${b}</option>`).join('')}
+            <option value="__CUSTOM__">✏️ 手動輸入新品牌...</option>
+          </select>
         </div>
         <div class="f-group">
           <label class="f-label">比例 / 尺寸</label>
           <input type="text" class="f-input" id="f_scale" value="${it ? it.scale : '1/64'}">
         </div>
       </div>
-      <div class="chip-row" style="margin-bottom:10px;">
-        <span class="mini-chip" onclick="document.getElementById('f_brand').value='BBR'">BBR</span>
-        <span class="mini-chip" onclick="document.getElementById('f_brand').value='MINI GT'">MINI GT</span>
-        <span class="mini-chip" onclick="document.getElementById('f_brand').value='POPRACE'">POPRACE</span>
-        <span class="mini-chip" onclick="document.getElementById('f_brand').value='KAIDO HOUSE'">KAIDO HOUSE</span>
-        <span class="mini-chip" onclick="document.getElementById('f_brand').value='LOOKSMART'">LOOKSMART</span>
+
+      <!-- 當選擇「手動輸入新品牌」時自動展開的輸入欄 -->
+      <div class="f-group" id="customBrandBox" style="display:none;">
+        <label class="f-label">輸入新品牌名稱（儲存後將自動同步加入選單）</label>
+        <input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新模型品牌或娃娃系列名稱">
       </div>
 
       <div class="f-grid-2">
@@ -1235,11 +1262,21 @@ function renderAddTab() {
     </button>
 
     ${it ? `
-      <div style="text-align:center;margin-top:12px;">
+      <div style="text-align:center;margin-bottom:20px;">
         <span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeCollectible('${it.id}')">🗑️ 刪除此筆收藏</span>
       </div>
     ` : ''}
   `;
+}
+
+function onBrandSelectChange(val) {
+  const customBox = document.getElementById('customBrandBox');
+  if (val === '__CUSTOM__') {
+    customBox.style.display = 'block';
+    document.getElementById('f_brand_custom').focus();
+  } else {
+    customBox.style.display = 'none';
+  }
 }
 
 function renderAllTab() {
@@ -1381,12 +1418,21 @@ async function saveCollectible() {
     actVal = new Date().toISOString().slice(0,10).replace(/-/g,'/');
   }
 
+  const brandSel = document.getElementById('f_brand_select').value;
+  const finalBrand = brandSel === '__CUSTOM__'
+    ? (document.getElementById('f_brand_custom').value.trim() || '其他')
+    : brandSel;
+
+  if (finalBrand && !cloudBrands.includes(finalBrand)) {
+    cloudBrands.push(finalBrand);
+  }
+
   const newItem = {
     id,
     category: document.getElementById('f_category').value,
     buyer: document.getElementById('f_buyer').value,
     name: document.getElementById('f_name').value.trim() || '未命名收藏',
-    brand: document.getElementById('f_brand').value.trim(),
+    brand: finalBrand,
     scale: document.getElementById('f_scale').value.trim(),
     price: Number(document.getElementById('f_price').value) || 0,
     status: statusVal,
@@ -1418,6 +1464,9 @@ async function saveCollectible() {
       const data = await res.json();
       if (data.status === 'success' && data.items) {
         items = data.items;
+        if (Array.isArray(data.brands) && data.brands.length > 0) {
+          cloudBrands = data.brands;
+        }
         saveLocal();
         renderScreen();
         showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
@@ -1450,7 +1499,6 @@ function closeCloudModal() {
   document.getElementById('cloudModal').classList.remove('open');
 }
 
-// 點擊右上角獨立「🔄」按鈕時直接執行，絕不跳出二級菜單！
 async function triggerDirectSync() {
   if (!gasUrl) {
     showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800);
@@ -1465,6 +1513,9 @@ async function triggerDirectSync() {
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items) && data.items.length > 0) {
       items = data.items;
+      if (Array.isArray(data.brands) && data.brands.length > 0) {
+        cloudBrands = data.brands;
+      }
       saveLocal();
       renderScreen();
       showAutoPopup('✅', '資料更新完成', `共 ${items.length} 筆收藏已同步`, 1500);
@@ -1479,7 +1530,6 @@ async function triggerDirectSync() {
   }
 }
 
-// 啟動時背景靜默更新
 async function silentStartupSync() {
   if (!gasUrl) return;
   try {
@@ -1487,6 +1537,9 @@ async function silentStartupSync() {
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items) && data.items.length > 0) {
       items = data.items;
+      if (Array.isArray(data.brands) && data.brands.length > 0) {
+        cloudBrands = data.brands;
+      }
       saveLocal();
       renderScreen();
     }
