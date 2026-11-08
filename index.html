@@ -26,11 +26,18 @@
   .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: var(--plum-noir-dark); }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
-  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(13,27,42,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(212,196,168,0.35); box-shadow: 0 18px 40px rgba(0,0,0,0.4); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; max-width: 310px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
+  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(13,27,42,0.96); color: var(--cloud-cream); padding: 20px 24px; border-radius: 26px; border: 1.5px solid rgba(212,196,168,0.4); box-shadow: 0 20px 45px rgba(0,0,0,0.5); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 210px; max-width: 320px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
   .auto-popup-hud.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; cursor: pointer; }
   .auto-popup-hud .hud-icon { font-size: 30px; line-height: 1; }
   .auto-popup-hud .hud-title { font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
-  .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; word-break: break-word; }
+  .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; word-break: break-word; line-height: 1.45; }
+  .hud-close-pill { margin-top: 6px; background: var(--frosted-blue); color: var(--plum-noir-dark); font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 16px; display: none; }
+
+  /* 新增收藏頁頂部：仿導覽列膠囊切換開關 */
+  .add-mode-dock { background: rgba(250, 249, 240, 0.94); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1.5px solid rgba(13, 27, 42, 0.1); border-radius: 26px; padding: 6px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 8px 22px rgba(13, 27, 42, 0.1); }
+  .add-mode-dock .pill-tab-btn { height: 40px; padding: 0 12px; }
+  .add-mode-dock .pill-tab-btn.active { padding: 0 16px; gap: 7px; }
+  .add-mode-dock .pill-tab-btn.active .tab-label { max-width: 110px; opacity: 1; }
 
   .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg'); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
@@ -232,6 +239,7 @@
   <div class="hud-icon" id="hudIcon">✅</div>
   <div class="hud-title" id="hudTitle">資料更新完成</div>
   <div class="hud-sub" id="hudSub">已與雲端試算表同步</div>
+  <div class="hud-close-pill" id="hudClosePill">✕ 截圖完成後，點此關閉視窗</div>
 </div>
 
 <div class="lightbox-overlay" id="fullPhotoLightbox" onclick="if(event.target===this)closeFullLightbox()">
@@ -244,7 +252,7 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 完整比例照片 ＋ 點擊全螢幕檢視</span>
+  <span>🎨 Holst 配色 ＋ 預購/現有雙模式開關 ＋ 報錯保留機制</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -297,12 +305,25 @@
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
+// 將星星與試算表 L 欄驗證數字 (0~5) 雙向自動轉換
+function starsToSheetNum(r) {
+  if (r === undefined || r === null || r === '') return '0';
+  const s = String(r).trim();
+  if (/^[0-5]$/.test(s)) return s;
+  const cnt = (s.match(/★/g) || []).length;
+  return String(Math.min(5, Math.max(0, cnt)));
+}
+
+function formatRatingStars(r) {
+  const n = Number(starsToSheetNum(r)) || 0;
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
 function loadSavedItems() {
   const v1 = JSON.parse(localStorage.getItem('trantor_left_items') || 'null');
   const v2 = JSON.parse(localStorage.getItem('trantor_left_items_v2') || 'null');
-  if (v1 && v1.some(x => x.photo)) return v1;
-  if (v2 && v2.some(x => x.photo)) return v2;
-  return v1 || v2 || [];
+  const raw = (v1 && v1.some(x => x.photo)) ? v1 : ((v2 && v2.some(x => x.photo)) ? v2 : (v1 || v2 || []));
+  return raw.map(it => ({ ...it, rating: formatRatingStars(it.rating) }));
 }
 
 let items = loadSavedItems();
@@ -322,6 +343,7 @@ let statusFilter = 'ALL';
 let searchKeyword = '';
 let editingId = null;
 let tempPhotoBase64 = '';
+let addMode = '等待中'; // '等待中' (預購) 或 '拿到了' (現有)
 
 const nowDate = new Date();
 let calYear = nowDate.getFullYear();
@@ -381,18 +403,30 @@ function getAllBrandOptions() {
 function hideAutoPopup() {
   const hud = document.getElementById('autoPopupHud');
   if (hud) hud.classList.remove('show');
-  if (hudTimer) clearTimeout(hudTimer);
+  if (hudTimer) { clearTimeout(hudTimer); hudTimer = null; }
 }
 
+// 智慧型 HUD：若是報錯 (⚠️ / ❌)，永久保留在畫面上直到使用者截完圖手動點擊才關閉！
 function showAutoPopup(icon, title, sub, duration = 1600) {
   const hud = document.getElementById('autoPopupHud');
+  const closePill = document.getElementById('hudClosePill');
   document.getElementById('hudIcon').textContent = icon;
   document.getElementById('hudTitle').textContent = title;
   document.getElementById('hudSub').textContent = sub || '';
   hud.classList.add('show');
-  if (hudTimer) clearTimeout(hudTimer);
-  const safeDuration = duration > 0 ? duration : 25000;
-  hudTimer = setTimeout(() => hud.classList.remove('show'), safeDuration);
+
+  if (hudTimer) { clearTimeout(hudTimer); hudTimer = null; }
+
+  const isError = (icon === '⚠️' || icon === '❌');
+  if (isError) {
+    if (closePill) closePill.style.display = 'inline-block';
+    // 報錯時不設定自動消失計時器，保留至手動點擊消除
+  } else {
+    if (closePill) closePill.style.display = 'none';
+    if (duration > 0) {
+      hudTimer = setTimeout(() => hud.classList.remove('show'), duration);
+    }
+  }
 }
 
 async function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
@@ -408,6 +442,11 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
   }
 }
 
+function normalizeServerItems(rawItems) {
+  if (!Array.isArray(rawItems)) return [];
+  return rawItems.map(it => ({ ...it, rating: formatRatingStars(it.rating) }));
+}
+
 function saveLocal() {
   localStorage.setItem('trantor_left_items', JSON.stringify(items));
   localStorage.setItem('trantor_left_items_v2', JSON.stringify(items));
@@ -416,8 +455,14 @@ function saveLocal() {
 }
 
 function switchTab(tab) {
-  if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') { editingId = null; tempPhotoBase64 = ''; }
-  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') { editingDiaryId = null; tempDiaryPhotos = []; }
+  if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') {
+    editingId = null;
+    tempPhotoBase64 = '';
+  }
+  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') {
+    editingDiaryId = null;
+    tempDiaryPhotos = [];
+  }
   activeTab = tab;
   document.getElementById('dockHome').classList.toggle('active', tab === 'home');
   document.getElementById('dockAll').classList.toggle('active', tab === 'all' || tab === 'detail');
@@ -446,7 +491,7 @@ function renderHomeTab() {
 
   const dateMap = {};
   items.forEach(it => {
-    const d = it.orderDate || '未知日期';
+    const d = it.orderDate || '現有收藏';
     if (!dateMap[d]) dateMap[d] = { count: 0, sum: 0 };
     dateMap[d].count += 1; dateMap[d].sum += Number(it.price) || 0;
   });
@@ -525,7 +570,7 @@ function renderHomeTab() {
       </div>
       <div class="chart-legend">
         <div class="legend-dots"><span class="peak-dot">左右滑動查看 (${chartDates.length}天)</span></div>
-        <span>${selectedBarInfo || (bestDay ? '🏆 最高：' + bestDay[0].slice(5) + ' (' + bestDay[1].count + '件)' : '-')}</span>
+        <span>${selectedBarInfo || (bestDay ? '🏆 最高：' + (bestDay[0].length>=10?bestDay[0].slice(5):bestDay[0]) + ' (' + bestDay[1].count + '件)' : '-')}</span>
       </div>
     </div>
     <div class="dark-Showcase-box">
@@ -539,16 +584,17 @@ function renderHomeTab() {
       ${recentList.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--frosted-blue);">☁️ 尚無資料，請點選右上角「☁️」設定網址或「🔄」同步</div>` : ''}
       ${recentList.map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
+        const stars = formatRatingStars(it.rating);
         return `
           <div class="dark-row-card" onclick="openDetailView('${it.id}')">
             <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
-              <div class="dark-row-sub">${it.brand} · ${it.orderDate} (${it.buyer})</div>
+              <div class="dark-row-sub">${it.brand} · ${it.orderDate ? it.orderDate + ' ' : ''}(${it.buyer})</div>
             </div>
             <div class="dark-row-right">
               <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
-              <div class="dark-row-tag">${it.status === '拿到了' ? '✓ 已拿到 ' + it.rating : '預計 ' + (it.estDate || '待定')}</div>
+              <div class="dark-row-tag">${it.status === '拿到了' ? '✓ 已拿到 ' + stars : '預計 ' + (it.estDate || '待定')}</div>
             </div>
           </div>`;
       }).join('')}
@@ -562,7 +608,13 @@ function renderDetailTab() {
   if (!it) return '';
   const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
   const isGot = it.status === '拿到了';
+  const isDoll = it.category === '娃娃/公仔';
+  const stars = formatRatingStars(it.rating);
   window._currentDetailPhoto = it.photo ? [it.photo] : [];
+
+  const descHtml = (it.store || it.orderDate)
+    ? `此收藏由 <u>${it.buyer}</u> ${it.orderDate ? `於 ${it.orderDate}` : ''} ${it.store ? `向 <u>${it.store}</u>` : ''} 購買，目前狀態為 <u>${it.status}</u>。`
+    : `此現有收藏由 <u>${it.buyer}</u> 收錄珍藏，目前狀態為 <u>${it.status}</u>。`;
 
   return `
     <div class="detail-page-wrap">
@@ -580,24 +632,27 @@ function renderDetailTab() {
             <div class="status-switch-knob"></div>
           </div>
         </div>
-        <p class="detail-desc-text">此收藏由 <u>${it.buyer}</u> 於 ${it.orderDate || '近期'} 向 <u>${it.store || '特約店家'}</u> 購買，目前狀態為 <u>${it.status}</u>。</p>
+        <p class="detail-desc-text">${descHtml}</p>
         <div class="detail-hero-metric">
           <div class="detail-big-price">$${Number(it.price || 0).toLocaleString()}<small>TWD</small></div>
-          <div class="detail-stars">${it.rating || '☆☆☆☆☆'}</div>
+          <div class="detail-stars">${isGot ? stars : '⏳ 預購等待中'}</div>
         </div>
         <div class="detail-sec-head" onclick="openEditItem('${it.id}')" style="cursor:pointer;">
-          <span>車輛規格資訊 (Specifications)</span><span style="font-size:18px;opacity:0.7;">›</span>
+          <span>收藏規格資訊 (Specifications)</span><span style="font-size:18px;opacity:0.7;">›</span>
         </div>
         <div class="detail-capsules-grid">
-          <div class="spec-capsule"><div class="spec-cap-circle">🏷️</div><div class="spec-cap-label">品牌</div><div class="spec-cap-val">${it.brand || '-'}</div></div>
-          <div class="spec-capsule"><div class="spec-cap-circle">📐</div><div class="spec-cap-label">比例</div><div class="spec-cap-val">${it.scale || '1/64'}</div></div>
-          <div class="spec-capsule"><div class="spec-cap-circle">📅</div><div class="spec-cap-label">預計到貨</div><div class="spec-cap-val">${it.estDate || '待定'}</div></div>
+          <div class="spec-capsule"><div class="spec-cap-circle">🏷️</div><div class="spec-cap-label">品牌/系列</div><div class="spec-cap-val">${it.brand || '-'}</div></div>
+          ${isDoll
+            ? `<div class="spec-capsule"><div class="spec-cap-circle">🧸</div><div class="spec-cap-label">分類</div><div class="spec-cap-val">娃娃/公仔</div></div>`
+            : `<div class="spec-capsule"><div class="spec-cap-circle">📐</div><div class="spec-cap-label">比例</div><div class="spec-cap-val">${it.scale || '1/64'}</div></div>`
+          }
+          <div class="spec-capsule"><div class="spec-cap-circle">${isGot ? '✅' : '📅'}</div><div class="spec-cap-label">${isGot ? '收藏狀態' : '預計到貨'}</div><div class="spec-cap-val">${isGot ? '現有入庫' : (it.estDate || '待定')}</div></div>
           <div class="spec-capsule"><div class="spec-cap-circle">${it.buyer === '可愛寶寶' ? '🥰' : '😎'}</div><div class="spec-cap-label">購買人</div><div class="spec-cap-val">${it.buyer}</div></div>
         </div>
         <div class="detail-extra-box">
-          <div class="detail-extra-row"><span>🏪 預購 / 購買店家</span><strong>${it.store || '未填寫'}</strong></div>
-          <div class="detail-extra-row"><span>🗓️ 預購下單日期</span><strong>${it.orderDate || '-'}</strong></div>
-          <div class="detail-extra-row"><span>📦 實際到貨日期</span><strong>${it.actDate || (isGot ? '已入庫' : '尚未到貨')}</strong></div>
+          ${it.store ? `<div class="detail-extra-row"><span>🏪 預購 / 購買店家</span><strong>${it.store}</strong></div>` : ''}
+          ${it.orderDate ? `<div class="detail-extra-row"><span>🗓️ 預購下單日期</span><strong>${it.orderDate}</strong></div>` : ''}
+          ${it.estDate && !isGot ? `<div class="detail-extra-row"><span>⏳ 預計到貨日期</span><strong>${it.estDate}</strong></div>` : ''}
           <div class="detail-extra-row"><span>🗂️ 收藏品分類</span><strong>${it.category || '模型車'}</strong></div>
         </div>
       </div>
@@ -615,36 +670,109 @@ async function toggleDetailStatus(id) {
   if (gasUrl) {
     try {
       const isB64 = it.photo && String(it.photo).startsWith('data:image');
-      const payloadItem = { ...it, photo: isB64 ? '' : (it.photo || '') };
-      await fetchWithTimeout(gasUrl, {
+      const payloadItem = { ...it, rating: starsToSheetNum(it.rating), photo: isB64 ? '' : (it.photo || '') };
+      const res = await fetchWithTimeout(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'saveItem', item: payloadItem, photoBase64: isB64 ? it.photo : null })
       });
-    } catch (e) {}
+      const data = await res.json();
+      if (data.status !== 'success') {
+        showAutoPopup('⚠️', '狀態已改 (雲端異常)', data.message || '雲端寫入異常', 0);
+      }
+    } catch (e) {
+      showAutoPopup('⚠️', '狀態已存於手機', '雲端連線逾時或失敗：' + e.message, 0);
+    }
+  }
+}
+
+// 切換「新增預購」與「新增現有」模式（無閃爍保留已填內容）
+function setAddMode(mode) {
+  addMode = mode;
+  const isGotMode = (mode === '拿到了');
+
+  const btnPre = document.getElementById('modeBtnPreorder');
+  const btnGot = document.getElementById('modeBtnExisting');
+  if (btnPre) btnPre.classList.toggle('active', !isGotMode);
+  if (btnGot) btnGot.classList.toggle('active', isGotMode);
+
+  const subText = document.getElementById('addModeSubText');
+  if (subText) {
+    subText.textContent = isGotMode
+      ? '✅ 現有收藏模式 · 免填預購資訊，可直接為收藏評分'
+      : '⏳ 預購登記模式 · 記錄預購店家、下單時間與預計到貨日';
+  }
+
+  // 現有收藏才顯示評分；預購階段隱藏評分
+  const ratingGroup = document.getElementById('ratingFieldGroup');
+  const priceRatingGrid = document.getElementById('priceRatingGrid');
+  if (ratingGroup && priceRatingGrid) {
+    ratingGroup.style.display = isGotMode ? 'block' : 'none';
+    priceRatingGrid.style.gridTemplateColumns = isGotMode ? '1fr 1fr' : '1fr';
+  }
+
+  // 現有收藏隱藏預購店家、預購日期、到貨日期
+  const preorderBox = document.getElementById('preorderFieldsBox');
+  if (preorderBox) {
+    preorderBox.style.display = isGotMode ? 'none' : 'block';
+  }
+
+  const submitText = document.getElementById('addSubmitBtnText');
+  if (submitText && !editingId) {
+    submitText.textContent = isGotMode ? '✓ 新增現有收藏並同步雲端' : '✓ 新增預購至收藏庫並同步雲端';
+  }
+}
+
+// 切換「收藏分類」時，動態顯示/隱藏「比例 / 尺寸」（娃娃/公仔不顯示比例）
+function onCategorySelectChange(catVal) {
+  const showScale = (catVal === '模型車' || catVal === '周邊/其他');
+  const scaleGroup = document.getElementById('scaleFieldGroup');
+  const brandScaleGrid = document.getElementById('brandScaleGrid');
+  if (scaleGroup && brandScaleGrid) {
+    scaleGroup.style.display = showScale ? 'block' : 'none';
+    brandScaleGrid.style.gridTemplateColumns = showScale ? '1fr 1fr' : '1fr';
   }
 }
 
 function renderAddTab() {
   const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
+  if (it) addMode = it.status === '拿到了' ? '拿到了' : '等待中';
+  const isGotMode = (addMode === '拿到了');
+
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  const currentCat = it ? (it.category || '模型車') : '模型車';
+  const showScale = (currentCat === '模型車' || currentCat === '周邊/其他');
   const currentBrand = it ? it.brand : 'BBR';
+  const currentStars = it ? formatRatingStars(it.rating) : '★★★★★';
   const brandOptions = getAllBrandOptions();
   if (currentBrand && !brandOptions.includes(currentBrand)) brandOptions.unshift(currentBrand);
 
   return `
-    <div class="header-row">
-      <div><h1 class="greet-title">${it ? '✏️ 編輯收藏品' : '➕ 新增收藏品'}</h1><p class="greet-sub">完整對應您的 Google 雲端試算表欄位</p></div>
+    <div class="header-row" style="margin-bottom:6px;">
+      <div class="add-mode-dock">
+        <button type="button" class="pill-tab-btn ${!isGotMode ? 'active' : ''}" id="modeBtnPreorder" onclick="setAddMode('等待中')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+          <span class="tab-label">${it ? '預購狀態' : '新增預購'}</span>
+        </button>
+        <button type="button" class="pill-tab-btn ${isGotMode ? 'active' : ''}" id="modeBtnExisting" onclick="setAddMode('拿到了')">
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <span class="tab-label">${it ? '現有狀態' : '新增現有'}</span>
+        </button>
+      </div>
       <div class="bell-btn" onclick="switchTab('${it ? 'detail' : 'home'}')">✕</div>
     </div>
+    <p class="greet-sub" id="addModeSubText" style="margin-bottom:12px;">
+      ${isGotMode ? '✅ 現有收藏模式 · 免填預購資訊，可直接為收藏評分' : '⏳ 預購登記模式 · 記錄預購店家、下單時間與預計到貨日'}
+    </p>
+
     <div class="form-card">
       <div class="f-grid-2">
         <div class="f-group">
           <label class="f-label">收藏分類</label>
-          <select class="f-select" id="f_category">
-            <option value="模型車" ${it && it.category==='模型車'?'selected':''}>🚗 模型車</option>
-            <option value="娃娃/公仔" ${it && it.category==='娃娃/公仔'?'selected':''}>🧸 娃娃 / 公仔</option>
-            <option value="周邊/其他" ${it && it.category==='周邊/其他'?'selected':''}>🏞️ 周邊 / 場景</option>
+          <select class="f-select" id="f_category" onchange="onCategorySelectChange(this.value)">
+            <option value="模型車" ${currentCat==='模型車'?'selected':''}>🚗 模型車</option>
+            <option value="娃娃/公仔" ${currentCat==='娃娃/公仔'?'selected':''}>🧸 娃娃 / 公仔</option>
+            <option value="周邊/其他" ${currentCat==='周邊/其他'?'selected':''}>🏞️ 周邊 / 場景</option>
           </select>
         </div>
         <div class="f-group">
@@ -655,8 +783,13 @@ function renderAddTab() {
           </select>
         </div>
       </div>
-      <div class="f-group"><label class="f-label">車車名稱 / 娃娃收藏名稱</label><input type="text" class="f-input" id="f_name" placeholder="例如：PEUGEOT 406 Taxi 或 娃娃" value="${it ? it.name : ''}"></div>
-      <div class="f-grid-2">
+
+      <div class="f-group">
+        <label class="f-label">車車名稱 / 娃娃收藏名稱</label>
+        <input type="text" class="f-input" id="f_name" placeholder="例如：Lamborghini Huracan GT 或 娃娃" value="${it ? it.name : ''}">
+      </div>
+
+      <div class="f-grid-2" id="brandScaleGrid" style="grid-template-columns: ${showScale ? '1fr 1fr' : '1fr'};">
         <div class="f-group">
           <label class="f-label">模型品牌 / 系列</label>
           <select class="f-select" id="f_brand_select" onchange="onBrandSelectChange(this.value)">
@@ -664,58 +797,69 @@ function renderAddTab() {
             <option value="__CUSTOM__">✏️ 手動輸入新品牌...</option>
           </select>
         </div>
-        <div class="f-group"><label class="f-label">比例 / 尺寸</label><input type="text" class="f-input" id="f_scale" value="${it ? it.scale : '1/64'}"></div>
+        <div class="f-group" id="scaleFieldGroup" style="display: ${showScale ? 'block' : 'none'};">
+          <label class="f-label">比例 / 尺寸</label>
+          <input type="text" class="f-input" id="f_scale" value="${it && it.scale ? it.scale : '1/64'}">
+        </div>
       </div>
-      <div class="f-group" id="customBrandBox" style="display:none;"><label class="f-label">輸入新品牌名稱</label><input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新品牌名稱"></div>
-      <div class="f-grid-2">
-        <div class="f-group" style="margin-bottom:0;"><label class="f-label">價格合計 (NT$)</label><input type="number" class="f-input" id="f_price" placeholder="800" value="${it ? it.price : ''}"></div>
+
+      <div class="f-group" id="customBrandBox" style="display:none;">
+        <label class="f-label">輸入新品牌名稱</label>
+        <input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新品牌名稱">
+      </div>
+
+      <div class="f-grid-2" id="priceRatingGrid" style="grid-template-columns: ${isGotMode ? '1fr 1fr' : '1fr'};">
         <div class="f-group" style="margin-bottom:0;">
-          <label class="f-label">車車狀態</label>
-          <select class="f-select" id="f_status">
-            <option value="等待中" ${!it || it.status==='等待中'?'selected':''}>⏳ 等待中 (預購)</option>
-            <option value="拿到了" ${it && it.status==='拿到了'?'selected':''}>✅ 拿到了 (現有)</option>
+          <label class="f-label">價格合計 (NT$)</label>
+          <input type="number" class="f-input" id="f_price" placeholder="650" value="${it ? it.price : ''}">
+        </div>
+        <div class="f-group" id="ratingFieldGroup" style="margin-bottom:0; display: ${isGotMode ? 'block' : 'none'};">
+          <label class="f-label">評分 (★)</label>
+          <select class="f-select" id="f_rating">
+            <option value="★★★★★" ${currentStars==='★★★★★'?'selected':''}>★★★★★ (5星)</option>
+            <option value="★★★★☆" ${currentStars==='★★★★☆'?'selected':''}>★★★★☆ (4星)</option>
+            <option value="★★★☆☆" ${currentStars==='★★★☆☆'?'selected':''}>★★★☆☆ (3星)</option>
+            <option value="★★☆☆☆" ${currentStars==='★★☆☆☆'?'selected':''}>★★☆☆☆ (2星)</option>
+            <option value="★☆☆☆☆" ${currentStars==='★☆☆☆☆'?'selected':''}>★☆☆☆☆ (1星)</option>
+            <option value="☆☆☆☆☆" ${currentStars==='☆☆☆☆☆'?'selected':''}>☆☆☆☆☆ (0星)</option>
           </select>
         </div>
       </div>
     </div>
+
     <div class="form-card dark-part">
-      <div class="f-group">
-        <label class="f-label">預購店家</label>
-        <input type="text" class="f-input" id="f_store" value="${it ? it.store : 'TSAI模型車販賣鋪-楊梅實體店'}">
-        <div class="chip-row">
-          <span class="mini-chip" onclick="document.getElementById('f_store').value='TSAI模型車販賣鋪-楊梅實體店'">TSAI-楊梅實體店</span>
-          <span class="mini-chip" onclick="document.getElementById('f_store').value=\`Fred's Grage Club\`">Fred's Grage Club</span>
-          <span class="mini-chip" onclick="document.getElementById('f_store').value='CarGu 模型車預購'">CarGu 模型車預購</span>
-        </div>
-      </div>
-      <div class="f-grid-2">
-        <div class="f-group"><label class="f-label">預購日期</label><input type="text" class="f-input" id="f_orderDate" value="${it ? it.orderDate : today}"></div>
-        <div class="f-group"><label class="f-label">預計到貨日期</label><input type="text" class="f-input" id="f_estDate" value="${it ? it.estDate : '2027/Q1'}"></div>
-      </div>
-      <div class="f-grid-2">
-        <div class="f-group"><label class="f-label">實際到貨日期</label><input type="text" class="f-input" id="f_actDate" placeholder="拿到時填寫" value="${it ? it.actDate : ''}"></div>
+      <div id="preorderFieldsBox" style="display: ${isGotMode ? 'none' : 'block'}; margin-bottom: 12px;">
         <div class="f-group">
-          <label class="f-label">評分 (★)</label>
-          <select class="f-select" id="f_rating">
-            <option value="☆☆☆☆☆" ${!it || it.rating==='☆☆☆☆☆'?'selected':''}>☆☆☆☆☆</option>
-            <option value="★★★★★" ${it && it.rating==='★★★★★'?'selected':''}>★★★★★</option>
-            <option value="★★★★☆" ${it && it.rating==='★★★★☆'?'selected':''}>★★★★☆</option>
-            <option value="★★★☆☆" ${it && it.rating==='★★★☆☆'?'selected':''}>★★★☆☆</option>
-            <option value="★★☆☆☆" ${it && it.rating==='★★☆☆☆'?'selected':''}>★★☆☆☆</option>
-            <option value="★☆☆☆☆" ${it && it.rating==='★☆☆☆☆'?'selected':''}>★☆☆☆☆</option>
-          </select>
+          <label class="f-label">預購店家</label>
+          <input type="text" class="f-input" id="f_store" value="${it && it.store ? it.store : 'TSAI模型車販賣鋪-楊梅實體店'}">
+          <div class="chip-row">
+            <span class="mini-chip" onclick="document.getElementById('f_store').value='TSAI模型車販賣鋪-楊梅實體店'">TSAI-楊梅實體店</span>
+            <span class="mini-chip" onclick="document.getElementById('f_store').value=\`Fred's Grage Club\`">Fred's Grage Club</span>
+            <span class="mini-chip" onclick="document.getElementById('f_store').value='CarGu 模型車預購'">CarGu 模型車預購</span>
+          </div>
+        </div>
+        <div class="f-grid-2">
+          <div class="f-group" style="margin-bottom:0;"><label class="f-label">預購日期</label><input type="text" class="f-input" id="f_orderDate" value="${it && it.orderDate ? it.orderDate : today}"></div>
+          <div class="f-group" style="margin-bottom:0;"><label class="f-label">預計到貨日期</label><input type="text" class="f-input" id="f_estDate" value="${it && it.estDate ? it.estDate : '2027/Q1'}"></div>
         </div>
       </div>
+
       <div class="f-group" style="margin-bottom:0;">
-        <label class="f-label">車車的樣子 (點擊開啟 S25U/S26U 相簿或相機)</label>
+        <label class="f-label">收藏照片 (點擊開啟 S25U/S26U 相簿或相機)</label>
         <label class="photo-upload-box">
           <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoPick(event)">
           <div id="photoPreviewHolder">${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
-          <div style="text-align:left;font-size:12px;"><div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div><div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div></div>
+          <div style="text-align:left;font-size:12px;">
+            <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
+            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div>
+          </div>
         </label>
       </div>
     </div>
-    <button class="submit-pill-btn" onclick="saveCollectible()"><span>✓ ${it ? '儲存修改並同步雲端' : '新增至收藏庫並同步雲端'}</span></button>
+
+    <button class="submit-pill-btn" onclick="saveCollectible()">
+      <span id="addSubmitBtnText">✓ ${it ? '儲存修改並同步雲端' : (isGotMode ? '新增現有收藏並同步雲端' : '新增預購至收藏庫並同步雲端')}</span>
+    </button>
     ${it ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeCollectible('${it.id}')">🗑️ 刪除此筆收藏</span></div>` : ''}
   `;
 }
@@ -771,13 +915,14 @@ function renderAllTab() {
       ${filtered.slice().reverse().map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         const isGot = it.status === '拿到了';
+        const isDoll = it.category === '娃娃/公仔';
         return `
           <div class="dark-row-card" onclick="openDetailView('${it.id}')">
             <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
-              <div class="dark-row-sub">${it.brand} (${it.scale}) · ${it.store || '未填店家'}</div>
-              <div class="dark-row-sub" style="color:var(--frosted-blue);">購買人：${it.buyer} ｜ 預購日：${it.orderDate}</div>
+              <div class="dark-row-sub">${it.brand}${!isDoll && it.scale ? ` (${it.scale})` : ''}${it.store ? ` · ${it.store}` : ''}</div>
+              <div class="dark-row-sub" style="color:var(--frosted-blue);">購買人：${it.buyer}${it.orderDate ? ` ｜ 預購日：${it.orderDate}` : ''}</div>
             </div>
             <div class="dark-row-right">
               <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
@@ -1092,7 +1237,7 @@ async function saveDiaryEntry() {
   switchTab('calendar');
 
   if (gasUrl) {
-    showAutoPopup('🔄', '正在同步日記...', `上傳 ${photosCopy.length} 張照片至雲端`, 25000);
+    showAutoPopup('🔄', '正在同步日記...', `上傳 ${photosCopy.length} 張照片至雲端`, 0);
     try {
       const cleanDiary = { ...newDiary, photos: [], photo: '' };
       const res = await fetchWithTimeout(gasUrl, {
@@ -1109,9 +1254,9 @@ async function saveDiaryEntry() {
         if (Array.isArray(data.diaries)) diaries = data.diaries;
         saveLocal(); renderScreen(); showAutoPopup('✅', '日記同步完成', `${newDiary.date} · ${newDiary.location}`, 1500);
       } else {
-        showAutoPopup('⚠️', '已存於手機 (雲端異常)', data.message || '請確認雲端腳本權限', 2800);
+        showAutoPopup('⚠️', '已存於手機 (雲端異常)', data.message || '請確認雲端腳本權限', 0);
       }
-    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端連線逾時或失敗', 2200); }
+    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端連線逾時或失敗：' + e.message, 0); }
   } else {
     showAutoPopup('✅', '日記已儲存', `${newDiary.date} · ${newDiary.location}`, 1500);
   }
@@ -1133,7 +1278,7 @@ function renderScreen() {
   else container.innerHTML = renderAllTab();
 }
 
-function showBarDetail(dateStr, cnt, sum) { selectedBarInfo = `📅 ${dateStr.slice(5)} 共 ${cnt} 件 ($${sum.toLocaleString()})`; renderScreen(); }
+function showBarDetail(dateStr, cnt, sum) { selectedBarInfo = `📅 ${dateStr.length>=10?dateStr.slice(5):dateStr} 共 ${cnt} 件 ($${sum.toLocaleString()})`; renderScreen(); }
 function setChartMode(m) { chartMode = m; selectedBarInfo = ''; renderScreen(); }
 function setHomeRecentMode(m) { homeRecentMode = m; renderScreen(); }
 function setOwnerFilter(o) { ownerFilter = o; renderScreen(); }
@@ -1164,22 +1309,39 @@ function handlePhotoPick(e) {
 async function saveCollectible() {
   const id = editingId || String(Date.now());
   const old = items.find(x => String(x.id) === String(id));
-  const statusVal = document.getElementById('f_status').value;
-  let actVal = document.getElementById('f_actDate').value.trim();
-  if (statusVal === '拿到了' && !actVal) actVal = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  const statusVal = addMode; // '等待中' 或 '拿到了'
+  const isGotMode = (statusVal === '拿到了');
+
+  const catVal = document.getElementById('f_category').value;
+  const hasScale = (catVal === '模型車' || catVal === '周邊/其他');
+  const scaleVal = hasScale ? document.getElementById('f_scale').value.trim() : '';
 
   const brandSel = document.getElementById('f_brand_select').value;
   const finalBrand = brandSel === '__CUSTOM__' ? (document.getElementById('f_brand_custom').value.trim() || '其他') : brandSel;
   if (finalBrand && !cloudBrands.includes(finalBrand)) cloudBrands.push(finalBrand);
 
+  const storeVal = isGotMode ? (old && editingId ? old.store : '') : document.getElementById('f_store').value.trim();
+  const orderDateVal = isGotMode ? (old && editingId ? old.orderDate : '') : document.getElementById('f_orderDate').value.trim();
+  const estDateVal = isGotMode ? (old && editingId ? old.estDate : '') : document.getElementById('f_estDate').value.trim();
+  const actDateVal = '';
+  const ratingVal = isGotMode ? formatRatingStars(document.getElementById('f_rating').value) : '☆☆☆☆☆';
+
   const localPhoto = tempPhotoBase64 || (old ? old.photo : '');
   const newItem = {
-    id, category: document.getElementById('f_category').value, buyer: document.getElementById('f_buyer').value,
-    name: document.getElementById('f_name').value.trim() || '未命名收藏', brand: finalBrand,
-    scale: document.getElementById('f_scale').value.trim(), price: Number(document.getElementById('f_price').value) || 0,
-    status: statusVal, store: document.getElementById('f_store').value.trim(),
-    orderDate: document.getElementById('f_orderDate').value.trim(), estDate: document.getElementById('f_estDate').value.trim(),
-    actDate: actVal, rating: document.getElementById('f_rating').value, photo: localPhoto
+    id,
+    category: catVal,
+    buyer: document.getElementById('f_buyer').value,
+    name: document.getElementById('f_name').value.trim() || '未命名收藏',
+    brand: finalBrand,
+    scale: scaleVal,
+    price: Number(document.getElementById('f_price').value) || 0,
+    status: statusVal,
+    store: storeVal,
+    orderDate: orderDateVal,
+    estDate: estDateVal,
+    actDate: actDateVal,
+    rating: ratingVal,
+    photo: localPhoto
   };
 
   const idx = items.findIndex(x => String(x.id) === String(id));
@@ -1190,10 +1352,12 @@ async function saveCollectible() {
   switchTab('detail');
 
   if (gasUrl) {
-    showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中 (點此可隱藏)', 25000);
+    showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中', 0);
     try {
+      // 將 rating 轉為 '0' ~ '5' 數字字串，完美通過試算表 L 欄資料驗證規則
       const cloudItemPayload = {
         ...newItem,
+        rating: starsToSheetNum(newItem.rating),
         photo: (localPhoto && localPhoto.startsWith('http')) ? localPhoto : ''
       };
       const res = await fetchWithTimeout(gasUrl, {
@@ -1203,7 +1367,7 @@ async function saveCollectible() {
       }, 25000);
       const data = await res.json();
       if (data.status === 'success' && Array.isArray(data.items)) {
-        items = data.items;
+        items = normalizeServerItems(data.items);
         if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
         if (Array.isArray(data.diaries)) diaries = data.diaries;
         const latestSaved = items[items.length - 1];
@@ -1212,10 +1376,10 @@ async function saveCollectible() {
         }
         saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
       } else {
-        showAutoPopup('⚠️', '已存於手機 (雲端異常)', data.message || '請檢查試算表驗證或部署權限', 3000);
+        showAutoPopup('⚠️', '已存於手機 (雲端異常)', data.message || '請檢查試算表驗證或部署權限', 0);
       }
     } catch (e) {
-      showAutoPopup('⚠️', '已儲存於手機', '雲端連線逾時或失敗', 2200);
+      showAutoPopup('⚠️', '已儲存於手機', '雲端連線逾時或失敗：' + e.message, 0);
     }
   } else {
     showAutoPopup('✅', '已儲存於手機', newItem.name, 1500);
@@ -1232,20 +1396,20 @@ function openCloudModal() { document.getElementById('gasUrlInput').value = gasUr
 function closeCloudModal() { document.getElementById('cloudModal').classList.remove('open'); }
 
 async function triggerDirectSync() {
-  if (!gasUrl) { showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800); return; }
+  if (!gasUrl) { showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 0); return; }
   const syncBtn = document.getElementById('topSyncBtn'); if (syncBtn) syncBtn.classList.add('spinning');
-  showAutoPopup('🔄', '資料更新中...', '正在同步收藏與日記', 25000);
+  showAutoPopup('🔄', '資料更新中...', '正在同步收藏與日記', 0);
   try {
     const res = await fetchWithTimeout(gasUrl + '?t=' + Date.now(), {}, 25000);
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items)) {
-      items = data.items;
+      items = normalizeServerItems(data.items);
       if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
       if (Array.isArray(data.diaries)) diaries = data.diaries;
       saveLocal(); renderScreen();
       showAutoPopup('✅', '資料更新完成', `已同步 ${items.length} 筆收藏 · ${diaries.length} 篇日記`, 1500);
-    } else { showAutoPopup('❌', '資料更新失敗', data.message || '雲端回傳格式異常', 2200); }
-  } catch (e) { showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 2200); }
+    } else { showAutoPopup('❌', '資料更新失敗', data.message || '雲端回傳格式異常', 0); }
+  } catch (e) { showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限：' + e.message, 0); }
   finally { const btnAfter = document.getElementById('topSyncBtn'); if (btnAfter) btnAfter.classList.remove('spinning'); }
 }
 
@@ -1255,7 +1419,7 @@ async function silentStartupSync() {
     const res = await fetchWithTimeout(gasUrl + '?t=' + Date.now(), {}, 20000);
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.items)) {
-      items = data.items;
+      items = normalizeServerItems(data.items);
       if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
       if (Array.isArray(data.diaries)) diaries = data.diaries;
       saveLocal(); renderScreen();
