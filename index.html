@@ -2,1047 +2,198 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>實實與寶寶收藏庫</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cloud-cream: #F3EFE7;
-    --cloud-cream-pure: #FAF8F5;
-    --frosted-blue: #C8DCE2;
-    --frosted-blue-deep: #B0C9D1;
-    --muted-jade: #829F8D;
-    --muted-jade-soft: #D7E3DC;
-    --brushed-pewter: #929795;
-    --plum-noir: #493342;
-    --plum-noir-dark: #372531;
-    --plum-noir-soft: #5D4354;
+    --cloud-cream: #F3EFE7; --cloud-cream-pure: #FAF8F5;
+    --frosted-blue: #C8DCE2; --frosted-blue-deep: #B0C9D1;
+    --muted-jade: #829F8D; --muted-jade-soft: #D7E3DC;
+    --brushed-pewter: #929795; --plum-noir: #493342;
+    --plum-noir-dark: #372531; --plum-noir-soft: #5D4354;
   }
-
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
-    background: #DFDBD2;
-    color: var(--plum-noir);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  body { margin: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; background: #DFDBD2; color: var(--plum-noir); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+  .top-preview-bar { width: 100%; background: var(--plum-noir); color: var(--cloud-cream); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; position: sticky; top: 0; z-index: 999; }
+  .top-preview-bar button { background: var(--frosted-blue); color: var(--plum-noir); border: none; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; cursor: pointer; }
 
-  .top-preview-bar {
-    width: 100%;
-    background: var(--plum-noir);
-    color: var(--cloud-cream);
-    padding: 8px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 999;
-  }
-  .top-preview-bar button {
-    background: var(--frosted-blue);
-    color: var(--plum-noir);
-    border: none;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-weight: 800;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .phone-frame {
-    width: 390px;
-    height: 820px;
-    background: var(--cloud-cream);
-    border-radius: 50px;
-    border: 11px solid var(--plum-noir);
-    box-shadow: 0 28px 60px rgba(73, 51, 66, 0.25), inset 0 0 0 2px #fff;
-    margin: 24px auto;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+  .phone-frame { width: 390px; height: 820px; background: var(--cloud-cream); border-radius: 50px; border: 11px solid var(--plum-noir); box-shadow: 0 28px 60px rgba(73,51,66,0.25), inset 0 0 0 2px #fff; margin: 24px auto; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   body.fullscreen-mode { background: var(--cloud-cream); }
   body.fullscreen-mode .top-preview-bar { display: none; }
-  body.fullscreen-mode .phone-frame {
-    width: 100%;
-    max-width: 480px;
-    height: 100vh;
-    margin: 0;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-  }
+  body.fullscreen-mode .phone-frame { width: 100%; max-width: 480px; height: 100vh; margin: 0; border: none; border-radius: 0; box-shadow: none; }
 
-  .screen-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 18px 150px;
-    scrollbar-width: none;
-  }
-  .screen-scroll.no-top-pad {
-    padding-top: 0;
-  }
+  .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 145px; scrollbar-width: none; background: var(--cloud-cream); }
+  .screen-scroll.home-mode { padding-top: 0; background: var(--cloud-cream); }
+  .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: #2E1F29; }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
-  /* 1.5~2秒自動消失的中央提示小視窗 */
-  .auto-popup-hud {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.88);
-    background: rgba(55, 37, 49, 0.95);
-    color: var(--cloud-cream);
-    padding: 20px 28px;
-    border-radius: 26px;
-    border: 1.5px solid rgba(200, 220, 226, 0.3);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.38);
-    z-index: 3000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-width: 190px;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.22s ease, transform 0.22s ease;
-  }
-  .auto-popup-hud.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+  /* 1.5秒自動消失的中央提示小視窗 */
+  .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(55,37,49,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(200,220,226,0.3); box-shadow: 0 18px 40px rgba(0,0,0,0.38); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
+  .auto-popup-hud.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   .auto-popup-hud .hud-icon { font-size: 30px; line-height: 1; }
   .auto-popup-hud .hud-title { font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
   .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; }
 
-  /* ====== 首頁頂部：參考 image.png 的背景圖片 + 漸層過渡設計 ====== */
+  /* 首頁頂部：DSC00224.jpg 滿版延伸至狀態列 + 漸層過渡 */
   .home-hero-banner {
-    margin: 0 -18px 8px;
-    min-height: 295px;
-    background-image:
-      linear-gradient(180deg,
-        rgba(243, 239, 231, 0.05) 0%,
-        rgba(243, 239, 231, 0.18) 38%,
-        rgba(243, 239, 231, 0.82) 76%,
-        #F3EFE7 100%),
-      url('DSC00224.jpg');
-    background-size: cover;
-    background-position: center 25%;
-    padding: 20px 18px 6px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
+    margin: 0 -18px 8px; min-height: 335px;
+    background-image: linear-gradient(180deg, rgba(243,239,231,0.02) 0%, rgba(243,239,231,0.16) 44%, rgba(243,239,231,0.85) 79%, #F3EFE7 100%), url('DSC00224.jpg');
+    background-size: cover; background-position: center 22%;
+    padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative;
   }
-  .home-hero-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .hero-quote-mark {
-    font-size: 34px;
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1;
-    text-shadow: 0 2px 10px rgba(73, 51, 66, 0.35);
-    user-select: none;
-  }
-  .home-hero-bottom {
-    margin-top: 115px;
-  }
+  .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
+  .hero-quote-mark { font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.88); line-height: 1; text-shadow: 0 2px 10px rgba(73,51,66,0.35); user-select: none; }
+  .home-hero-bottom { margin-top: 118px; }
 
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .greet-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--plum-noir);
-    margin: 0;
-    letter-spacing: -0.3px;
-    text-shadow: 0 2px 12px rgba(243, 239, 231, 0.9);
-  }
-  .greet-sub {
-    font-size: 12px;
-    color: var(--plum-noir-soft);
-    font-weight: 700;
-    margin: 2px 0 6px;
-  }
-  .header-icons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .bell-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: rgba(250, 248, 245, 0.82);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(73,51,66,0.14);
-    color: var(--plum-noir);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 15px;
-    flex-shrink: 0;
-    transition: transform 0.2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
+  .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .greet-title { font-size: 22px; font-weight: 900; color: var(--plum-noir); margin: 0; letter-spacing: -0.3px; text-shadow: 0 2px 12px rgba(243,239,231,0.9); }
+  .greet-sub { font-size: 12px; color: var(--plum-noir-soft); font-weight: 700; margin: 2px 0 6px; }
+  .header-icons { display: flex; align-items: center; gap: 10px; }
+  .bell-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(250,248,245,0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(73,51,66,0.14); color: var(--plum-noir); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
   .bell-btn:active { transform: scale(0.92); }
-  @keyframes spinSync {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  .bell-btn.spinning svg {
-    animation: spinSync 0.8s linear infinite;
-  }
-  .user-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: rgba(200, 220, 226, 0.9);
-    backdrop-filter: blur(8px);
-    border: 2px solid var(--plum-noir);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 15px;
-    cursor: pointer;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
+  @keyframes spinSync { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .bell-btn.spinning svg { animation: spinSync 0.8s linear infinite; }
+  .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(200,220,226,0.9); backdrop-filter: blur(8px); border: 2px solid var(--plum-noir); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-  .val-label {
-    font-size: 11px;
-    color: var(--plum-noir-soft);
-    font-weight: 800;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-  }
-  .val-row {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 2px 0 10px;
-  }
-  .val-main {
-    font-size: 34px;
-    font-weight: 900;
-    color: var(--plum-noir);
-    letter-spacing: -0.8px;
-  }
-  .val-main small {
-    font-size: 20px;
-    color: var(--brushed-pewter);
-    font-weight: 700;
-  }
-  .val-badge {
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--muted-jade);
-  }
+  .val-label { font-size: 11px; color: var(--plum-noir-soft); font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; }
+  .val-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 2px 0 10px; }
+  .val-main { font-size: 34px; font-weight: 900; color: var(--plum-noir); letter-spacing: -0.8px; }
+  .val-main small { font-size: 20px; color: var(--brushed-pewter); font-weight: 700; }
+  .val-badge { font-size: 11px; font-weight: 800; color: var(--muted-jade); }
 
-  .dual-pill-wrap {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .dual-pill {
-    flex: 1;
-    height: 48px;
-    background: var(--cloud-cream-pure);
-    border: 1.5px solid rgba(73, 51, 66, 0.12);
-    border-radius: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 14px;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--plum-noir);
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(73,51,66,0.04);
-    transition: transform 0.15s;
-  }
-  .dual-pill:active { transform: scale(0.98); }
-  .dual-center-x {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--cloud-cream);
-    border: 1.5px solid rgba(73,51,66,0.18);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 800;
-    margin: 0 -10px;
-    z-index: 2;
-    cursor: pointer;
-  }
+  .dual-pill-wrap { display: flex; align-items: center; margin-bottom: 16px; }
+  .dual-pill { flex: 1; height: 48px; background: var(--cloud-cream-pure); border: 1.5px solid rgba(73,51,66,0.12); border-radius: 28px; display: flex; align-items: center; justify-content: center; padding: 0 14px; font-size: 13px; font-weight: 800; color: var(--plum-noir); cursor: pointer; box-shadow: 0 4px 12px rgba(73,51,66,0.04); }
+  .dual-center-x { width: 34px; height: 34px; border-radius: 50%; background: var(--cloud-cream); border: 1.5px solid rgba(73,51,66,0.18); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 -10px; z-index: 2; cursor: pointer; }
 
-  .chart-card {
-    background: var(--frosted-blue);
-    border-radius: 28px;
-    padding: 16px 14px 14px;
-    margin-bottom: 16px;
-    box-shadow: 0 8px 20px rgba(200, 220, 226, 0.45);
-  }
-  .chart-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .chart-coin-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--plum-noir);
-  }
-  .chart-coin-badge .diamond {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--plum-noir);
-    color: var(--cloud-cream);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-  }
-  .chart-period-pills {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-  .period-pill {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 12px;
-    color: var(--plum-noir);
-    cursor: pointer;
-  }
-  .period-pill.active {
-    background: var(--plum-noir);
-    color: var(--cloud-cream);
-  }
-  .more-pill {
-    background: rgba(243, 239, 231, 0.75);
-    color: var(--plum-noir);
-    font-size: 10px;
-    font-weight: 800;
-    padding: 4px 9px;
-    border-radius: 12px;
-    cursor: pointer;
-  }
+  .chart-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px 14px 14px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(200,220,226,0.45); }
+  .chart-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .chart-coin-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--plum-noir); }
+  .chart-coin-badge .diamond { width: 22px; height: 22px; border-radius: 50%; background: var(--plum-noir); color: var(--cloud-cream); display: flex; align-items: center; justify-content: center; font-size: 11px; }
+  .chart-period-pills { display: flex; gap: 4px; align-items: center; }
+  .period-pill { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; color: var(--plum-noir); cursor: pointer; }
+  .period-pill.active { background: var(--plum-noir); color: var(--cloud-cream); }
+  .more-pill { background: rgba(243,239,231,0.75); color: var(--plum-noir); font-size: 10px; font-weight: 800; padding: 4px 9px; border-radius: 12px; cursor: pointer; }
 
-  .histogram-wrapper {
-    display: flex;
-    align-items: stretch;
-    height: 152px;
-    position: relative;
-  }
-  .y-axis-fixed {
-    width: 28px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px 0 24px;
-    font-size: 9px;
-    font-weight: 700;
-    color: rgba(73, 51, 66, 0.55);
-    z-index: 3;
-  }
-  .hist-scroll-viewport {
-    flex: 1;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    position: relative;
-  }
+  .histogram-wrapper { display: flex; align-items: stretch; height: 152px; position: relative; }
+  .y-axis-fixed { width: 28px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0 24px; font-size: 9px; font-weight: 700; color: rgba(73,51,66,0.55); z-index: 3; }
+  .hist-scroll-viewport { flex: 1; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; position: relative; }
   .hist-scroll-viewport::-webkit-scrollbar { display: none; }
-
-  .hist-track {
-    display: inline-flex;
-    align-items: flex-end;
-    min-width: 100%;
-    height: 100%;
-    padding: 14px 6px 24px;
-    gap: 12px;
-    position: relative;
-  }
-  .y-grid-lines {
-    position: absolute;
-    inset: 14px 0 24px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .y-grid-lines i {
-    display: block;
-    width: 100%;
-    border-bottom: 1px dashed rgba(73, 51, 66, 0.14);
-  }
-
-  .hist-col {
-    flex: 0 0 42px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-    cursor: pointer;
-  }
-  .hist-bg-bar {
-    width: 34px;
-    background: rgba(130, 159, 141, 0.35);
-    border-radius: 16px 16px 10px 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    transition: height 0.3s ease;
-  }
-  .hist-fg-bar {
-    width: 34px;
-    background: var(--plum-noir);
-    border-radius: 16px 16px 10px 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0 6px;
-    color: var(--cloud-cream);
-    box-shadow: 0 4px 10px rgba(73,51,66,0.2);
-    transition: height 0.3s ease;
-  }
-  .hist-col.peak .hist-fg-bar {
-    background: var(--plum-noir);
-    border: 1.5px solid var(--cloud-cream);
-  }
-  .hist-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 1px solid rgba(243,239,231,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    line-height: 1;
-  }
+  .hist-track { display: inline-flex; align-items: flex-end; min-width: 100%; height: 100%; padding: 14px 6px 24px; gap: 12px; position: relative; }
+  .y-grid-lines { position: absolute; inset: 14px 0 24px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; z-index: 1; }
+  .y-grid-lines i { display: block; width: 100%; border-bottom: 1px dashed rgba(73,51,66,0.14); }
+  .hist-col { flex: 0 0 42px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; z-index: 2; cursor: pointer; }
+  .hist-bg-bar { width: 34px; background: rgba(130,159,141,0.35); border-radius: 16px 16px 10px 10px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .hist-fg-bar { width: 34px; background: var(--plum-noir); border-radius: 16px 16px 10px 10px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 5px 0 6px; color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(73,51,66,0.2); }
+  .hist-col.peak .hist-fg-bar { border: 1.5px solid var(--cloud-cream); }
+  .hist-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(243,239,231,0.5); display: flex; align-items: center; justify-content: center; font-size: 9px; line-height: 1; }
   .hist-val { font-size: 9px; font-weight: 800; letter-spacing: -0.3px; }
-  .hist-date {
-    position: absolute;
-    bottom: -19px;
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--plum-noir);
-    white-space: nowrap;
-  }
-
-  .chart-legend {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 6px;
-    padding: 0 4px;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--plum-noir);
-  }
+  .hist-date { position: absolute; bottom: -19px; font-size: 9px; font-weight: 800; color: var(--plum-noir); white-space: nowrap; }
+  .chart-legend { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 0 4px; font-size: 10px; font-weight: 700; color: var(--plum-noir); }
   .legend-dots { display: flex; gap: 10px; }
-  .legend-dots span::before { content: '● '; }
-  .legend-dots span.peak-dot::before { color: var(--plum-noir); }
+  .legend-dots span::before { content: '● '; color: var(--plum-noir); }
 
-  .dark-Showcase-box {
-    background: var(--plum-noir);
-    border-radius: 30px;
-    padding: 14px;
-    color: var(--cloud-cream);
-    box-shadow: 0 12px 26px rgba(73, 51, 66, 0.22);
-  }
-  .dark-box-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2px 6px 10px;
-  }
+  .dark-Showcase-box { background: var(--plum-noir); border-radius: 30px; padding: 14px; color: var(--cloud-cream); box-shadow: 0 12px 26px rgba(73,51,66,0.22); }
+  .dark-box-header { display: flex; justify-content: space-between; align-items: center; padding: 2px 6px 10px; }
   .dark-box-tabs { display: flex; gap: 6px; }
-  .dark-tab {
-    font-size: 11px;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 14px;
-    background: var(--plum-noir-dark);
-    color: var(--brushed-pewter);
-    cursor: pointer;
-  }
-  .dark-tab.active {
-    background: var(--muted-jade);
-    color: var(--cloud-cream);
-  }
-
-  .dark-row-card {
-    background: var(--plum-noir-dark);
-    border: 1px solid rgba(243, 239, 231, 0.08);
-    border-radius: 22px;
-    padding: 11px 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-  .dark-row-card:active { transform: scale(0.98); }
-  .dark-row-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--plum-noir-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
+  .dark-tab { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 14px; background: var(--plum-noir-dark); color: var(--brushed-pewter); cursor: pointer; }
+  .dark-tab.active { background: var(--muted-jade); color: var(--cloud-cream); }
+  .dark-row-card { background: var(--plum-noir-dark); border: 1px solid rgba(243,239,231,0.08); border-radius: 22px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; cursor: pointer; }
+  .dark-row-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--plum-noir-soft); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; overflow: hidden; }
   .dark-row-icon img { width: 100%; height: 100%; object-fit: cover; }
   .dark-row-info { flex: 1; min-width: 0; }
-  .dark-row-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--cloud-cream);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .dark-row-sub {
-    font-size: 10px;
-    color: var(--brushed-pewter);
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .dark-row-name { font-size: 13px; font-weight: 700; color: var(--cloud-cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dark-row-sub { font-size: 10px; color: var(--brushed-pewter); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dark-row-right { text-align: right; flex-shrink: 0; }
   .dark-row-price { font-size: 13px; font-weight: 800; color: var(--cloud-cream); }
   .dark-row-tag { font-size: 10px; font-weight: 700; color: var(--muted-jade); margin-top: 2px; }
-  .view-all-row {
-    text-align: right;
-    padding: 2px 8px 0;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--frosted-blue);
-    cursor: pointer;
-  }
+  .view-all-row { text-align: right; padding: 2px 8px 0; font-size: 11px; font-weight: 700; color: var(--frosted-blue); cursor: pointer; }
 
-  /* ====== 全新「物品詳細頁面」(100% 參考 參考01.png 設計) ====== */
-  .detail-page-wrap {
-    margin: 0 -18px -40px;
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 90px);
-  }
-  .detail-top-photo {
-    width: 100%;
-    height: 330px;
-    background: #E8E3DA;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .detail-top-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .detail-top-photo .fallback-emoji {
-    font-size: 84px;
-  }
-  .detail-floating-nav {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    right: 18px;
-    display: flex;
-    justify-content: space-between;
-    z-index: 10;
-  }
-  .detail-glass-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
-    background: rgba(73, 51, 66, 0.42);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-  }
+  /* 物品詳細頁：上半部滿版延伸至狀態列 + 下半部深色100%延伸到底部無空白 */
+  .detail-page-wrap { margin: 0 -18px; display: flex; flex-direction: column; min-height: 100vh; background: #2E1F29; }
+  .detail-top-photo { width: 100%; height: 350px; background: #E8E3DA; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+  .detail-top-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .detail-top-photo .fallback-emoji { font-size: 84px; }
+  .detail-floating-nav { position: absolute; top: 44px; left: 18px; right: 18px; display: flex; justify-content: space-between; z-index: 10; }
+  .detail-glass-btn { width: 40px; height: 40px; border-radius: 13px; background: rgba(73,51,66,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.28); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
 
-  /* 下半部磨砂質感大圓角資訊卡 (對應參考01.png的Living Room下半部) */
   .detail-sheet-card {
-    flex: 1;
-    margin-top: -34px;
-    border-radius: 34px 34px 0 0;
-    background: linear-gradient(165deg, rgba(94, 68, 84, 0.94) 0%, rgba(55, 37, 49, 0.98) 60%, #2E1F29 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1.5px solid rgba(243, 239, 231, 0.22);
-    padding: 26px 22px 60px;
-    color: var(--cloud-cream);
-    position: relative;
-    z-index: 5;
-    box-shadow: 0 -12px 32px rgba(55, 37, 49, 0.28);
+    flex: 1; margin-top: -34px; border-radius: 34px 34px 0 0;
+    background: linear-gradient(165deg, #5A4050 0%, #372531 55%, #2E1F29 100%);
+    border-top: 1.5px solid rgba(243,239,231,0.22);
+    padding: 26px 22px 135px; color: var(--cloud-cream); position: relative; z-index: 5;
+    box-shadow: 0 -12px 32px rgba(55,37,49,0.28);
   }
-  .detail-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .detail-car-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: #fff;
-    margin: 0;
-    line-height: 1.25;
-  }
-  /* 復刻參考01.png右上角的膠囊開關 (一鍵切換 等待中 / 拿到了) */
-  .status-switch-pill {
-    width: 52px;
-    height: 28px;
-    border-radius: 20px;
-    background: rgba(243, 239, 231, 0.25);
-    padding: 3px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.25s;
-  }
-  .status-switch-pill.got {
-    background: var(--cloud-cream);
-    justify-content: flex-end;
-  }
-  .status-switch-knob {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--frosted-blue);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  }
-  .status-switch-pill.got .status-switch-knob {
-    background: var(--muted-jade);
-  }
+  .detail-title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .detail-car-title { font-size: 22px; font-weight: 800; color: #fff; margin: 0; line-height: 1.25; }
+  .status-switch-pill { width: 52px; height: 28px; border-radius: 20px; background: rgba(243,239,231,0.25); padding: 3px; display: flex; align-items: center; cursor: pointer; flex-shrink: 0; transition: background 0.25s; }
+  .status-switch-pill.got { background: var(--cloud-cream); justify-content: flex-end; }
+  .status-switch-knob { width: 22px; height: 22px; border-radius: 50%; background: var(--frosted-blue); box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+  .status-switch-pill.got .status-switch-knob { background: var(--muted-jade); }
+  .detail-desc-text { font-size: 13px; color: rgba(243,239,231,0.78); line-height: 1.55; margin: 0 0 16px; }
+  .detail-desc-text u { color: #fff; font-weight: 700; text-underline-offset: 3px; }
+  .detail-hero-metric { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid rgba(243,239,231,0.14); margin-bottom: 18px; }
+  .detail-big-price { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .detail-big-price small { font-size: 14px; font-weight: 600; color: var(--frosted-blue); margin-left: 4px; }
+  .detail-stars { font-size: 16px; color: #FBBF24; letter-spacing: 2px; }
+  .detail-sec-head { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+  .detail-capsules-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+  .spec-capsule { background: rgba(243,239,231,0.12); border: 1px solid rgba(243,239,231,0.16); border-radius: 42px; padding: 10px 6px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .spec-cap-circle { width: 46px; height: 46px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir); display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+  .spec-cap-label { font-size: 11px; font-weight: 800; color: #fff; margin-bottom: 3px; }
+  .spec-cap-val { font-size: 10px; font-weight: 600; color: rgba(243,239,231,0.72); word-break: break-word; padding: 0 4px; }
+  .detail-extra-box { background: rgba(0,0,0,0.22); border: 1px solid rgba(243,239,231,0.1); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+  .detail-extra-row { display: flex; justify-content: space-between; color: rgba(243,239,231,0.75); }
+  .detail-extra-row strong { color: #fff; }
 
-  .detail-desc-text {
-    font-size: 13px;
-    color: rgba(243, 239, 231, 0.78);
-    line-height: 1.55;
-    margin: 0 0 16px;
-  }
-  .detail-desc-text u {
-    color: #fff;
-    font-weight: 700;
-    text-underline-offset: 3px;
-  }
-
-  /* 復刻參考01.png的 27° 大字區 -> 展示模型價格與星級評分 */
-  .detail-hero-metric {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    padding-bottom: 18px;
-    border-bottom: 1px solid rgba(243, 239, 231, 0.14);
-    margin-bottom: 18px;
-  }
-  .detail-big-price {
-    font-size: 30px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.5px;
-  }
-  .detail-big-price small {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--frosted-blue);
-    margin-left: 4px;
-  }
-  .detail-stars {
-    font-size: 16px;
-    color: #FBBF24;
-    letter-spacing: 2px;
-  }
-
-  .detail-sec-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 15px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 14px;
-  }
-
-  /* 復刻參考01.png底部的 4 根直立式圓頭膠囊卡 (WiFi / Light / Temp / Fan) */
-  .detail-capsules-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  .spec-capsule {
-    background: rgba(243, 239, 231, 0.12);
-    border: 1px solid rgba(243, 239, 231, 0.16);
-    border-radius: 42px;
-    padding: 10px 6px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    backdrop-filter: blur(8px);
-  }
-  .spec-cap-circle {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: var(--cloud-cream);
-    color: var(--plum-noir);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 19px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  }
-  .spec-cap-label {
-    font-size: 11px;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 3px;
-  }
-  .spec-cap-val {
-    font-size: 10px;
-    font-weight: 600;
-    color: rgba(243, 239, 231, 0.72);
-    word-break: break-word;
-    padding: 0 4px;
-  }
-
-  .detail-extra-box {
-    background: rgba(0, 0, 0, 0.22);
-    border: 1px solid rgba(243, 239, 231, 0.1);
-    border-radius: 22px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 12px;
-  }
-  .detail-extra-row {
-    display: flex;
-    justify-content: space-between;
-    color: rgba(243, 239, 231, 0.75);
-  }
-  .detail-extra-row strong {
-    color: #fff;
-  }
-
-  /* ====== 表單與所有收藏品樣式 ====== */
-  .form-card {
-    background: var(--frosted-blue);
-    border-radius: 28px;
-    padding: 16px;
-    margin-bottom: 14px;
-  }
-  .form-card.dark-part {
-    background: var(--plum-noir);
-    color: var(--cloud-cream);
-  }
-  .f-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+  .form-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px; margin-bottom: 14px; }
+  .form-card.dark-part { background: var(--plum-noir); color: var(--cloud-cream); }
+  .f-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .f-group { margin-bottom: 10px; }
-  .f-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 800;
-    margin-bottom: 4px;
-    opacity: 0.85;
-  }
-  .f-input, .f-select {
-    width: 100%;
-    background: var(--cloud-cream-pure);
-    border: 1.5px solid rgba(73,51,66,0.12);
-    color: var(--plum-noir);
-    padding: 10px 12px;
-    border-radius: 14px;
-    font-size: 13px;
-    font-weight: 700;
-    outline: none;
-  }
-  .form-card.dark-part .f-input,
-  .form-card.dark-part .f-select {
-    background: var(--plum-noir-dark);
-    border-color: rgba(243,239,231,0.15);
-    color: var(--cloud-cream);
-  }
-  .chip-row {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 5px;
-  }
-  .mini-chip {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 10px;
-    background: rgba(243,239,231,0.75);
-    color: var(--plum-noir);
-    cursor: pointer;
-  }
-  .form-card.dark-part .mini-chip {
-    background: var(--plum-noir-soft);
-    color: var(--cloud-cream);
-  }
-  .photo-upload-box {
-    border: 2px dashed rgba(243,239,231,0.3);
-    border-radius: 18px;
-    padding: 12px;
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background: var(--plum-noir-dark);
-  }
-  .photo-upload-box img {
-    width: 54px;
-    height: 54px;
-    border-radius: 12px;
-    object-fit: cover;
-  }
-  .submit-pill-btn {
-    width: 100%;
-    height: 52px;
-    border-radius: 28px;
-    background: var(--plum-noir);
-    color: var(--cloud-cream);
-    border: none;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 18px;
-    box-shadow: 0 8px 20px rgba(73,51,66,0.25);
-  }
+  .f-label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 4px; opacity: 0.85; }
+  .f-input, .f-select { width: 100%; background: var(--cloud-cream-pure); border: 1.5px solid rgba(73,51,66,0.12); color: var(--plum-noir); padding: 10px 12px; border-radius: 14px; font-size: 13px; font-weight: 700; outline: none; }
+  .form-card.dark-part .f-input, .form-card.dark-part .f-select { background: var(--plum-noir-dark); border-color: rgba(243,239,231,0.15); color: var(--cloud-cream); }
+  .chip-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+  .mini-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; background: rgba(243,239,231,0.75); color: var(--plum-noir); cursor: pointer; }
+  .form-card.dark-part .mini-chip { background: var(--plum-noir-soft); color: var(--cloud-cream); }
+  .photo-upload-box { border: 2px dashed rgba(243,239,231,0.3); border-radius: 18px; padding: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--plum-noir-dark); }
+  .photo-upload-box img { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; }
+  .submit-pill-btn { width: 100%; height: 52px; border-radius: 28px; background: var(--plum-noir); color: var(--cloud-cream); border: none; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 18px; box-shadow: 0 8px 20px rgba(73,51,66,0.25); }
 
-  .owner-tabs-box {
-    background: var(--frosted-blue);
-    padding: 6px;
-    border-radius: 22px;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr 1fr;
-    gap: 5px;
-    margin-bottom: 12px;
-  }
-  .owner-tab {
-    padding: 9px 6px;
-    border-radius: 17px;
-    text-align: center;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--plum-noir);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .owner-tab.active {
-    background: var(--plum-noir);
-    color: var(--cloud-cream);
-    box-shadow: 0 4px 10px rgba(73,51,66,0.2);
-  }
-  .filter-pills-bar {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scrollbar-width: none;
-  }
+  .owner-tabs-box { background: var(--frosted-blue); padding: 6px; border-radius: 22px; display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 5px; margin-bottom: 12px; }
+  .owner-tab { padding: 9px 6px; border-radius: 17px; text-align: center; font-size: 11px; font-weight: 800; color: var(--plum-noir); cursor: pointer; transition: all 0.2s; }
+  .owner-tab.active { background: var(--plum-noir); color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(73,51,66,0.2); }
+  .filter-pills-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
   .filter-pills-bar::-webkit-scrollbar { display: none; }
-  .f-pill {
-    white-space: nowrap;
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 11px;
-    font-weight: 800;
-    background: var(--cloud-cream-pure);
-    color: var(--plum-noir);
-    border: 1px solid rgba(73,51,66,0.12);
-    cursor: pointer;
-  }
-  .f-pill.active {
-    background: var(--muted-jade);
-    color: var(--cloud-cream);
-    border-color: var(--muted-jade);
-  }
+  .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir); border: 1px solid rgba(73,51,66,0.12); cursor: pointer; }
+  .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
 
-  .trantor-dock-container {
-    position: absolute;
-    bottom: 14px;
-    left: 16px;
-    right: 16px;
-    height: 76px;
-    z-index: 100;
-    display: flex;
-    align-items: flex-end;
-  }
-  body.fullscreen-mode .trantor-dock-container {
-    position: fixed;
-    max-width: 448px;
-    margin: 0 auto;
-  }
+  /* 半透明毛玻璃底部導覽列 */
+  .trantor-dock-container { position: absolute; bottom: 14px; left: 16px; right: 16px; height: 76px; z-index: 100; display: flex; align-items: flex-end; pointer-events: none; }
+  body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 448px; margin: 0 auto; }
   .trantor-dock-bg {
-    width: 100%;
-    height: 62px;
-    background: var(--plum-noir);
-    border-radius: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
-    position: relative;
-    box-shadow: 0 12px 28px rgba(73, 51, 66, 0.35);
+    pointer-events: auto; width: 100%; height: 62px;
+    background: rgba(73, 51, 66, 0.72);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(243, 239, 231, 0.2);
+    border-radius: 30px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; position: relative;
+    box-shadow: 0 12px 28px rgba(35, 22, 31, 0.32);
   }
   .trantor-center-arch {
-    position: absolute;
-    left: 50%;
-    top: -18px;
-    transform: translateX(-50%);
-    width: 74px;
-    height: 74px;
-    border-radius: 50%;
-    background: var(--cloud-cream);
-    padding: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    position: absolute; left: 50%; top: -18px; transform: translateX(-50%); width: 74px; height: 74px; border-radius: 50%;
+    background: rgba(243, 239, 231, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;
   }
-  .trantor-center-btn {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--cloud-cream-pure);
-    border: 2px solid rgba(73,51,66,0.12);
-    color: var(--plum-noir);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 800;
-    box-shadow: 0 4px 12px rgba(73,51,66,0.12);
-    transition: all 0.2s;
-  }
-  .trantor-center-arch.active .trantor-center-btn {
-    background: var(--muted-jade);
-    color: var(--cloud-cream);
-    border-color: var(--muted-jade);
-  }
+  .trantor-center-btn { width: 100%; height: 100%; border-radius: 50%; background: rgba(250,248,245,0.92); border: 2px solid rgba(73,51,66,0.12); color: var(--plum-noir); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; box-shadow: 0 4px 12px rgba(73,51,66,0.15); transition: all 0.2s; }
+  .trantor-center-arch.active .trantor-center-btn { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
+  .trantor-side-btn { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(243,239,231,0.3); background: transparent; color: rgba(243,239,231,0.65); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+  .trantor-side-btn.active { border-color: var(--cloud-cream); color: var(--cloud-cream); background: rgba(243,239,231,0.16); }
+  .grid-4-icon { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 16px; height: 16px; }
+  .grid-4-icon span { border: 1.5px solid currentColor; border-radius: 3px; }
 
-  .trantor-side-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(243, 239, 231, 0.25);
-    background: transparent;
-    color: var(--brushed-pewter);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .trantor-side-btn.active {
-    border-color: var(--cloud-cream);
-    color: var(--cloud-cream);
-    background: rgba(243, 239, 231, 0.12);
-  }
-  .grid-4-icon {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3px;
-    width: 16px;
-    height: 16px;
-  }
-  .grid-4-icon span {
-    border: 1.5px solid currentColor;
-    border-radius: 3px;
-  }
-
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(55, 37, 49, 0.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 950;
-    padding: 20px;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(55,37,49,0.7); display: none; align-items: center; justify-content: center; z-index: 950; padding: 20px; }
   .modal-overlay.open { display: flex; }
-  .modal-panel {
-    background: var(--cloud-cream);
-    border: 2px solid var(--plum-noir);
-    border-radius: 28px;
-    padding: 20px;
-    width: 100%;
-    max-width: 360px;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.3);
-  }
+  .modal-panel { background: var(--cloud-cream); border: 2px solid var(--plum-noir); border-radius: 28px; padding: 20px; width: 100%; max-width: 360px; box-shadow: 0 18px 40px rgba(0,0,0,0.3); }
 </style>
 </head>
 <body>
@@ -1054,41 +205,32 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 首頁漸層背景 ＋ 參考01.png 物品詳細頁</span>
+  <span>🎨 雲端純淨版（無寫死預設資料，100% 同步 Google 試算表）</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
 <div class="phone-frame">
-  <div class="screen-scroll no-top-pad" id="screenContent"></div>
+  <div class="screen-scroll home-mode" id="screenContent"></div>
 
   <div class="trantor-dock-container">
     <div class="trantor-dock-bg">
       <button class="trantor-side-btn active" id="dockLeft" onclick="switchTab('home')" title="首頁">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
       </button>
-
       <div class="trantor-center-arch" id="dockCenter" onclick="switchTab('add')" title="新增收藏品">
         <div class="trantor-center-btn">＋</div>
       </div>
-
       <button class="trantor-side-btn" id="dockRight" onclick="switchTab('all')" title="所有收藏品">
-        <div class="grid-4-icon">
-          <span></span><span></span><span></span><span></span>
-        </div>
+        <div class="grid-4-icon"><span></span><span></span><span></span><span></span></div>
       </button>
     </div>
   </div>
 </div>
 
-<!-- 雲端網址設定視窗 -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
     <h3 style="margin:0 0 8px;font-size:16px;">☁️ 雲端伺服器網址設定</h3>
-    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">
-      請貼上一次您的 Google Apps Script 網址並儲存，之後直接點首頁右上角的「🔄」即可一鍵更新：
-    </p>
+    <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">請貼上一次您的 Google Apps Script 網址並儲存，之後直接點右上角的「🔄」即可一鍵更新：</p>
     <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;gap:8px;">
       <button class="submit-pill-btn" style="height:42px;font-size:13px;margin-bottom:0;" onclick="saveAndPullCloud()">💾 儲存網址並立即同步</button>
@@ -1101,81 +243,31 @@
 // 💡 您可以直接把 https://script.google.com/.../exec 網址貼在下方雙引號內：
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
 
-const DEFAULT_BRANDS = [
-  "BBR", "MINI GT", "POPRACE", "KAIDO HOUSE", "LOOKSMART",
-  "π MODEL", "INNO 64", "CM MODEL", "HKM", "GLAMCRAFT",
-  "ZINCIT MODEL", "DM MODEL", "TRANDS HABBY", "COOL CAR",
-  "DEMON KING AUTO", "RHINO MODEL", "FNRC"
-];
+const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
-const INITIAL_DATA = [
-  {id:"1",name:"Alfa Romeo 33",brand:"BBR",status:"等待中",scale:"1/64",price:580,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"2",name:"Ferrari 296 Special",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"3",name:"Ferrari LaFerrari",brand:"GLAMCRAFT",status:"拿到了",scale:"1/64",price:2200,orderDate:"2026/08/29",estDate:"2026/10",actDate:"2026/09/14",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"★★★★★",buyer:"帥氣實實",category:"模型車"},
-  {id:"4",name:"大黑PA停車場 滑鼠墊",brand:"FNRC",status:"拿到了",scale:"1/64",price:599,orderDate:"2026/08/22",estDate:"2026/10",actDate:"2026/10/30",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"★★★☆☆",buyer:"帥氣實實",category:"周邊/其他"},
-  {id:"5",name:'Aston Martin DBS "Quantum of Solace"',brand:"MINI GT",status:"等待中",scale:"1/64",price:550,orderDate:"2026/08/26",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"6",name:"Bugatti Tourbillon 金色",brand:"TRANDS HABBY",status:"等待中",scale:"1/64",price:500,orderDate:"2026/08/21",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"7",name:"Bugatti Tourbillon 大西洋藍色",brand:"TRANDS HABBY",status:"等待中",scale:"1/64",price:500,orderDate:"2026/08/21",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"8",name:"Mercedes-AMG G 63 Silver Metallic",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/09/07",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"9",name:"Aston Martin Valhalla Podium Green",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/09/07",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"10",name:"DarwinPRO 720SE²NWB",brand:"CM MODEL",status:"等待中",scale:"1/64",price:810,orderDate:"2026/09/10",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"11",name:"Nissan Skyline GT-R R34",brand:"MINI GT",status:"等待中",scale:"1/64",price:590,orderDate:"2026/09/23",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"12",name:"Dodge Charger",brand:"MINI GT",status:"等待中",scale:"1/64",price:520,orderDate:"2026/09/23",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"13",name:"Porsche 992 Targa",brand:"ZINCIT MODEL",status:"等待中",scale:"1/64",price:700,orderDate:"2026/09/22",estDate:"2026/Q4",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"14",name:"Porsche 992 Targa",brand:"ZINCIT MODEL",status:"等待中",scale:"1/64",price:700,orderDate:"2026/09/22",estDate:"2026/Q4",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"15",name:"Tesla Pickup Truck",brand:"DM MODEL",status:"等待中",scale:"1/64",price:1330,orderDate:"2026/09/25",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"16",name:"Porsche 911 GT3 R",brand:"HKM",status:"等待中",scale:"1/64",price:660,orderDate:"2026/09/24",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"17",name:"Porsche 911 GT3 R",brand:"HKM",status:"等待中",scale:"1/64",price:660,orderDate:"2026/09/24",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"18",name:"Bugatti EB110",brand:"MINI GT",status:"等待中",scale:"1/64",price:370,orderDate:"2026/09/28",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"19",name:"Lamborghini Temerario",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/09/28",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"20",name:"LB-ER34",brand:"POPRACE",status:"等待中",scale:"1/64",price:600,orderDate:"2026/09/28",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"21",name:"Lamborghini Veneno",brand:"POPRACE",status:"等待中",scale:"1/64",price:600,orderDate:"2026/09/28",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"22",name:"Subaru Impreza WRX STI",brand:"KAIDO HOUSE",status:"等待中",scale:"1/64",price:630,orderDate:"2026/10/07",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"23",name:"Honda NSX Kaido House",brand:"KAIDO HOUSE",status:"等待中",scale:"1/64",price:630,orderDate:"2026/10/07",estDate:"2027/Q2",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"24",name:"LB WORKS NISSAN R35 GTR Ver.2",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/10/12",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"25",name:"Porsche 911 GT3 RS STAPLE",brand:"MINI GT",status:"等待中",scale:"1/64",price:430,orderDate:"2026/10/12",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"26",name:"Ducati Panigale V4 S",brand:"MINI GT",status:"等待中",scale:"1/64",price:510,orderDate:"2026/10/12",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"27",name:"McLaren Senna",brand:"CM MODEL",status:"等待中",scale:"1/64",price:810,orderDate:"2026/10/15",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"28",name:"Porsche 911 GT3 R",brand:"BBR",status:"等待中",scale:"1/64",price:580,orderDate:"2026/10/22",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"29",name:"Lamborghini GT EVO V5",brand:"COOL CAR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/10/25",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"30",name:"Koenigsegg One : 1",brand:"DEMON KING AUTO",status:"等待中",scale:"1/64",price:1380,orderDate:"2026/10/28",estDate:"2026/12",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"31",name:"Aston Martin Valkyrie",brand:"MINI GT",status:"等待中",scale:"1/64",price:370,orderDate:"2026/10/28",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"32",name:"Ferrari F50",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/11/02",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"33",name:"Ferrari F80",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/11/02",estDate:"2027/Q1",actDate:"",photo:"",store:"Fred's Grage Club",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"34",name:"Ferrari 12Cilondri",brand:"RHINO MODEL",status:"等待中",scale:"1/64",price:810,orderDate:"2026/11/03",estDate:"2027/01",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"35",name:"P1 GTR-X",brand:"INNO 64",status:"等待中",scale:"1/64",price:790,orderDate:"2026/11/04",estDate:"2027/Q1",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
-  {id:"36",name:"RWB 930",brand:"POPRACE",status:"等待中",scale:"1/64",price:580,orderDate:"2026/11/05",estDate:"2027/Q2",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
-  {id:"37",name:"Ferrari SF26 #44 巴塞隆納P1",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
-  {id:"38",name:"Ferrari SF26 #44 加拿大P2",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
-  {id:"39",name:"Ferrari SF26 #16 日本P3",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
-  {id:"40",name:"PEUGEOT 406 Taxi",brand:"π MODEL",status:"等待中",scale:"1/64",price:800,orderDate:"2026/11/06",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"}
-];
-
+// 已完全移除寫死的 40 筆預設資料，100% 讀取雲端同步快取！
 function loadSavedItems() {
   const v1 = JSON.parse(localStorage.getItem('trantor_left_items') || 'null');
   const v2 = JSON.parse(localStorage.getItem('trantor_left_items_v2') || 'null');
   if (v1 && v1.some(x => x.photo)) return v1;
   if (v2 && v2.some(x => x.photo)) return v2;
-  return v1 || v2 || INITIAL_DATA;
+  return v1 || v2 || [];
 }
 
 let items = loadSavedItems();
 let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
 let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
-let activeTab = 'home'; // 'home' | 'add' | 'all' | 'detail'
+let activeTab = 'home';
 let previousTab = 'all';
 let viewingDetailId = null;
-
 let chartMode = 'recent';
 let homeRecentMode = 'preorder';
 let selectedBarInfo = '';
-
 let ownerFilter = 'ALL';
 let catFilter = 'ALL';
 let statusFilter = 'ALL';
 let searchKeyword = '';
-
 let editingId = null;
 let tempPhotoBase64 = '';
 let hudTimer = null;
@@ -1185,10 +277,7 @@ const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" st
 function getAllBrandOptions() {
   const set = new Set(cloudBrands);
   DEFAULT_BRANDS.forEach(b => set.add(b));
-  items.forEach(it => {
-    const b = String(it.brand || '').trim();
-    if (b) set.add(b);
-  });
+  items.forEach(it => { const b = String(it.brand || '').trim(); if (b) set.add(b); });
   return Array.from(set);
 }
 
@@ -1199,11 +288,7 @@ function showAutoPopup(icon, title, sub, duration = 1600) {
   document.getElementById('hudSub').textContent = sub || '';
   hud.classList.add('show');
   if (hudTimer) clearTimeout(hudTimer);
-  if (duration > 0) {
-    hudTimer = setTimeout(() => {
-      hud.classList.remove('show');
-    }, duration);
-  }
+  if (duration > 0) hudTimer = setTimeout(() => hud.classList.remove('show'), duration);
 }
 
 function saveLocal() {
@@ -1214,8 +299,7 @@ function saveLocal() {
 
 function switchTab(tab) {
   if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') {
-    editingId = null;
-    tempPhotoBase64 = '';
+    editingId = null; tempPhotoBase64 = '';
   }
   activeTab = tab;
   document.getElementById('dockLeft').classList.toggle('active', tab === 'home');
@@ -1223,21 +307,19 @@ function switchTab(tab) {
   document.getElementById('dockRight').classList.toggle('active', tab === 'all' || tab === 'detail');
 
   const scrollBox = document.getElementById('screenContent');
-  scrollBox.classList.toggle('no-top-pad', tab === 'home' || tab === 'detail');
+  scrollBox.className = 'screen-scroll';
+  if (tab === 'home') scrollBox.classList.add('home-mode');
+  if (tab === 'detail') scrollBox.classList.add('detail-mode');
   renderScreen();
   scrollBox.scrollTop = 0;
 }
 
-// 點擊任何清單物品時，進入「參考01.png 風格物品詳細頁」！
 function openDetailView(id) {
-  if (activeTab === 'home' || activeTab === 'all') {
-    previousTab = activeTab;
-  }
+  if (activeTab === 'home' || activeTab === 'all') previousTab = activeTab;
   viewingDetailId = id;
   switchTab('detail');
 }
 
-/* ====== 1. 首頁 (整合 image.png 風格背景圖 DSC00224.jpg + 漸層過渡) ====== */
 function renderHomeTab() {
   const totalVal = items.reduce((s, x) => s + (Number(x.price) || 0), 0);
   const waitCnt = items.filter(x => x.status === '等待中').length;
@@ -1247,40 +329,31 @@ function renderHomeTab() {
   items.forEach(it => {
     const d = it.orderDate || '未知日期';
     if (!dateMap[d]) dateMap[d] = { count: 0, sum: 0 };
-    dateMap[d].count += 1;
-    dateMap[d].sum += Number(it.price) || 0;
+    dateMap[d].count += 1; dateMap[d].sum += Number(it.price) || 0;
   });
 
   const allDates = Object.entries(dateMap);
-  let chartDates = [];
-  if (chartMode === 'top') {
-    chartDates = allDates.slice().sort((a, b) => b[1].count - a[1].count || b[0].localeCompare(a[0]));
-  } else {
-    chartDates = allDates.slice().sort((a, b) => b[0].localeCompare(a[0]));
-  }
+  const chartDates = chartMode === 'top'
+    ? allDates.slice().sort((a, b) => b[1].count - a[1].count || b[0].localeCompare(a[0]))
+    : allDates.slice().sort((a, b) => b[0].localeCompare(a[0]));
   const maxDayCount = Math.max(...allDates.map(d => d[1].count), 4);
   const bestDay = allDates.slice().sort((a, b) => b[1].count - a[1].count)[0];
 
-  let recentList = [];
-  if (homeRecentMode === 'preorder') {
-    recentList = items.filter(x => x.status === '等待中').slice(-4).reverse();
-  } else {
-    recentList = items.filter(x => x.status === '拿到了').slice(-4).reverse();
-    if (recentList.length === 0) recentList = items.slice(-3).reverse();
-  }
+  let recentList = homeRecentMode === 'preorder'
+    ? items.filter(x => x.status === '等待中').slice(-4).reverse()
+    : items.filter(x => x.status === '拿到了').slice(-4).reverse();
+  if (recentList.length === 0) recentList = items.slice(-4).reverse();
 
   return `
-    <!-- 首頁頂部：DSC00224.jpg 滿版背景 + 柔和漸層過渡 (參考 image.png) -->
     <div class="home-hero-banner">
       <div class="home-hero-top">
         <div class="hero-quote-mark">“</div>
         <div class="header-icons">
-          <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
-          <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端網址設定">☁️</div>
-          <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
+          <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()">${SYNC_SVG}</div>
+          <div class="bell-btn" onclick="openCloudModal()">☁️</div>
+          <div class="user-avatar" onclick="switchTab('all')">🏎️</div>
         </div>
       </div>
-
       <div class="home-hero-bottom">
         <h1 class="greet-title">Hey, 實實 & 寶寶!</h1>
         <p class="greet-sub">— KEEP BUILDING YOUR DREAM GARAGE.</p>
@@ -1293,42 +366,27 @@ function renderHomeTab() {
     </div>
 
     <div class="dual-pill-wrap">
-      <div class="dual-pill" onclick="jumpToAllWithStatus('等待中')">
-        <span>預購等待 (${waitCnt})</span>
-      </div>
-      <div class="dual-center-x" onclick="switchTab('add')" title="新增收藏">＋</div>
-      <div class="dual-pill" onclick="jumpToAllWithStatus('拿到了')">
-        <span>現有入庫 (${gotCnt})</span>
-      </div>
+      <div class="dual-pill" onclick="jumpToAllWithStatus('等待中')"><span>預購等待 (${waitCnt})</span></div>
+      <div class="dual-center-x" onclick="switchTab('add')">＋</div>
+      <div class="dual-pill" onclick="jumpToAllWithStatus('拿到了')"><span>現有入庫 (${gotCnt})</span></div>
     </div>
 
     <div class="chart-card">
       <div class="chart-top-bar">
-        <div class="chart-coin-badge">
-          <span class="diamond">📊</span>
-          <span>單日購買統計</span>
-        </div>
+        <div class="chart-coin-badge"><span class="diamond">📊</span><span>單日購買統計</span></div>
         <div class="chart-period-pills">
           <span class="period-pill ${chartMode==='recent'?'active':''}" onclick="setChartMode('recent')">近期日期</span>
           <span class="period-pill ${chartMode==='top'?'active':''}" onclick="setChartMode('top')">最多購買日</span>
         </div>
         <div class="more-pill" onclick="setChartMode(chartMode==='top'?'recent':'top')">切換 ⌄</div>
       </div>
-
       <div class="histogram-wrapper">
         <div class="y-axis-fixed">
-          <span>${maxDayCount}件</span>
-          <span>${Math.ceil(maxDayCount*0.66)}件</span>
-          <span>${Math.ceil(maxDayCount*0.33)}件</span>
-          <span>0件</span>
+          <span>${maxDayCount}件</span><span>${Math.ceil(maxDayCount*0.66)}件</span><span>${Math.ceil(maxDayCount*0.33)}件</span><span>0件</span>
         </div>
-
         <div class="hist-scroll-viewport">
           <div class="hist-track">
-            <div class="y-grid-lines">
-              <i></i><i></i><i></i><i></i>
-            </div>
-
+            <div class="y-grid-lines"><i></i><i></i><i></i><i></i></div>
             ${chartDates.map(([dateStr, info]) => {
               const fgHeight = Math.max(38, Math.round((info.count / maxDayCount) * 105));
               const bgHeight = Math.min(110, fgHeight + 18);
@@ -1343,17 +401,13 @@ function renderHomeTab() {
                     </div>
                   </div>
                   <div class="hist-date">${shortDate}</div>
-                </div>
-              `;
+                </div>`;
             }).join('')}
           </div>
         </div>
       </div>
-
       <div class="chart-legend">
-        <div class="legend-dots">
-          <span class="peak-dot">左右滑動查看 (${chartDates.length}天)</span>
-        </div>
+        <div class="legend-dots"><span class="peak-dot">左右滑動查看 (${chartDates.length}天)</span></div>
         <span>${selectedBarInfo || (bestDay ? '🏆 最高：' + bestDay[0].slice(5) + ' (' + bestDay[1].count + '件)' : '-')}</span>
       </div>
     </div>
@@ -1366,7 +420,7 @@ function renderHomeTab() {
           <span class="dark-tab ${homeRecentMode==='got'?'active':''}" onclick="setHomeRecentMode('got')">最近購買/到貨</span>
         </div>
       </div>
-
+      ${recentList.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--brushed-pewter);">☁️ 尚無資料，請點選右上角「☁️」設定網址或「🔄」同步</div>` : ''}
       ${recentList.map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         return `
@@ -1380,16 +434,13 @@ function renderHomeTab() {
               <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
               <div class="dark-row-tag">${it.status === '拿到了' ? '✓ 已拿到 ' + it.rating : '預計 ' + (it.estDate || '待定')}</div>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('')}
-
       <div class="view-all-row" onclick="switchTab('all')">View All 全部收藏 (${items.length}) ⌄</div>
     </div>
   `;
 }
 
-/* ====== 2. 物品詳細頁面 (100% 參考 參考01.png 設計：上圖下磨砂資訊卡+4膠囊) ====== */
 function renderDetailTab() {
   const it = items.find(x => String(x.id) === String(viewingDetailId)) || items[0];
   if (!it) return '';
@@ -1398,124 +449,68 @@ function renderDetailTab() {
 
   return `
     <div class="detail-page-wrap">
-      <!-- 最上方：滿版展示模型車圖片 (參考01.png 上半部) -->
       <div class="detail-top-photo">
         <div class="detail-floating-nav">
-          <div class="detail-glass-btn" onclick="switchTab('${previousTab}')" title="返回">‹</div>
-          <div class="detail-glass-btn" onclick="openEditItem('${it.id}')" title="編輯此收藏">⚙️</div>
+          <div class="detail-glass-btn" onclick="switchTab('${previousTab}')">‹</div>
+          <div class="detail-glass-btn" onclick="openEditItem('${it.id}')">⚙️</div>
         </div>
-        ${it.photo
-          ? `<img src="${it.photo}" alt="${it.name}">`
-          : `<span class="fallback-emoji">${icon}</span>`
-        }
+        ${it.photo ? `<img src="${it.photo}" alt="${it.name}">` : `<span class="fallback-emoji">${icon}</span>`}
       </div>
 
-      <!-- 下方磨砂深色圓角卡片 (參考01.png 下半部 Living Room 結構) -->
       <div class="detail-sheet-card">
         <div class="detail-title-row">
           <h2 class="detail-car-title">${it.name}</h2>
-          <div class="status-switch-pill ${isGot ? 'got' : ''}" onclick="toggleDetailStatus('${it.id}')" title="點擊切換：等待中 / 拿到了">
+          <div class="status-switch-pill ${isGot ? 'got' : ''}" onclick="toggleDetailStatus('${it.id}')">
             <div class="status-switch-knob"></div>
           </div>
         </div>
-
         <p class="detail-desc-text">
           此收藏由 <u>${it.buyer}</u> 於 ${it.orderDate || '近期'} 向 <u>${it.store || '特約店家'}</u> 購買，目前狀態為 <u>${it.status}</u>。
         </p>
-
         <div class="detail-hero-metric">
           <div class="detail-big-price">$${Number(it.price || 0).toLocaleString()}<small>TWD</small></div>
           <div class="detail-stars">${it.rating || '☆☆☆☆☆'}</div>
         </div>
-
         <div class="detail-sec-head" onclick="openEditItem('${it.id}')" style="cursor:pointer;">
           <span>車輛規格資訊 (Specifications)</span>
           <span style="font-size:18px;opacity:0.7;">›</span>
         </div>
-
-        <!-- 4 根直立式圓頭膠囊卡 (復刻參考01.png底部的 WiFi / Light / Temp / Fan) -->
         <div class="detail-capsules-grid">
-          <div class="spec-capsule">
-            <div class="spec-cap-circle">🏷️</div>
-            <div class="spec-cap-label">品牌</div>
-            <div class="spec-cap-val">${it.brand || '-'}</div>
-          </div>
-          <div class="spec-capsule">
-            <div class="spec-cap-circle">📐</div>
-            <div class="spec-cap-label">比例</div>
-            <div class="spec-cap-val">${it.scale || '1/64'}</div>
-          </div>
-          <div class="spec-capsule">
-            <div class="spec-cap-circle">📅</div>
-            <div class="spec-cap-label">預計到貨</div>
-            <div class="spec-cap-val">${it.estDate || '待定'}</div>
-          </div>
-          <div class="spec-capsule">
-            <div class="spec-cap-circle">${it.buyer === '可愛寶寶' ? '🥰' : '😎'}</div>
-            <div class="spec-cap-label">購買人</div>
-            <div class="spec-cap-val">${it.buyer}</div>
-          </div>
+          <div class="spec-capsule"><div class="spec-cap-circle">🏷️</div><div class="spec-cap-label">品牌</div><div class="spec-cap-val">${it.brand || '-'}</div></div>
+          <div class="spec-capsule"><div class="spec-cap-circle">📐</div><div class="spec-cap-label">比例</div><div class="spec-cap-val">${it.scale || '1/64'}</div></div>
+          <div class="spec-capsule"><div class="spec-cap-circle">📅</div><div class="spec-cap-label">預計到貨</div><div class="spec-cap-val">${it.estDate || '待定'}</div></div>
+          <div class="spec-capsule"><div class="spec-cap-circle">${it.buyer === '可愛寶寶' ? '🥰' : '😎'}</div><div class="spec-cap-label">購買人</div><div class="spec-cap-val">${it.buyer}</div></div>
         </div>
-
         <div class="detail-extra-box">
-          <div class="detail-extra-row">
-            <span>🏪 預購 / 購買店家</span>
-            <strong>${it.store || '未填寫'}</strong>
-          </div>
-          <div class="detail-extra-row">
-            <span>🗓️ 預購下單日期</span>
-            <strong>${it.orderDate || '-'}</strong>
-          </div>
-          <div class="detail-extra-row">
-            <span>📦 實際到貨日期</span>
-            <strong>${it.actDate || (isGot ? '已入庫' : '尚未到貨')}</strong>
-          </div>
-          <div class="detail-extra-row">
-            <span>🗂️ 收藏品分類</span>
-            <strong>${it.category || '模型車'}</strong>
-          </div>
+          <div class="detail-extra-row"><span>🏪 預購 / 購買店家</span><strong>${it.store || '未填寫'}</strong></div>
+          <div class="detail-extra-row"><span>🗓️ 預購下單日期</span><strong>${it.orderDate || '-'}</strong></div>
+          <div class="detail-extra-row"><span>📦 實際到貨日期</span><strong>${it.actDate || (isGot ? '已入庫' : '尚未到貨')}</strong></div>
+          <div class="detail-extra-row"><span>🗂️ 收藏品分類</span><strong>${it.category || '模型車'}</strong></div>
         </div>
       </div>
     </div>
   `;
 }
 
-// 在詳細頁面撥動右上角開關時，直接切換「等待中 / 拿到了」並同步雲端
 async function toggleDetailStatus(id) {
   const it = items.find(x => String(x.id) === String(id));
   if (!it) return;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
-  if (it.status === '拿到了') {
-    it.status = '等待中';
-    it.actDate = '';
-  } else {
-    it.status = '拿到了';
-    if (!it.actDate) it.actDate = today;
-  }
-  saveLocal();
-  renderScreen();
+  if (it.status === '拿到了') { it.status = '等待中'; it.actDate = ''; }
+  else { it.status = '拿到了'; if (!it.actDate) it.actDate = today; }
+  saveLocal(); renderScreen();
   showAutoPopup('✅', `已切換為：${it.status}`, it.name, 1400);
-
   if (gasUrl) {
-    try {
-      await fetch(gasUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'saveItem', item: it })
-      });
-    } catch (e) {}
+    try { await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveItem', item: it }) }); } catch (e) {}
   }
 }
 
-/* ====== 3. 新增 / 編輯收藏品介面 ====== */
 function renderAddTab() {
   const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
   const currentBrand = it ? it.brand : 'BBR';
   const brandOptions = getAllBrandOptions();
-  if (currentBrand && !brandOptions.includes(currentBrand)) {
-    brandOptions.unshift(currentBrand);
-  }
+  if (currentBrand && !brandOptions.includes(currentBrand)) brandOptions.unshift(currentBrand);
 
   return `
     <div class="header-row">
@@ -1525,7 +520,6 @@ function renderAddTab() {
       </div>
       <div class="bell-btn" onclick="switchTab('${it ? 'detail' : 'home'}')">✕</div>
     </div>
-
     <div class="form-card">
       <div class="f-grid-2">
         <div class="f-group">
@@ -1544,12 +538,10 @@ function renderAddTab() {
           </select>
         </div>
       </div>
-
       <div class="f-group">
         <label class="f-label">車車名稱 / 娃娃收藏名稱</label>
         <input type="text" class="f-input" id="f_name" placeholder="例如：PEUGEOT 406 Taxi 或 娃娃" value="${it ? it.name : ''}">
       </div>
-
       <div class="f-grid-2">
         <div class="f-group">
           <label class="f-label">模型品牌 / 系列</label>
@@ -1563,12 +555,10 @@ function renderAddTab() {
           <input type="text" class="f-input" id="f_scale" value="${it ? it.scale : '1/64'}">
         </div>
       </div>
-
       <div class="f-group" id="customBrandBox" style="display:none;">
         <label class="f-label">輸入新品牌名稱（儲存後將自動同步加入選單）</label>
         <input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新模型品牌或娃娃系列名稱">
       </div>
-
       <div class="f-grid-2">
         <div class="f-group" style="margin-bottom:0;">
           <label class="f-label">價格合計 (NT$)</label>
@@ -1583,7 +573,6 @@ function renderAddTab() {
         </div>
       </div>
     </div>
-
     <div class="form-card dark-part">
       <div class="f-group">
         <label class="f-label">預購店家</label>
@@ -1594,23 +583,12 @@ function renderAddTab() {
           <span class="mini-chip" onclick="document.getElementById('f_store').value='CarGu 模型車預購'">CarGu 模型車預購</span>
         </div>
       </div>
-
       <div class="f-grid-2">
-        <div class="f-group">
-          <label class="f-label">預購日期</label>
-          <input type="text" class="f-input" id="f_orderDate" placeholder="YYYY/MM/DD" value="${it ? it.orderDate : today}">
-        </div>
-        <div class="f-group">
-          <label class="f-label">預計到貨日期</label>
-          <input type="text" class="f-input" id="f_estDate" placeholder="如 2027/Q1" value="${it ? it.estDate : '2027/Q1'}">
-        </div>
+        <div class="f-group"><label class="f-label">預購日期</label><input type="text" class="f-input" id="f_orderDate" value="${it ? it.orderDate : today}"></div>
+        <div class="f-group"><label class="f-label">預計到貨日期</label><input type="text" class="f-input" id="f_estDate" value="${it ? it.estDate : '2027/Q1'}"></div>
       </div>
-
       <div class="f-grid-2">
-        <div class="f-group">
-          <label class="f-label">實際到貨日期</label>
-          <input type="text" class="f-input" id="f_actDate" placeholder="拿到時填寫" value="${it ? it.actDate : ''}">
-        </div>
+        <div class="f-group"><label class="f-label">實際到貨日期</label><input type="text" class="f-input" id="f_actDate" placeholder="拿到時填寫" value="${it ? it.actDate : ''}"></div>
         <div class="f-group">
           <label class="f-label">評分 (★)</label>
           <select class="f-select" id="f_rating">
@@ -1623,14 +601,11 @@ function renderAddTab() {
           </select>
         </div>
       </div>
-
       <div class="f-group" style="margin-bottom:0;">
         <label class="f-label">車車的樣子 (點擊開啟 S25U/S26U 相簿或相機)</label>
         <label class="photo-upload-box">
           <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoPick(event)">
-          <div id="photoPreviewHolder">
-            ${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}
-          </div>
+          <div id="photoPreviewHolder">${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
           <div style="text-align:left;font-size:12px;">
             <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
             <div style="color:var(--brushed-pewter);font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div>
@@ -1638,30 +613,17 @@ function renderAddTab() {
         </label>
       </div>
     </div>
-
-    <button class="submit-pill-btn" onclick="saveCollectible()">
-      <span>✓ ${it ? '儲存修改並同步雲端' : '新增至收藏庫並同步雲端'}</span>
-    </button>
-
-    ${it ? `
-      <div style="text-align:center;margin-bottom:20px;">
-        <span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeCollectible('${it.id}')">🗑️ 刪除此筆收藏</span>
-      </div>
-    ` : ''}
+    <button class="submit-pill-btn" onclick="saveCollectible()"><span>✓ ${it ? '儲存修改並同步雲端' : '新增至收藏庫並同步雲端'}</span></button>
+    ${it ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeCollectible('${it.id}')">🗑️ 刪除此筆收藏</span></div>` : ''}
   `;
 }
 
 function onBrandSelectChange(val) {
   const customBox = document.getElementById('customBrandBox');
-  if (val === '__CUSTOM__') {
-    customBox.style.display = 'block';
-    document.getElementById('f_brand_custom').focus();
-  } else {
-    customBox.style.display = 'none';
-  }
+  if (val === '__CUSTOM__') { customBox.style.display = 'block'; document.getElementById('f_brand_custom').focus(); }
+  else { customBox.style.display = 'none'; }
 }
 
-/* ====== 4. 所有收藏品總覽 (點擊任意項目進入詳細頁面) ====== */
 function renderAllTab() {
   const countAll = items.length;
   const countShi = items.filter(x => x.buyer === '帥氣實實').length;
@@ -1677,7 +639,6 @@ function renderAllTab() {
     }
     return true;
   });
-
   const subTotal = filtered.reduce((s, x) => s + (Number(x.price) || 0), 0);
 
   return `
@@ -1687,24 +648,16 @@ function renderAllTab() {
         <p class="greet-sub">目前檢視共 ${filtered.length} 件 · 合計 $${subTotal.toLocaleString()}</p>
       </div>
       <div class="header-icons">
-        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
-        <div class="bell-btn" onclick="openCloudModal()" title="雲端網址設定">☁️</div>
-        <div class="bell-btn" onclick="switchTab('add')" title="新增收藏">＋</div>
+        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()">${SYNC_SVG}</div>
+        <div class="bell-btn" onclick="openCloudModal()">☁️</div>
+        <div class="bell-btn" onclick="switchTab('add')">＋</div>
       </div>
     </div>
-
     <div class="owner-tabs-box">
-      <div class="owner-tab ${ownerFilter==='ALL'?'active':''}" onclick="setOwnerFilter('ALL')">
-        👥 兩人一起 (${countAll})
-      </div>
-      <div class="owner-tab ${ownerFilter==='帥氣實實'?'active':''}" onclick="setOwnerFilter('帥氣實實')">
-        😎 帥氣實實 (${countShi})
-      </div>
-      <div class="owner-tab ${ownerFilter==='可愛寶寶'?'active':''}" onclick="setOwnerFilter('可愛寶寶')">
-        🥰 可愛寶寶 (${countBao})
-      </div>
+      <div class="owner-tab ${ownerFilter==='ALL'?'active':''}" onclick="setOwnerFilter('ALL')">👥 兩人一起 (${countAll})</div>
+      <div class="owner-tab ${ownerFilter==='帥氣實實'?'active':''}" onclick="setOwnerFilter('帥氣實實')">😎 帥氣實實 (${countShi})</div>
+      <div class="owner-tab ${ownerFilter==='可愛寶寶'?'active':''}" onclick="setOwnerFilter('可愛寶寶')">🥰 可愛寶寶 (${countBao})</div>
     </div>
-
     <div class="filter-pills-bar">
       <span class="f-pill ${catFilter==='ALL'?'active':''}" onclick="setCat('ALL')">全部類型</span>
       <span class="f-pill ${catFilter==='模型車'?'active':''}" onclick="setCat('模型車')">🚗 模型車</span>
@@ -1713,10 +666,9 @@ function renderAllTab() {
       <span class="f-pill ${statusFilter==='等待中'?'active':''}" onclick="setStat('等待中')">⏳ 預購中</span>
       <span class="f-pill ${statusFilter==='拿到了'?'active':''}" onclick="setStat('拿到了')">✅ 已拿到</span>
     </div>
-
     <input type="text" class="f-input" style="margin-bottom:12px;" placeholder="🔍 搜尋車名、品牌、店家或預計到貨日 (如 2027/Q1)..." value="${searchKeyword}" oninput="handleAllSearch(this.value)">
-
     <div class="dark-Showcase-box">
+      ${filtered.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--brushed-pewter);">尚無符合條件的收藏品</div>` : ''}
       ${filtered.slice().reverse().map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         const isGot = it.status === '拿到了';
@@ -1730,12 +682,9 @@ function renderAllTab() {
             </div>
             <div class="dark-row-right">
               <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
-              <div class="dark-row-tag" style="color:${isGot ? '#A8C9B4' : 'var(--frosted-blue)'}">
-                ${isGot ? '✓ 拿到了' : '⏳ ' + (it.estDate || '等待中')}
-              </div>
+              <div class="dark-row-tag" style="color:${isGot ? '#A8C9B4' : 'var(--frosted-blue)'}">${isGot ? '✓ 拿到了' : '⏳ ' + (it.estDate || '等待中')}</div>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('')}
     </div>
   `;
@@ -1749,41 +698,25 @@ function renderScreen() {
   else container.innerHTML = renderAllTab();
 }
 
-function showBarDetail(dateStr, cnt, sum) {
-  selectedBarInfo = `📅 ${dateStr.slice(5)} 共 ${cnt} 件 ($${sum.toLocaleString()})`;
-  renderScreen();
-}
-
+function showBarDetail(dateStr, cnt, sum) { selectedBarInfo = `📅 ${dateStr.slice(5)} 共 ${cnt} 件 ($${sum.toLocaleString()})`; renderScreen(); }
 function setChartMode(m) { chartMode = m; selectedBarInfo = ''; renderScreen(); }
 function setHomeRecentMode(m) { homeRecentMode = m; renderScreen(); }
 function setOwnerFilter(o) { ownerFilter = o; renderScreen(); }
 function setCat(c) { catFilter = (catFilter === c) ? 'ALL' : c; renderScreen(); }
 function setStat(s) { statusFilter = (statusFilter === s) ? 'ALL' : s; renderScreen(); }
 function handleAllSearch(v) { searchKeyword = v; renderScreen(); }
-
-function jumpToAllWithStatus(st) {
-  statusFilter = st;
-  switchTab('all');
-}
-
-function openEditItem(id) {
-  editingId = id;
-  tempPhotoBase64 = '';
-  switchTab('add');
-}
+function jumpToAllWithStatus(st) { statusFilter = st; switchTab('all'); }
+function openEditItem(id) { editingId = id; tempPhotoBase64 = ''; switchTab('add'); }
 
 function handlePhotoPick(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = function(evt) {
     const img = new Image();
     img.onload = function() {
       const canvas = document.createElement('canvas');
-      const maxW = 800;
-      const scale = img.width > maxW ? maxW / img.width : 1;
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
+      const maxW = 800; const scale = img.width > maxW ? maxW / img.width : 1;
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       tempPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
       document.getElementById('photoPreviewHolder').innerHTML = `<img src="${tempPhotoBase64}">`;
@@ -1798,121 +731,62 @@ async function saveCollectible() {
   const old = items.find(x => String(x.id) === String(id));
   const statusVal = document.getElementById('f_status').value;
   let actVal = document.getElementById('f_actDate').value.trim();
-  if (statusVal === '拿到了' && !actVal) {
-    actVal = new Date().toISOString().slice(0,10).replace(/-/g,'/');
-  }
+  if (statusVal === '拿到了' && !actVal) actVal = new Date().toISOString().slice(0,10).replace(/-/g,'/');
 
   const brandSel = document.getElementById('f_brand_select').value;
-  const finalBrand = brandSel === '__CUSTOM__'
-    ? (document.getElementById('f_brand_custom').value.trim() || '其他')
-    : brandSel;
-
-  if (finalBrand && !cloudBrands.includes(finalBrand)) {
-    cloudBrands.push(finalBrand);
-  }
+  const finalBrand = brandSel === '__CUSTOM__' ? (document.getElementById('f_brand_custom').value.trim() || '其他') : brandSel;
+  if (finalBrand && !cloudBrands.includes(finalBrand)) cloudBrands.push(finalBrand);
 
   const newItem = {
-    id,
-    category: document.getElementById('f_category').value,
-    buyer: document.getElementById('f_buyer').value,
-    name: document.getElementById('f_name').value.trim() || '未命名收藏',
-    brand: finalBrand,
-    scale: document.getElementById('f_scale').value.trim(),
-    price: Number(document.getElementById('f_price').value) || 0,
-    status: statusVal,
-    store: document.getElementById('f_store').value.trim(),
-    orderDate: document.getElementById('f_orderDate').value.trim(),
-    estDate: document.getElementById('f_estDate').value.trim(),
-    actDate: actVal,
-    rating: document.getElementById('f_rating').value,
-    photo: tempPhotoBase64 || (old ? old.photo : '')
+    id, category: document.getElementById('f_category').value, buyer: document.getElementById('f_buyer').value,
+    name: document.getElementById('f_name').value.trim() || '未命名收藏', brand: finalBrand,
+    scale: document.getElementById('f_scale').value.trim(), price: Number(document.getElementById('f_price').value) || 0,
+    status: statusVal, store: document.getElementById('f_store').value.trim(),
+    orderDate: document.getElementById('f_orderDate').value.trim(), estDate: document.getElementById('f_estDate').value.trim(),
+    actDate: actVal, rating: document.getElementById('f_rating').value, photo: tempPhotoBase64 || (old ? old.photo : '')
   };
 
   const idx = items.findIndex(x => String(x.id) === String(id));
   if (idx > -1) items[idx] = newItem; else items.push(newItem);
-
   saveLocal();
-  const uploadImg = tempPhotoBase64;
-  editingId = null;
-  tempPhotoBase64 = '';
-  viewingDetailId = id;
+  const uploadImg = tempPhotoBase64; editingId = null; tempPhotoBase64 = ''; viewingDetailId = id;
   switchTab('detail');
 
   if (gasUrl) {
     showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中', 0);
     try {
-      const res = await fetch(gasUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'saveItem', item: newItem, photoBase64: uploadImg || null })
-      });
+      const res = await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveItem', item: newItem, photoBase64: uploadImg || null }) });
       const data = await res.json();
       if (data.status === 'success' && data.items) {
-        items = data.items;
-        if (Array.isArray(data.brands) && data.brands.length > 0) {
-          cloudBrands = data.brands;
-        }
-        saveLocal();
-        renderScreen();
-        showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
+        items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+        saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
       }
-    } catch (e) {
-      showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600);
-    }
+    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600); }
   }
 }
 
 function removeCollectible(id) {
   items = items.filter(x => String(x.id) !== String(id));
-  saveLocal();
-  editingId = null;
-  switchTab('all');
-  if (gasUrl) {
-    fetch(gasUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'deleteItem', id })
-    }).catch(() => {});
-  }
+  saveLocal(); editingId = null; switchTab('all');
+  if (gasUrl) fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteItem', id }) }).catch(() => {});
 }
 
-function openCloudModal() {
-  document.getElementById('gasUrlInput').value = gasUrl;
-  document.getElementById('cloudModal').classList.add('open');
-}
-function closeCloudModal() {
-  document.getElementById('cloudModal').classList.remove('open');
-}
+function openCloudModal() { document.getElementById('gasUrlInput').value = gasUrl; document.getElementById('cloudModal').classList.add('open'); }
+function closeCloudModal() { document.getElementById('cloudModal').classList.remove('open'); }
 
 async function triggerDirectSync() {
-  if (!gasUrl) {
-    showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800);
-    return;
-  }
-  const syncBtn = document.getElementById('topSyncBtn');
-  if (syncBtn) syncBtn.classList.add('spinning');
+  if (!gasUrl) { showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800); return; }
+  const syncBtn = document.getElementById('topSyncBtn'); if (syncBtn) syncBtn.classList.add('spinning');
   showAutoPopup('🔄', '資料更新中...', '正在讀取 Google 試算表', 0);
-
   try {
     const res = await fetch(gasUrl + '?t=' + Date.now());
     const data = await res.json();
-    if (data.status === 'success' && Array.isArray(data.items) && data.items.length > 0) {
-      items = data.items;
-      if (Array.isArray(data.brands) && data.brands.length > 0) {
-        cloudBrands = data.brands;
-      }
-      saveLocal();
-      renderScreen();
-      showAutoPopup('✅', '資料更新完成', `共 ${items.length} 筆收藏已同步`, 1500);
-    } else {
-      showAutoPopup('❌', '資料更新失敗', '雲端回傳格式異常', 1600);
-    }
-  } catch (e) {
-    showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 1600);
-  } finally {
-    const btnAfter = document.getElementById('topSyncBtn');
-    if (btnAfter) btnAfter.classList.remove('spinning');
-  }
+    if (data.status === 'success' && Array.isArray(data.items)) {
+      items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+      saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `共 ${items.length} 筆收藏已同步`, 1500);
+    } else { showAutoPopup('❌', '資料更新失敗', '雲端回傳格式異常', 1600); }
+  } catch (e) { showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 1600); }
+  finally { const btnAfter = document.getElementById('topSyncBtn'); if (btnAfter) btnAfter.classList.remove('spinning'); }
 }
 
 async function silentStartupSync() {
@@ -1920,13 +794,9 @@ async function silentStartupSync() {
   try {
     const res = await fetch(gasUrl + '?t=' + Date.now());
     const data = await res.json();
-    if (data.status === 'success' && Array.isArray(data.items) && data.items.length > 0) {
-      items = data.items;
-      if (Array.isArray(data.brands) && data.brands.length > 0) {
-        cloudBrands = data.brands;
-      }
-      saveLocal();
-      renderScreen();
+    if (data.status === 'success' && Array.isArray(data.items)) {
+      items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+      saveLocal(); renderScreen();
     }
   } catch (e) {}
 }
@@ -1934,8 +804,7 @@ async function silentStartupSync() {
 async function saveAndPullCloud() {
   gasUrl = document.getElementById('gasUrlInput').value.trim();
   localStorage.setItem('my_gas_url', gasUrl);
-  closeCloudModal();
-  await triggerDirectSync();
+  closeCloudModal(); await triggerDirectSync();
 }
 
 renderScreen();
