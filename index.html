@@ -88,6 +88,23 @@
   }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
+  .sync-toast {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--plum-noir);
+    color: var(--cloud-cream);
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    z-index: 1000;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    display: none;
+  }
+
+  /* 頂部問候與右上角三顆等距按鈕 */
   .header-row {
     display: flex;
     justify-content: space-between;
@@ -109,19 +126,30 @@
   .header-icons {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* 與隔壁圖標保持完全一致的 10px 間距 */
   }
   .bell-btn {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: var(--cloud-cream-pure);
     border: 1.5px solid rgba(73,51,66,0.12);
+    color: var(--plum-noir);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 15px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .bell-btn:active { transform: scale(0.92); }
+  @keyframes spinSync {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .bell-btn.spinning svg {
+    animation: spinSync 0.8s linear infinite;
   }
   .user-avatar {
     width: 42px;
@@ -135,6 +163,7 @@
     font-weight: 900;
     font-size: 15px;
     cursor: pointer;
+    flex-shrink: 0;
   }
 
   .val-label {
@@ -165,6 +194,7 @@
     color: var(--muted-jade);
   }
 
+  /* 雙膠囊按鈕（已移除多餘的上下箭頭圓圈，文字完美置中） */
   .dual-pill-wrap {
     display: flex;
     align-items: center;
@@ -172,30 +202,22 @@
   }
   .dual-pill {
     flex: 1;
-    height: 50px;
+    height: 48px;
     background: var(--cloud-cream-pure);
     border: 1.5px solid rgba(73, 51, 66, 0.12);
     border-radius: 28px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 14px;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--plum-noir);
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(73,51,66,0.04);
+    transition: transform 0.15s;
   }
-  .dual-pill .circle-arrow {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1.5px solid var(--plum-noir);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-  }
+  .dual-pill:active { transform: scale(0.98); }
   .dual-center-x {
     width: 34px;
     height: 34px;
@@ -205,13 +227,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
     margin: 0 -10px;
     z-index: 2;
     cursor: pointer;
   }
 
+  /* 直方圖卡片（支援左右滑動查看所有購買日期！） */
   .chart-card {
     background: var(--frosted-blue);
     border-radius: 28px;
@@ -271,41 +294,61 @@
     cursor: pointer;
   }
 
-  .histogram-area {
-    position: relative;
-    height: 148px;
+  /* 左側固定刻度 + 右側可橫向滑動直方圖軌道 */
+  .histogram-wrapper {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 14px 6px 22px 28px;
+    align-items: stretch;
+    height: 152px;
+    position: relative;
   }
-  .y-axis-lines {
+  .y-axis-fixed {
+    width: 28px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 0 24px;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(73, 51, 66, 0.55);
+    z-index: 3;
+  }
+  .hist-scroll-viewport {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: relative;
+  }
+  .hist-scroll-viewport::-webkit-scrollbar { display: none; }
+
+  .hist-track {
+    display: inline-flex;
+    align-items: flex-end;
+    min-width: 100%;
+    height: 100%;
+    padding: 14px 6px 24px;
+    gap: 12px;
+    position: relative;
+  }
+  .y-grid-lines {
     position: absolute;
-    inset: 10px 6px 22px 0;
+    inset: 14px 0 24px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     pointer-events: none;
+    z-index: 1;
   }
-  .y-line {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .y-grid-lines i {
+    display: block;
     width: 100%;
-  }
-  .y-line span {
-    font-size: 9px;
-    font-weight: 700;
-    color: rgba(73, 51, 66, 0.55);
-    width: 22px;
-  }
-  .y-line i {
-    flex: 1;
     border-bottom: 1px dashed rgba(73, 51, 66, 0.14);
   }
 
   .hist-col {
-    flex: 1;
+    flex: 0 0 42px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -360,7 +403,7 @@
   }
   .hist-date {
     position: absolute;
-    bottom: -18px;
+    bottom: -19px;
     font-size: 9px;
     font-weight: 800;
     color: var(--plum-noir);
@@ -372,12 +415,12 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 6px;
-    padding: 0 6px;
+    padding: 0 4px;
     font-size: 10px;
     font-weight: 700;
     color: var(--plum-noir);
   }
-  .legend-dots { display: flex; gap: 12px; }
+  .legend-dots { display: flex; gap: 10px; }
   .legend-dots span::before { content: '● '; }
   .legend-dots span.peak-dot::before { color: var(--plum-noir); }
   .legend-dots span.sub-dot::before { color: var(--muted-jade); }
@@ -424,8 +467,8 @@
   }
   .dark-row-card:active { transform: scale(0.98); }
   .dark-row-icon {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: var(--plum-noir-soft);
     display: flex;
@@ -710,7 +753,6 @@
     border-radius: 3px;
   }
 
-  /* 雲端設定與通知彈窗 */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -734,6 +776,8 @@
 </style>
 </head>
 <body>
+
+<div class="sync-toast" id="syncToast">🔄 正在與 Google 表格同步...</div>
 
 <div class="top-preview-bar">
   <span>🎨 圖一左機 UI ＋ 圖二莫蘭迪色票</span>
@@ -767,14 +811,14 @@
 <!-- 雲端硬碟同步設定視窗 -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
-    <h3 style="margin:0 0 8px;font-size:16px;">☁️ Google 雲端硬碟同步設定</h3>
+    <h3 style="margin:0 0 8px;font-size:16px;">☁️ Google 雲端試算表同步</h3>
     <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">
-      貼上您的 Google Apps Script 網址，即可在 S25 Ultra 與 S26 Ultra 免費同步所有資料與照片：
+      貼上您的 Google Apps Script 網址（設定後可直接點首頁右上角的獨立同步按鈕更新）：
     </p>
     <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button class="submit-pill-btn" style="height:42px;font-size:13px;" onclick="saveAndPullCloud()">🔄 儲存網址並從雲端同步</button>
-      <button class="submit-pill-btn" style="height:42px;font-size:13px;background:var(--muted-jade);" onclick="pushAllToCloud()">⬆️ 將目前資料初始化上傳至雲端</button>
+      <button class="submit-pill-btn" style="height:42px;font-size:13px;" onclick="saveAndPullCloud()">🔄 立即從 Google 表格抓取最新資料</button>
+      <button class="submit-pill-btn" style="height:42px;font-size:13px;background:var(--muted-jade);" onclick="pushAllToCloud()">⬆️ 將手機目前資料覆蓋寫入雲端表格</button>
       <button class="submit-pill-btn" style="height:38px;font-size:12px;background:var(--brushed-pewter);" onclick="closeCloudModal()">關閉視窗</button>
     </div>
   </div>
@@ -820,14 +864,15 @@ const INITIAL_DATA = [
   {id:"36",name:"RWB 930",brand:"POPRACE",status:"等待中",scale:"1/64",price:580,orderDate:"2026/11/05",estDate:"2027/Q2",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
   {id:"37",name:"Ferrari SF26 #44 巴塞隆納P1",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
   {id:"38",name:"Ferrari SF26 #44 加拿大P2",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
-  {id:"39",name:"Ferrari SF26 #16 日本P3",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"}
+  {id:"39",name:"Ferrari SF26 #16 日本P3",brand:"LOOKSMART",status:"等待中",scale:"1/64",price:1350,orderDate:"2026/06/15",estDate:"2026/Q4",actDate:"",photo:"",store:"CarGu 模型車預購",rating:"☆☆☆☆☆",buyer:"可愛寶寶",category:"模型車"},
+  {id:"40",name:"PEUGEOT 406 Taxi",brand:"π MODEL",status:"等待中",scale:"1/64",price:800,orderDate:"2026/11/06",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"}
 ];
 
-let items = JSON.parse(localStorage.getItem('trantor_left_items')) || INITIAL_DATA;
+let items = JSON.parse(localStorage.getItem('trantor_left_items_v2')) || INITIAL_DATA;
 let gasUrl = localStorage.getItem('my_gas_url') || '';
 
 let activeTab = 'home';
-let chartMode = 'top';
+let chartMode = 'recent'; // 預設顯示可左右滑動的近期購買日期
 let homeRecentMode = 'preorder';
 let selectedBarInfo = '';
 
@@ -839,8 +884,18 @@ let searchKeyword = '';
 let editingId = null;
 let tempPhotoBase64 = '';
 
+// 共用 SVG 獨立同步圖示
+const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
+
+function showToast(msg, duration = 2200) {
+  const t = document.getElementById('syncToast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, duration);
+}
+
 function saveLocal() {
-  localStorage.setItem('trantor_left_items', JSON.stringify(items));
+  localStorage.setItem('trantor_left_items_v2', JSON.stringify(items));
 }
 
 function switchTab(tab) {
@@ -870,11 +925,13 @@ function renderHomeTab() {
   });
 
   const allDates = Object.entries(dateMap);
+  // 完整保留所有日期，不截斷，供使用者左右滑動查看！
   let chartDates = [];
   if (chartMode === 'top') {
-    chartDates = allDates.sort((a, b) => b[1].count - a[1].count).slice(0, 6);
+    chartDates = allDates.slice().sort((a, b) => b[1].count - a[1].count || b[0].localeCompare(a[0]));
   } else {
-    chartDates = allDates.sort((a, b) => a[0].localeCompare(b[0])).slice(-6);
+    // 近期日期：由最新日期排到最舊，往右滑即可查看過去每一天的購買紀錄
+    chartDates = allDates.slice().sort((a, b) => b[0].localeCompare(a[0]));
   }
   const maxDayCount = Math.max(...allDates.map(d => d[1].count), 4);
   const bestDay = allDates.slice().sort((a, b) => b[1].count - a[1].count)[0];
@@ -894,7 +951,9 @@ function renderHomeTab() {
         <p class="greet-sub">Good morning! 👋</p>
       </div>
       <div class="header-icons">
-        <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端硬碟同步">☁️</div>
+        <!-- 新增獨立同步按鈕：位於雲朵左側，間隔與隔壁完全一致 -->
+        <div class="bell-btn" id="topSyncBtn" onclick="autoPullFromCloud(true)" title="立即同步最新資料">${SYNC_SVG}</div>
+        <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端硬碟設定">☁️</div>
         <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
       </div>
     </div>
@@ -905,18 +964,18 @@ function renderHomeTab() {
       <div class="val-badge">+ ${items.length} 件總收藏 (預購 ${waitCnt} / 現有 ${gotCnt})</div>
     </div>
 
+    <!-- 已移除左右兩側的上下箭頭圓圈，文字完美置中 -->
     <div class="dual-pill-wrap">
       <div class="dual-pill" onclick="jumpToAllWithStatus('等待中')">
-        <span class="circle-arrow">↑</span>
         <span>預購等待 (${waitCnt})</span>
       </div>
       <div class="dual-center-x" onclick="switchTab('add')" title="新增收藏">＋</div>
       <div class="dual-pill" onclick="jumpToAllWithStatus('拿到了')">
         <span>現有入庫 (${gotCnt})</span>
-        <span class="circle-arrow">↓</span>
       </div>
     </div>
 
+    <!-- 可左右滑動的直方圖區塊 -->
     <div class="chart-card">
       <div class="chart-top-bar">
         <div class="chart-coin-badge">
@@ -924,43 +983,50 @@ function renderHomeTab() {
           <span>單日購買統計</span>
         </div>
         <div class="chart-period-pills">
-          <span class="period-pill ${chartMode==='top'?'active':''}" onclick="setChartMode('top')">最多購買日</span>
           <span class="period-pill ${chartMode==='recent'?'active':''}" onclick="setChartMode('recent')">近期日期</span>
+          <span class="period-pill ${chartMode==='top'?'active':''}" onclick="setChartMode('top')">最多購買日</span>
         </div>
         <div class="more-pill" onclick="setChartMode(chartMode==='top'?'recent':'top')">切換 ⌄</div>
       </div>
 
-      <div class="histogram-area">
-        <div class="y-axis-lines">
-          <div class="y-line"><span>${maxDayCount}件</span><i></i></div>
-          <div class="y-line"><span>${Math.ceil(maxDayCount*0.66)}件</span><i></i></div>
-          <div class="y-line"><span>${Math.ceil(maxDayCount*0.33)}件</span><i></i></div>
-          <div class="y-line"><span>0件</span><i></i></div>
+      <div class="histogram-wrapper">
+        <div class="y-axis-fixed">
+          <span>${maxDayCount}件</span>
+          <span>${Math.ceil(maxDayCount*0.66)}件</span>
+          <span>${Math.ceil(maxDayCount*0.33)}件</span>
+          <span>0件</span>
         </div>
 
-        ${chartDates.map(([dateStr, info]) => {
-          const fgHeight = Math.max(38, Math.round((info.count / maxDayCount) * 105));
-          const bgHeight = Math.min(110, fgHeight + 18);
-          const shortDate = dateStr.length >= 10 ? dateStr.slice(5) : dateStr;
-          const isPeak = info.count === maxDayCount;
-          return `
-            <div class="hist-col ${isPeak ? 'peak' : ''}" onclick="showBarDetail('${dateStr}', ${info.count}, ${info.sum})">
-              <div class="hist-bg-bar" style="height:${bgHeight}px;">
-                <div class="hist-fg-bar" style="height:${fgHeight}px;">
-                  <div class="hist-dot">${isPeak ? '👑' : '＋'}</div>
-                  <div class="hist-val">${info.count}件</div>
-                </div>
-              </div>
-              <div class="hist-date">${shortDate}</div>
+        <div class="hist-scroll-viewport">
+          <div class="hist-track">
+            <div class="y-grid-lines">
+              <i></i><i></i><i></i><i></i>
             </div>
-          `;
-        }).join('')}
+
+            ${chartDates.map(([dateStr, info]) => {
+              const fgHeight = Math.max(38, Math.round((info.count / maxDayCount) * 105));
+              const bgHeight = Math.min(110, fgHeight + 18);
+              const shortDate = dateStr.length >= 10 ? dateStr.slice(5) : dateStr;
+              const isPeak = info.count === maxDayCount;
+              return `
+                <div class="hist-col ${isPeak ? 'peak' : ''}" onclick="showBarDetail('${dateStr}', ${info.count}, ${info.sum})">
+                  <div class="hist-bg-bar" style="height:${bgHeight}px;">
+                    <div class="hist-fg-bar" style="height:${fgHeight}px;">
+                      <div class="hist-dot">${isPeak ? '👑' : '＋'}</div>
+                      <div class="hist-val">${info.count}件</div>
+                    </div>
+                  </div>
+                  <div class="hist-date">${shortDate}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
       </div>
 
       <div class="chart-legend">
         <div class="legend-dots">
-          <span class="peak-dot">單日購買件數</span>
-          <span class="sub-dot">最高峰值對比</span>
+          <span class="peak-dot">左右滑動查看 (${chartDates.length}天)</span>
         </div>
         <span>${selectedBarInfo || (bestDay ? '🏆 最高：' + bestDay[0].slice(5) + ' (' + bestDay[1].count + '件)' : '-')}</span>
       </div>
@@ -979,7 +1045,7 @@ function renderHomeTab() {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         return `
           <div class="dark-row-card" onclick="openEditItem('${it.id}')">
-            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}" referrerpolicy="no-referrer">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
               <div class="dark-row-sub">${it.brand} · ${it.orderDate} (${it.buyer})</div>
@@ -1031,7 +1097,7 @@ function renderAddTab() {
 
       <div class="f-group">
         <label class="f-label">車車名稱 / 娃娃收藏名稱</label>
-        <input type="text" class="f-input" id="f_name" placeholder="例如：Ferrari F80 或 吉伊卡哇娃娃" value="${it ? it.name : ''}">
+        <input type="text" class="f-input" id="f_name" placeholder="例如：PEUGEOT 406 Taxi 或 娃娃" value="${it ? it.name : ''}">
       </div>
 
       <div class="f-grid-2">
@@ -1055,7 +1121,7 @@ function renderAddTab() {
       <div class="f-grid-2">
         <div class="f-group" style="margin-bottom:0;">
           <label class="f-label">價格合計 (NT$)</label>
-          <input type="number" class="f-input" id="f_price" placeholder="例如：820" value="${it ? it.price : ''}">
+          <input type="number" class="f-input" id="f_price" placeholder="例如：800" value="${it ? it.price : ''}">
         </div>
         <div class="f-group" style="margin-bottom:0;">
           <label class="f-label">車車狀態</label>
@@ -1112,11 +1178,11 @@ function renderAddTab() {
         <label class="photo-upload-box">
           <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoPick(event)">
           <div id="photoPreviewHolder">
-            ${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}
+            ${it && it.photo ? `<img src="${it.photo}" referrerpolicy="no-referrer">` : '<span style="font-size:24px;">📸</span>'}
           </div>
           <div style="text-align:left;font-size:12px;">
             <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
-            <div style="color:var(--brushed-pewter);font-size:10px;">自動壓縮並同步至您的 Google 雲端硬碟</div>
+            <div style="color:var(--brushed-pewter);font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div>
           </div>
         </label>
       </div>
@@ -1158,7 +1224,11 @@ function renderAllTab() {
         <h1 class="greet-title">📦 所有收藏品總覽</h1>
         <p class="greet-sub">目前檢視共 ${filtered.length} 件 · 合計 $${subTotal.toLocaleString()}</p>
       </div>
-      <div class="bell-btn" onclick="switchTab('add')">＋</div>
+      <div class="header-icons">
+        <div class="bell-btn" id="topSyncBtn" onclick="autoPullFromCloud(true)" title="立即同步最新資料">${SYNC_SVG}</div>
+        <div class="bell-btn" onclick="openCloudModal()" title="雲端設定">☁️</div>
+        <div class="bell-btn" onclick="switchTab('add')" title="新增收藏">＋</div>
+      </div>
     </div>
 
     <div class="owner-tabs-box">
@@ -1190,7 +1260,7 @@ function renderAllTab() {
         const isGot = it.status === '拿到了';
         return `
           <div class="dark-row-card" onclick="openEditItem('${it.id}')">
-            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}" referrerpolicy="no-referrer">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
               <div class="dark-row-sub">${it.brand} (${it.scale}) · ${it.store || '未填店家'}</div>
@@ -1296,6 +1366,7 @@ async function saveCollectible() {
   switchTab('all');
 
   if (gasUrl) {
+    showToast('☁️ 正在同步寫入 Google 表格...');
     try {
       const res = await fetch(gasUrl, {
         method: 'POST',
@@ -1307,8 +1378,11 @@ async function saveCollectible() {
         items = data.items;
         saveLocal();
         renderScreen();
+        showToast('✅ 已同步至 Google 表格！');
       }
-    } catch (e) {}
+    } catch (e) {
+      showToast('⚠️ 離線儲存成功');
+    }
   }
 }
 
@@ -1334,20 +1408,36 @@ function closeCloudModal() {
   document.getElementById('cloudModal').classList.remove('open');
 }
 
+async function autoPullFromCloud(showMsg = false) {
+  if (!gasUrl) {
+    if (showMsg) openCloudModal();
+    return;
+  }
+  const syncBtn = document.getElementById('topSyncBtn');
+  if (syncBtn) syncBtn.classList.add('spinning');
+  if (showMsg) showToast('🔄 正在從 Google 表格同步最新資料...');
+  try {
+    const res = await fetch(gasUrl + '?t=' + Date.now());
+    const data = await res.json();
+    if (data.status === 'success' && Array.isArray(data.items) && data.items.length > 0) {
+      items = data.items;
+      saveLocal();
+      renderScreen();
+      if (showMsg) showToast(`✅ 同步成功！目前共 ${items.length} 筆收藏`);
+    }
+  } catch (e) {
+    if (showMsg) showToast('⚠️ 同步失敗，請檢查雲端網址設定');
+  } finally {
+    const btnAfter = document.getElementById('topSyncBtn');
+    if (btnAfter) btnAfter.classList.remove('spinning');
+  }
+}
+
 async function saveAndPullCloud() {
   gasUrl = document.getElementById('gasUrlInput').value.trim();
   localStorage.setItem('my_gas_url', gasUrl);
   closeCloudModal();
-  if (!gasUrl) return;
-  try {
-    const res = await fetch(gasUrl);
-    const data = await res.json();
-    if (data.status === 'success' && data.items && data.items.length > 0) {
-      items = data.items;
-      saveLocal();
-      renderScreen();
-    }
-  } catch (e) {}
+  await autoPullFromCloud(true);
 }
 
 async function pushAllToCloud() {
@@ -1355,16 +1445,24 @@ async function pushAllToCloud() {
   localStorage.setItem('my_gas_url', gasUrl);
   closeCloudModal();
   if (!gasUrl) return;
+  showToast('⬆️ 正在將資料寫入 Google 表格...');
   try {
-    await fetch(gasUrl, {
+    const res = await fetch(gasUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'syncAll', items: items })
     });
-  } catch (e) {}
+    const data = await res.json();
+    if (data.status === 'success') {
+      showToast('✅ 成功寫入 Google 試算表！');
+    }
+  } catch (e) {
+    showToast('⚠️ 上傳失敗，請檢查部署設定');
+  }
 }
 
 renderScreen();
+autoPullFromCloud(false);
 </script>
 </body>
 </html>
