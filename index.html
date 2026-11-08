@@ -97,7 +97,7 @@
   .view-all-row { text-align: right; padding: 2px 8px 0; font-size: 11px; font-weight: 700; color: var(--frosted-blue); cursor: pointer; }
 
   .detail-page-wrap { margin: 0 -18px; display: flex; flex-direction: column; min-height: 100vh; background: var(--plum-noir-dark); }
-  .detail-top-photo { width: 100%; height: 350px; background: #E5DEC9; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+  .detail-top-photo { width: 100%; height: 350px; background: #E5DEC9; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; cursor: zoom-in; }
   .detail-top-photo img { width: 100%; height: 100%; object-fit: cover; }
   .detail-top-photo .fallback-emoji { font-size: 84px; }
   .detail-floating-nav { position: absolute; top: 44px; left: 18px; right: 18px; display: flex; justify-content: space-between; z-index: 10; }
@@ -143,18 +143,18 @@
   .cal-count-text { font-size: 13px; font-weight: 700; color: var(--brushed-pewter); }
   .cal-viewall-pill { background: var(--plum-noir); color: var(--cloud-cream); padding: 6px 13px; border-radius: 16px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
-  /* ====== 月曆下方日記卡片 + 多圖左右滑動輪播 ====== */
   .banff-diary-card { background: var(--cloud-cream-pure); border-radius: 26px; padding: 11px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(13,27,42,0.1); border: 1px solid rgba(13,27,42,0.07); }
   .banff-photo-box { width: 100%; height: 215px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .diary-carousel-track { width: 100%; height: 100%; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .diary-carousel-track::-webkit-scrollbar { display: none; }
-  .diary-carousel-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; }
+  .diary-carousel-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; position: relative; }
   .diary-carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+  /* 在日記彈出視窗內，圖片改用 contain 完整顯示不裁切，並可點擊全螢幕放大！ */
+  .diary-modal-gallery .diary-carousel-slide img { object-fit: contain; cursor: zoom-in; }
 
   .banff-top-tags { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 6px; z-index: 3; pointer-events: none; }
-  /* 加深毛玻璃底色，確保在白色亮背景照片上文字依然 100% 清晰！ */
   .banff-glass-pill { background: rgba(13, 27, 42, 0.58); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.25); color: #F4F1DE; font-size: 10px; font-weight: 700; padding: 5px 11px; border-radius: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .banff-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; background: rgba(13,27,42,0.4); padding: 4px 8px; border-radius: 12px; pointer-events: none; }
+  .banff-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; background: rgba(13,27,42,0.45); padding: 4px 8px; border-radius: 12px; pointer-events: none; }
   .banff-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.45); transition: all 0.2s; }
   .banff-dots span.on { background: #fff; transform: scale(1.2); }
   .banff-body { padding: 14px 8px 6px; cursor: pointer; }
@@ -169,20 +169,26 @@
   .banff-action-btn { background: var(--plum-noir-dark); color: var(--cloud-cream); border: none; border-radius: 22px; padding: 6px 6px 6px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; cursor: pointer; }
   .banff-action-btn .arr-cir { width: 24px; height: 24px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
 
-  /* ====== 日記完整檢視彈出視窗 (Popup Modal) ====== */
-  .diary-modal-card {
-    background: var(--cloud-cream-pure); border: 2px solid var(--plum-noir-dark);
-    border-radius: 30px; width: 100%; max-width: 390px; max-height: 86vh;
-    display: flex; flex-direction: column; overflow: hidden;
-    box-shadow: 0 24px 50px rgba(0,0,0,0.45);
-  }
-  .diary-modal-gallery { width: 100%; height: 290px; background: var(--plum-noir-dark); position: relative; flex-shrink: 0; }
-  .diary-modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: rgba(13,27,42,0.65); backdrop-filter: blur(8px); color: #fff; border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; z-index: 5; }
-  .diary-modal-counter { position: absolute; top: 14px; left: 14px; background: rgba(13,27,42,0.65); backdrop-filter: blur(8px); color: #F4F1DE; padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; border: 1px solid rgba(255,255,255,0.25); z-index: 5; pointer-events: none; }
+  .diary-modal-card { background: var(--cloud-cream-pure); border: 2px solid var(--plum-noir-dark); border-radius: 30px; width: 100%; max-width: 390px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 50px rgba(0,0,0,0.45); }
+  .diary-modal-gallery { width: 100%; height: 320px; background: #09131E; position: relative; flex-shrink: 0; }
+  .diary-modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: rgba(13,27,42,0.72); backdrop-filter: blur(8px); color: #fff; border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; z-index: 5; }
+  .diary-modal-counter { position: absolute; top: 14px; left: 14px; background: rgba(13,27,42,0.72); backdrop-filter: blur(8px); color: #F4F1DE; padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; border: 1px solid rgba(255,255,255,0.25); z-index: 5; pointer-events: none; }
   .diary-modal-body { padding: 18px 20px 20px; overflow-y: auto; flex: 1; }
   .diary-modal-fulltext { font-size: 14px; color: var(--plum-noir-dark); line-height: 1.7; white-space: pre-wrap; margin: 12px 0 18px; background: rgba(212,196,168,0.25); padding: 14px; border-radius: 18px; }
 
-  /* 多圖預覽縮圖列 */
+  /* ====== 全螢幕完整照片檢視器 (Lightbox) ====== */
+  .lightbox-overlay {
+    position: fixed; inset: 0; background: rgba(5, 10, 16, 0.96);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    z-index: 4500; display: none; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-top-bar { position: absolute; top: 44px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+  .lightbox-track { width: 100vw; height: 82vh; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; align-items: center; }
+  .lightbox-track::-webkit-scrollbar { display: none; }
+  .lightbox-slide { flex: 0 0 100vw; width: 100vw; height: 82vh; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; padding: 12px; }
+  .lightbox-slide img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+
   .multi-thumb-strip { display: flex; gap: 8px; overflow-x: auto; padding-top: 10px; scrollbar-width: none; }
   .multi-thumb-strip::-webkit-scrollbar { display: none; }
   .thumb-item { position: relative; width: 64px; height: 64px; border-radius: 12px; overflow: hidden; flex-shrink: 0; border: 1.5px solid var(--frosted-blue); }
@@ -234,8 +240,18 @@
   <div class="hud-sub" id="hudSub">已與雲端試算表同步</div>
 </div>
 
+<!-- 全螢幕完整照片檢視器 (點擊照片即可打開看無裁切完整大圖 + 支援左右滑動) -->
+<div class="lightbox-overlay" id="fullPhotoLightbox" onclick="if(event.target===this)closeFullLightbox()">
+  <div class="lightbox-top-bar">
+    <div class="diary-modal-counter" id="lightboxCounter" style="position:static;">📷 1 / 1</div>
+    <div class="diary-modal-close" onclick="closeFullLightbox()" style="position:static;">✕</div>
+  </div>
+  <div class="lightbox-track" id="lightboxTrack" onscroll="updateCarouselDots(this, 'lightboxCounter')"></div>
+  <div class="banff-dots" id="lightboxDots" style="bottom:28px;"></div>
+</div>
+
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 多圖左右滑動日記彈出檢視</span>
+  <span>🎨 Holst 配色 ＋ 完整比例照片 ＋ 點擊全螢幕檢視</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -268,12 +284,10 @@
   </div>
 </div>
 
-<!-- 日記完整檢視彈出視窗 (點擊月曆下方的日記時彈出，支援多圖左右滑動！) -->
 <div class="modal-overlay" id="diaryViewModal" onclick="if(event.target===this)closeDiaryViewModal()">
   <div class="diary-modal-card" id="diaryViewModalContent"></div>
 </div>
 
-<!-- 雲端網址設定視窗 -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
     <h3 style="margin:0 0 8px;font-size:16px;">☁️ 雲端伺服器網址設定</h3>
@@ -287,9 +301,7 @@
 </div>
 
 <script>
-// 💡 您可以直接把 https://script.google.com/.../exec 網址貼在下方雙引號內：
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
-
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
 function loadSavedItems() {
@@ -323,12 +335,12 @@ let calYear = nowDate.getFullYear();
 let calMonth = nowDate.getMonth() + 1;
 let selectedCalDate = nowDate.toISOString().slice(0,10).replace(/-/g,'/');
 let editingDiaryId = null;
-let tempDiaryPhotos = []; // 支援一篇日記存放多張照片！
+let tempDiaryPhotos = [];
+let currentLightboxPhotos = [];
 let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
 
-// 取得一篇日記的所有照片陣列（相容單張與多張格式）
 function getDiaryPhotos(d) {
   if (!d) return [];
   if (Array.isArray(d.photos) && d.photos.length > 0) return d.photos.filter(Boolean);
@@ -338,6 +350,33 @@ function getDiaryPhotos(d) {
     return s.split(/\s*\|\|\s*|\s*,\s*(?=https?:)/).filter(Boolean);
   }
   return [];
+}
+
+// 開啟全螢幕完整無裁切照片檢視器
+function openFullLightbox(photosArr, startIndex = 0) {
+  if (!Array.isArray(photosArr) || photosArr.length === 0) return;
+  currentLightboxPhotos = photosArr;
+  const track = document.getElementById('lightboxTrack');
+  const dots = document.getElementById('lightboxDots');
+  const counter = document.getElementById('lightboxCounter');
+
+  track.innerHTML = photosArr.map(url => `
+    <div class="lightbox-slide" onclick="if(event.target===this)closeFullLightbox()">
+      <img src="${url}" alt="full photo">
+    </div>
+  `).join('');
+
+  dots.innerHTML = photosArr.map((_, i) => `<span class="${i === startIndex ? 'on' : ''}"></span>`).join('');
+  counter.textContent = `📷 ${startIndex + 1} / ${photosArr.length}`;
+  document.getElementById('fullPhotoLightbox').classList.add('open');
+
+  setTimeout(() => {
+    track.scrollLeft = startIndex * track.clientWidth;
+  }, 20);
+}
+
+function closeFullLightbox() {
+  document.getElementById('fullPhotoLightbox').classList.remove('open');
 }
 
 function getAllBrandOptions() {
@@ -514,8 +553,8 @@ function renderDetailTab() {
 
   return `
     <div class="detail-page-wrap">
-      <div class="detail-top-photo">
-        <div class="detail-floating-nav">
+      <div class="detail-top-photo" onclick="${it.photo ? `openFullLightbox(['${it.photo}'], 0)` : ''}">
+        <div class="detail-floating-nav" onclick="event.stopPropagation()">
           <div class="detail-glass-btn" onclick="switchTab('${previousTab}')">‹</div>
           <div class="detail-glass-btn" onclick="openEditItem('${it.id}')">⚙️</div>
         </div>
@@ -729,7 +768,6 @@ function renderAllTab() {
   `;
 }
 
-/* ====== ④ 互動月曆頁面 (點擊日記會彈出完整檢視視窗 + 支援多張照片左右滑動！) ====== */
 function renderCalendarTab() {
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const weekNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -833,7 +871,6 @@ function renderCalendarTab() {
   `;
 }
 
-// 當手指左右滑動照片時，即時更新下方圓點與張數指示器
 function updateCarouselDots(trackEl, counterId) {
   const idx = Math.round(trackEl.scrollLeft / trackEl.clientWidth);
   const dotsBox = trackEl.parentElement.querySelector('.banff-dots');
@@ -847,20 +884,21 @@ function updateCarouselDots(trackEl, counterId) {
   }
 }
 
-// 點擊日記時彈出「完整日記檢視視窗」
+// 點擊日記彈出「完整日記檢視視窗」（內部照片完整不裁切，再點照片可開啟全螢幕檢視器！）
 function openDiaryViewModal(id) {
   const d = diaries.find(x => String(x.id) === String(id));
   if (!d) return;
   const photos = getDiaryPhotos(d);
+  window._currentModalDiaryPhotos = photos;
   const box = document.getElementById('diaryViewModalContent');
 
   box.innerHTML = `
     <div class="diary-modal-gallery">
-      ${photos.length > 0 ? `<div class="diary-modal-counter" id="modalPhotoCounter">📷 1 / ${photos.length} (左右滑動)</div>` : ''}
+      ${photos.length > 0 ? `<div class="diary-modal-counter" id="modalPhotoCounter">📷 1 / ${photos.length} (點照片可全螢幕放大)</div>` : ''}
       <div class="diary-modal-close" onclick="closeDiaryViewModal()">✕</div>
       ${photos.length > 0 ? `
         <div class="diary-carousel-track" onscroll="updateCarouselDots(this, 'modalPhotoCounter')">
-          ${photos.map(url => `<div class="diary-carousel-slide"><img src="${url}" alt="diary"></div>`).join('')}
+          ${photos.map((url, idx) => `<div class="diary-carousel-slide" onclick="openFullLightbox(window._currentModalDiaryPhotos, ${idx})"><img src="${url}" alt="diary"></div>`).join('')}
         </div>
         <div class="banff-dots">
           ${photos.map((_, idx) => `<span class="${idx===0?'on':''}"></span>`).join('')}
@@ -911,7 +949,7 @@ function renderDiaryTab() {
 
   return `
     <div class="header-row">
-      <div><h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1><p class="greet-sub">支援多張照片上傳與雙機 Google 雲端硬碟同步</p></div>
+      <div><h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1><p class="greet-sub">支援一次勾選多張照片與雙機雲端同步</p></div>
       <div class="bell-btn" onclick="switchTab('calendar')">✕</div>
     </div>
     <div class="form-card">
@@ -941,13 +979,13 @@ function renderDiaryTab() {
     <div class="form-card dark-part">
       <div class="f-group"><label class="f-label">📝 做什麼 / 今日心情日記</label><textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、心情、吃了什麼好料...">${d ? d.content : ''}</textarea></div>
       <div class="f-group" style="margin-bottom:0;">
-        <label class="f-label">📸 回憶照片（可連續點選新增多張照片，閱讀時可左右滑動！）</label>
+        <label class="f-label">📸 回憶照片（支援長按一次勾選多張，或重複點擊新增！）</label>
         <label class="photo-upload-box">
           <input type="file" accept="image/*" multiple style="display:none;" onchange="handleDiaryPhotoPick(event)">
           <span style="font-size:24px;">➕</span>
           <div style="text-align:left;font-size:12px;">
-            <div style="font-weight:800;color:var(--frosted-blue);">點擊新增照片（目前已選 <span id="diaryPhotoCount">${tempDiaryPhotos.length}</span> 張）</div>
-            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">想要多張照片可重複點擊此處加入，自動同步至 Google 雲端</div>
+            <div style="font-weight:800;color:var(--frosted-blue);">點擊選擇照片（目前已選 <span id="diaryPhotoCount">${tempDiaryPhotos.length}</span> 張）</div>
+            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">在相簿內長按照片即可一次勾選多張上傳</div>
           </div>
         </label>
         <div class="multi-thumb-strip" id="diaryMultiThumbStrip">
@@ -977,28 +1015,37 @@ function removeTempDiaryPhoto(idx) {
   if (cnt) cnt.textContent = tempDiaryPhotos.length;
 }
 
-function handleDiaryPhotoPick(e) {
-  const files = Array.from(e.target.files || []);
-  if (files.length === 0) return;
-  files.forEach(file => {
+function compressSingleImageFile(file) {
+  return new Promise(resolve => {
     const reader = new FileReader();
     reader.onload = function(evt) {
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
-        const maxW = 900; const scale = img.width > maxW ? maxW / img.width : 1;
-        canvas.width = img.width * scale; canvas.height = img.height * scale;
+        const maxW = 1000;
+        const scale = img.width > maxW ? maxW / img.width : 1;
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        tempDiaryPhotos.push(canvas.toDataURL('image/jpeg', 0.82));
-        const strip = document.getElementById('diaryMultiThumbStrip');
-        const cnt = document.getElementById('diaryPhotoCount');
-        if (strip) strip.innerHTML = renderDiaryThumbStripHtml();
-        if (cnt) cnt.textContent = tempDiaryPhotos.length;
+        resolve(canvas.toDataURL('image/jpeg', 0.84));
       };
       img.src = evt.target.result;
     };
     reader.readAsDataURL(file);
   });
+}
+
+async function handleDiaryPhotoPick(e) {
+  const files = Array.from(e.target.files || []);
+  if (files.length === 0) return;
+  for (let i = 0; i < files.length; i++) {
+    const b64 = await compressSingleImageFile(files[i]);
+    tempDiaryPhotos.push(b64);
+  }
+  const strip = document.getElementById('diaryMultiThumbStrip');
+  const cnt = document.getElementById('diaryPhotoCount');
+  if (strip) strip.innerHTML = renderDiaryThumbStripHtml();
+  if (cnt) cnt.textContent = tempDiaryPhotos.length;
   e.target.value = '';
 }
 
