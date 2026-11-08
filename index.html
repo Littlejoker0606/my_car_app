@@ -7,51 +7,35 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Holst 指定 6 色票系統 */
-    --cloud-cream: #F4F1DE;       /* 奶油象牙白 (主背景) */
-    --cloud-cream-pure: #FAF9F0;  /* 亮白卡片底 */
-    --frosted-blue: #D4C4A8;      /* 暖沙金 (次要主卡底色) */
-    --frosted-blue-deep: #C2B092;
-    --muted-jade: #778D7A;        /* 鼠尾草綠 (強調色/已入庫/導覽列左漸層) */
-    --muted-jade-soft: #E1E7E2;
-    --brushed-pewter: #415A77;    /* 岩石鋼藍 (副標題/導覽列右漸層) */
-    --plum-noir: #1B263B;         /* 深牛津藍 (深色主卡/主要深色字) */
-    --plum-noir-dark: #0D1B2A;    /* 午夜深海藍 (最深底色/內層深色卡) */
-    --plum-noir-soft: #415A77;
+    --cloud-cream: #F4F1DE; --cloud-cream-pure: #FAF9F0;
+    --frosted-blue: #D4C4A8; --frosted-blue-deep: #C2B092;
+    --muted-jade: #778D7A; --muted-jade-soft: #E1E7E2;
+    --brushed-pewter: #415A77; --plum-noir: #1B263B;
+    --plum-noir-dark: #0D1B2A; --plum-noir-soft: #415A77;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; background: #D4C4A8; color: var(--plum-noir-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
   .top-preview-bar { width: 100%; background: var(--plum-noir-dark); color: var(--cloud-cream); padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; position: sticky; top: 0; z-index: 999; }
   .top-preview-bar button { background: var(--frosted-blue); color: var(--plum-noir-dark); border: none; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; cursor: pointer; }
-
   .phone-frame { width: 390px; height: 820px; background: var(--cloud-cream); border-radius: 50px; border: 11px solid var(--plum-noir-dark); box-shadow: 0 28px 60px rgba(13,27,42,0.3), inset 0 0 0 2px #fff; margin: 24px auto; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   body.fullscreen-mode { background: var(--cloud-cream); }
   body.fullscreen-mode .top-preview-bar { display: none; }
   body.fullscreen-mode .phone-frame { width: 100%; max-width: 480px; height: 100vh; margin: 0; border: none; border-radius: 0; box-shadow: none; }
-
   .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 150px; scrollbar-width: none; background: var(--cloud-cream); }
   .screen-scroll.home-mode { padding-top: 0; background: var(--cloud-cream); }
   .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: var(--plum-noir-dark); }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
-  /* 1.5秒自動消失的中央提示小視窗 */
   .auto-popup-hud { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(13,27,42,0.95); color: var(--cloud-cream); padding: 20px 28px; border-radius: 26px; border: 1.5px solid rgba(212,196,168,0.35); box-shadow: 0 18px 40px rgba(0,0,0,0.4); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 190px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.22s ease, transform 0.22s ease; }
   .auto-popup-hud.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   .auto-popup-hud .hud-icon { font-size: 30px; line-height: 1; }
   .auto-popup-hud .hud-title { font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
   .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; }
 
-  /* 首頁頂部：DSC00224.jpg + Holst 奶油白漸層過渡 */
-  .home-hero-banner {
-    margin: 0 -18px 8px; min-height: 335px;
-    background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg');
-    background-size: cover; background-position: center 22%;
-    padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative;
-  }
+  .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg'); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
   .hero-quote-mark { font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; text-shadow: 0 2px 10px rgba(13,27,42,0.4); user-select: none; }
   .home-hero-bottom { margin-top: 118px; }
-
   .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .greet-title { font-size: 22px; font-weight: 900; color: var(--plum-noir-dark); margin: 0; letter-spacing: -0.3px; text-shadow: 0 2px 12px rgba(244,241,222,0.9); }
   .greet-sub { font-size: 12px; color: var(--brushed-pewter); font-weight: 700; margin: 2px 0 6px; }
@@ -61,13 +45,11 @@
   @keyframes spinSync { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   .bell-btn.spinning svg { animation: spinSync 0.8s linear infinite; }
   .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: rgba(212,196,168,0.92); backdrop-filter: blur(8px); border: 2px solid var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
   .val-label { font-size: 11px; color: var(--brushed-pewter); font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; }
   .val-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 2px 0 10px; }
   .val-main { font-size: 34px; font-weight: 900; color: var(--plum-noir-dark); letter-spacing: -0.8px; }
   .val-main small { font-size: 20px; color: var(--brushed-pewter); font-weight: 700; }
   .val-badge { font-size: 11px; font-weight: 800; color: var(--muted-jade); }
-
   .dual-pill-wrap { display: flex; align-items: center; margin-bottom: 16px; }
   .dual-pill { flex: 1; height: 48px; background: var(--cloud-cream-pure); border: 1.5px solid rgba(13,27,42,0.12); border-radius: 28px; display: flex; align-items: center; justify-content: center; padding: 0 14px; font-size: 13px; font-weight: 800; color: var(--plum-noir-dark); cursor: pointer; box-shadow: 0 4px 12px rgba(13,27,42,0.04); }
   .dual-center-x { width: 34px; height: 34px; border-radius: 50%; background: var(--cloud-cream); border: 1.5px solid rgba(13,27,42,0.18); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; margin: 0 -10px; z-index: 2; cursor: pointer; }
@@ -80,7 +62,6 @@
   .period-pill { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; color: var(--plum-noir-dark); cursor: pointer; }
   .period-pill.active { background: var(--plum-noir-dark); color: var(--cloud-cream); }
   .more-pill { background: rgba(244,241,222,0.75); color: var(--plum-noir-dark); font-size: 10px; font-weight: 800; padding: 4px 9px; border-radius: 12px; cursor: pointer; }
-
   .histogram-wrapper { display: flex; align-items: stretch; height: 152px; position: relative; }
   .y-axis-fixed { width: 28px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 0 24px; font-size: 9px; font-weight: 700; color: rgba(13,27,42,0.6); z-index: 3; }
   .hist-scroll-viewport { flex: 1; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; position: relative; }
@@ -115,21 +96,13 @@
   .dark-row-tag { font-size: 10px; font-weight: 700; color: var(--muted-jade); margin-top: 2px; }
   .view-all-row { text-align: right; padding: 2px 8px 0; font-size: 11px; font-weight: 700; color: var(--frosted-blue); cursor: pointer; }
 
-  /* 物品詳細頁 (Holst 深海午夜藍漸層) */
   .detail-page-wrap { margin: 0 -18px; display: flex; flex-direction: column; min-height: 100vh; background: var(--plum-noir-dark); }
   .detail-top-photo { width: 100%; height: 350px; background: #E5DEC9; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
   .detail-top-photo img { width: 100%; height: 100%; object-fit: cover; }
   .detail-top-photo .fallback-emoji { font-size: 84px; }
   .detail-floating-nav { position: absolute; top: 44px; left: 18px; right: 18px; display: flex; justify-content: space-between; z-index: 10; }
   .detail-glass-btn { width: 40px; height: 40px; border-radius: 13px; background: rgba(13,27,42,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.28); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
-
-  .detail-sheet-card {
-    flex: 1; margin-top: -34px; border-radius: 34px 34px 0 0;
-    background: linear-gradient(165deg, #415A77 0%, #1B263B 50%, #0D1B2A 100%);
-    border-top: 1.5px solid rgba(244,241,222,0.22);
-    padding: 26px 22px 135px; color: var(--cloud-cream); position: relative; z-index: 5;
-    box-shadow: 0 -12px 32px rgba(13,27,42,0.35);
-  }
+  .detail-sheet-card { flex: 1; margin-top: -34px; border-radius: 34px 34px 0 0; background: linear-gradient(165deg, #415A77 0%, #1B263B 50%, #0D1B2A 100%); border-top: 1.5px solid rgba(244,241,222,0.22); padding: 26px 22px 135px; color: var(--cloud-cream); position: relative; z-index: 5; box-shadow: 0 -12px 32px rgba(13,27,42,0.35); }
   .detail-title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
   .detail-car-title { font-size: 22px; font-weight: 800; color: #fff; margin: 0; line-height: 1.25; }
   .status-switch-pill { width: 52px; height: 28px; border-radius: 20px; background: rgba(244,241,222,0.25); padding: 3px; display: flex; align-items: center; cursor: pointer; flex-shrink: 0; }
@@ -152,7 +125,6 @@
   .detail-extra-row { display: flex; justify-content: space-between; color: rgba(244,241,222,0.75); }
   .detail-extra-row strong { color: #fff; }
 
-  /* ====== 第 4 頁：互動式月曆頁面 (參考 月歷參考.jpg) ====== */
   .cal-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .cal-month-pill { background: rgba(65,90,119,0.14); padding: 7px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--plum-noir-dark); }
   .cal-month-arrow { cursor: pointer; padding: 0 4px; font-size: 15px; user-select: none; }
@@ -162,19 +134,15 @@
   .cal-day-cell { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--plum-noir-dark); background: rgba(65,90,119,0.1); cursor: pointer; position: relative; transition: all 0.18s; }
   .cal-day-cell.muted { background: transparent; color: rgba(65,90,119,0.32); pointer-events: none; }
   .cal-day-cell.today-ring { background: var(--cloud-cream-pure); border: 1.8px solid var(--plum-noir-dark); }
-  /* 有寫日記的日子：鼠尾草綠底色 + 右上角小圖標 */
   .cal-day-cell.has-diary { background: var(--muted-jade); color: var(--cloud-cream); font-weight: 800; }
   .cal-day-cell.has-diary::after { content: '✦'; position: absolute; top: -3px; right: -2px; font-size: 10px; color: var(--plum-noir-dark); background: var(--frosted-blue); width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
-  /* 目前點選查看的日子：深海午夜藍實心圓 */
   .cal-day-cell.selected { background: var(--plum-noir-dark) !important; color: var(--cloud-cream) !important; transform: scale(1.06); box-shadow: 0 4px 10px rgba(13,27,42,0.25); }
-
   .cal-today-summary { display: flex; justify-content: space-between; align-items: center; padding: 0 6px 12px; border-left: 3px solid rgba(65,90,119,0.25); margin-left: 4px; padding-left: 12px; margin-bottom: 14px; }
   .cal-big-day { font-size: 28px; font-weight: 900; color: var(--plum-noir-dark); line-height: 1; }
   .cal-day-sub { font-size: 11px; font-weight: 700; color: var(--brushed-pewter); margin-top: 3px; }
   .cal-count-text { font-size: 13px; font-weight: 700; color: var(--brushed-pewter); }
   .cal-viewall-pill { background: var(--plum-noir); color: var(--cloud-cream); padding: 6px 13px; border-radius: 16px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
-  /* ====== 月曆下方日記卡片 (100% 參考 月曆下方ui參考.png Banff 卡片設計) ====== */
   .banff-diary-card { background: var(--cloud-cream-pure); border-radius: 26px; padding: 11px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(13,27,42,0.1); border: 1px solid rgba(13,27,42,0.07); }
   .banff-photo-box { width: 100%; height: 205px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .banff-photo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -195,7 +163,6 @@
   .banff-action-btn { background: var(--plum-noir-dark); color: var(--cloud-cream); border: none; border-radius: 22px; padding: 6px 6px 6px 14px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; cursor: pointer; }
   .banff-action-btn .arr-cir { width: 24px; height: 24px; border-radius: 50%; background: var(--cloud-cream); color: var(--plum-noir-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
 
-  /* 表單與所有收藏品樣式 */
   .form-card { background: var(--frosted-blue); border-radius: 28px; padding: 16px; margin-bottom: 14px; }
   .form-card.dark-part { background: var(--plum-noir); color: var(--cloud-cream); }
   .f-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -219,38 +186,22 @@
   .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13,27,42,0.12); cursor: pointer; }
   .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
 
-  /* ====== 全新 5 鍵式「中間U型凹槽漸層底部導覽列」(100% 復刻第 2 張附圖造型) ====== */
   .trantor-dock-container { position: absolute; bottom: 12px; left: 14px; right: 14px; height: 84px; z-index: 100; display: flex; align-items: flex-end; pointer-events: none; }
   body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 452px; margin: 0 auto; }
   .concave-dock-bar {
     pointer-events: auto; width: 100%; height: 64px;
-    /* 採用 Holst 鼠尾草綠 (#778D7A) 到 岩石鋼藍 (#415A77) 半透明漸層，完美契合第 2 張圖！ */
     background: linear-gradient(90deg, rgba(119, 141, 122, 0.92) 0%, rgba(65, 90, 119, 0.92) 100%);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    /* 使用 radial-gradient 在正中央上方切出平滑的 U 型凹陷弧形缺口 */
     -webkit-mask-image: radial-gradient(circle 38px at 50% 0px, transparent 37px, black 38px);
     mask-image: radial-gradient(circle 38px at 50% 0px, transparent 37px, black 38px);
     border-radius: 16px 16px 32px 32px;
     display: grid; grid-template-columns: 1fr 1fr 76px 1fr 1fr; align-items: center; justify-items: center;
     padding: 0 6px; box-shadow: 0 12px 28px rgba(13, 27, 42, 0.28);
   }
-  .dock-nav-item {
-    background: transparent; border: none; color: rgba(244, 241, 222, 0.68);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-    font-size: 9px; font-weight: 800; cursor: pointer; padding: 6px; transition: all 0.2s;
-  }
+  .dock-nav-item { background: transparent; border: none; color: rgba(244, 241, 222, 0.68); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 9px; font-weight: 800; cursor: pointer; padding: 6px; transition: all 0.2s; }
   .dock-nav-item.active { color: #fff; transform: translateY(-2px); }
   .dock-nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* 懸浮在 U 型凹槽正中央的漸層大圓鈕 */
-  .concave-center-fab {
-    pointer-events: auto; position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
-    width: 62px; height: 62px; border-radius: 50%;
-    background: linear-gradient(135deg, #778D7A 0%, #415A77 100%);
-    color: var(--cloud-cream); border: 2px solid rgba(244, 241, 222, 0.65);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 20px rgba(13, 27, 42, 0.32); cursor: pointer; transition: all 0.2s;
-  }
+  .concave-center-fab { pointer-events: auto; position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); width: 62px; height: 62px; border-radius: 50%; background: linear-gradient(135deg, #778D7A 0%, #415A77 100%); color: var(--cloud-cream); border: 2px solid rgba(244, 241, 222, 0.65); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(13, 27, 42, 0.32); cursor: pointer; transition: all 0.2s; }
   .concave-center-fab.active { background: var(--plum-noir-dark); border-color: var(--frosted-blue); transform: translateX(-50%) scale(1.05); }
   .concave-center-fab svg { width: 26px; height: 26px; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
 
@@ -275,36 +226,24 @@
 <div class="phone-frame">
   <div class="screen-scroll home-mode" id="screenContent"></div>
 
-  <!-- 第 2 張附圖造型：5 鍵式 U 型凹槽漸層底部導覽列 -->
   <div class="trantor-dock-container">
-    <!-- 正中間懸浮圓形按鈕 (③ 新增收藏品) -->
     <div class="concave-center-fab" id="dockAdd" onclick="switchTab('add')" title="新增收藏品">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
     </div>
-
     <div class="concave-dock-bar">
-      <!-- ① 首頁 (左一：儀表板圖示) -->
       <button class="dock-nav-item active" id="dockHome" onclick="switchTab('home')">
         <svg viewBox="0 0 24 24"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
         <span>首頁</span>
       </button>
-
-      <!-- ② 所有收藏品 (左二：收藏大樓圖示) -->
       <button class="dock-nav-item" id="dockAll" onclick="switchTab('all')">
         <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
         <span>所有收藏</span>
       </button>
-
-      <!-- 中央凹槽佔位 -->
       <div></div>
-
-      <!-- ④ 日曆 (右二：互動月曆圖示) -->
       <button class="dock-nav-item" id="dockCalendar" onclick="switchTab('calendar')">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span>日曆</span>
       </button>
-
-      <!-- ⑤ 日記 (最右：寫日記圖示) -->
       <button class="dock-nav-item" id="dockDiary" onclick="switchTab('diary')">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span>日記</span>
@@ -327,7 +266,7 @@
 
 <script>
 // 💡 您可以直接把 https://script.google.com/.../exec 網址貼在下方雙引號內：
-const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
+const DEFAULT_GAS_URL = "";
 
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
@@ -344,7 +283,7 @@ let diaries = JSON.parse(localStorage.getItem('my_couple_diaries') || '[]');
 let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
 let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
-let activeTab = 'home'; // 'home' | 'all' | 'add' | 'calendar' | 'diary' | 'detail'
+let activeTab = 'home';
 let previousTab = 'all';
 let viewingDetailId = null;
 let chartMode = 'recent';
@@ -354,19 +293,15 @@ let ownerFilter = 'ALL';
 let catFilter = 'ALL';
 let statusFilter = 'ALL';
 let searchKeyword = '';
-
-// 收藏品編輯狀態
 let editingId = null;
 let tempPhotoBase64 = '';
 
-// 日曆與日記狀態
 const nowDate = new Date();
 let calYear = nowDate.getFullYear();
-let calMonth = nowDate.getMonth() + 1; // 1~12
+let calMonth = nowDate.getMonth() + 1;
 let selectedCalDate = nowDate.toISOString().slice(0,10).replace(/-/g,'/');
 let editingDiaryId = null;
 let tempDiaryPhotoBase64 = '';
-
 let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
@@ -396,12 +331,8 @@ function saveLocal() {
 }
 
 function switchTab(tab) {
-  if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') {
-    editingId = null; tempPhotoBase64 = '';
-  }
-  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') {
-    editingDiaryId = null; tempDiaryPhotoBase64 = '';
-  }
+  if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') { editingId = null; tempPhotoBase64 = ''; }
+  if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') { editingDiaryId = null; tempDiaryPhotoBase64 = ''; }
   activeTab = tab;
   document.getElementById('dockHome').classList.toggle('active', tab === 'home');
   document.getElementById('dockAll').classList.toggle('active', tab === 'all' || tab === 'detail');
@@ -423,7 +354,6 @@ function openDetailView(id) {
   switchTab('detail');
 }
 
-/* ====== ① 首頁 ====== */
 function renderHomeTab() {
   const totalVal = items.reduce((s, x) => s + (Number(x.price) || 0), 0);
   const waitCnt = items.filter(x => x.status === '等待中').length;
@@ -468,13 +398,11 @@ function renderHomeTab() {
         </div>
       </div>
     </div>
-
     <div class="dual-pill-wrap">
       <div class="dual-pill" onclick="jumpToAllWithStatus('等待中')"><span>預購等待 (${waitCnt})</span></div>
       <div class="dual-center-x" onclick="switchTab('add')">＋</div>
       <div class="dual-pill" onclick="jumpToAllWithStatus('拿到了')"><span>現有入庫 (${gotCnt})</span></div>
     </div>
-
     <div class="chart-card">
       <div class="chart-top-bar">
         <div class="chart-coin-badge"><span class="diamond">📊</span><span>單日購買統計</span></div>
@@ -515,7 +443,6 @@ function renderHomeTab() {
         <span>${selectedBarInfo || (bestDay ? '🏆 最高：' + bestDay[0].slice(5) + ' (' + bestDay[1].count + '件)' : '-')}</span>
       </div>
     </div>
-
     <div class="dark-Showcase-box">
       <div class="dark-box-header">
         <span style="font-size:13px;font-weight:800;">✨ 最近動態追蹤</span>
@@ -545,7 +472,6 @@ function renderHomeTab() {
   `;
 }
 
-/* ====== 物品詳細頁 ====== */
 function renderDetailTab() {
   const it = items.find(x => String(x.id) === String(viewingDetailId)) || items[0];
   if (!it) return '';
@@ -561,7 +487,6 @@ function renderDetailTab() {
         </div>
         ${it.photo ? `<img src="${it.photo}" alt="${it.name}">` : `<span class="fallback-emoji">${icon}</span>`}
       </div>
-
       <div class="detail-sheet-card">
         <div class="detail-title-row">
           <h2 class="detail-car-title">${it.name}</h2>
@@ -569,16 +494,13 @@ function renderDetailTab() {
             <div class="status-switch-knob"></div>
           </div>
         </div>
-        <p class="detail-desc-text">
-          此收藏由 <u>${it.buyer}</u> 於 ${it.orderDate || '近期'} 向 <u>${it.store || '特約店家'}</u> 購買，目前狀態為 <u>${it.status}</u>。
-        </p>
+        <p class="detail-desc-text">此收藏由 <u>${it.buyer}</u> 於 ${it.orderDate || '近期'} 向 <u>${it.store || '特約店家'}</u> 購買，目前狀態為 <u>${it.status}</u>。</p>
         <div class="detail-hero-metric">
           <div class="detail-big-price">$${Number(it.price || 0).toLocaleString()}<small>TWD</small></div>
           <div class="detail-stars">${it.rating || '☆☆☆☆☆'}</div>
         </div>
         <div class="detail-sec-head" onclick="openEditItem('${it.id}')" style="cursor:pointer;">
-          <span>車輛規格資訊 (Specifications)</span>
-          <span style="font-size:18px;opacity:0.7;">›</span>
+          <span>車輛規格資訊 (Specifications)</span><span style="font-size:18px;opacity:0.7;">›</span>
         </div>
         <div class="detail-capsules-grid">
           <div class="spec-capsule"><div class="spec-cap-circle">🏷️</div><div class="spec-cap-label">品牌</div><div class="spec-cap-val">${it.brand || '-'}</div></div>
@@ -598,8 +520,7 @@ function renderDetailTab() {
 }
 
 async function toggleDetailStatus(id) {
-  const it = items.find(x => String(x.id) === String(id));
-  if (!it) return;
+  const it = items.find(x => String(x.id) === String(id)); if (!it) return;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
   if (it.status === '拿到了') { it.status = '等待中'; it.actDate = ''; }
   else { it.status = '拿到了'; if (!it.actDate) it.actDate = today; }
@@ -610,7 +531,6 @@ async function toggleDetailStatus(id) {
   }
 }
 
-/* ====== ③ 新增 / 編輯收藏品介面 ====== */
 function renderAddTab() {
   const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
@@ -620,10 +540,7 @@ function renderAddTab() {
 
   return `
     <div class="header-row">
-      <div>
-        <h1 class="greet-title">${it ? '✏️ 編輯收藏品' : '➕ 新增收藏品'}</h1>
-        <p class="greet-sub">完整對應您的 Google 雲端試算表欄位</p>
-      </div>
+      <div><h1 class="greet-title">${it ? '✏️ 編輯收藏品' : '➕ 新增收藏品'}</h1><p class="greet-sub">完整對應您的 Google 雲端試算表欄位</p></div>
       <div class="bell-btn" onclick="switchTab('${it ? 'detail' : 'home'}')">✕</div>
     </div>
     <div class="form-card">
@@ -644,10 +561,7 @@ function renderAddTab() {
           </select>
         </div>
       </div>
-      <div class="f-group">
-        <label class="f-label">車車名稱 / 娃娃收藏名稱</label>
-        <input type="text" class="f-input" id="f_name" placeholder="例如：PEUGEOT 406 Taxi 或 娃娃" value="${it ? it.name : ''}">
-      </div>
+      <div class="f-group"><label class="f-label">車車名稱 / 娃娃收藏名稱</label><input type="text" class="f-input" id="f_name" placeholder="例如：PEUGEOT 406 Taxi 或 娃娃" value="${it ? it.name : ''}"></div>
       <div class="f-grid-2">
         <div class="f-group">
           <label class="f-label">模型品牌 / 系列</label>
@@ -656,20 +570,11 @@ function renderAddTab() {
             <option value="__CUSTOM__">✏️ 手動輸入新品牌...</option>
           </select>
         </div>
-        <div class="f-group">
-          <label class="f-label">比例 / 尺寸</label>
-          <input type="text" class="f-input" id="f_scale" value="${it ? it.scale : '1/64'}">
-        </div>
+        <div class="f-group"><label class="f-label">比例 / 尺寸</label><input type="text" class="f-input" id="f_scale" value="${it ? it.scale : '1/64'}"></div>
       </div>
-      <div class="f-group" id="customBrandBox" style="display:none;">
-        <label class="f-label">輸入新品牌名稱（儲存後將自動同步加入選單）</label>
-        <input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新模型品牌或娃娃系列名稱">
-      </div>
+      <div class="f-group" id="customBrandBox" style="display:none;"><label class="f-label">輸入新品牌名稱</label><input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新品牌名稱"></div>
       <div class="f-grid-2">
-        <div class="f-group" style="margin-bottom:0;">
-          <label class="f-label">價格合計 (NT$)</label>
-          <input type="number" class="f-input" id="f_price" placeholder="例如：800" value="${it ? it.price : ''}">
-        </div>
+        <div class="f-group" style="margin-bottom:0;"><label class="f-label">價格合計 (NT$)</label><input type="number" class="f-input" id="f_price" placeholder="800" value="${it ? it.price : ''}"></div>
         <div class="f-group" style="margin-bottom:0;">
           <label class="f-label">車車狀態</label>
           <select class="f-select" id="f_status">
@@ -712,10 +617,7 @@ function renderAddTab() {
         <label class="photo-upload-box">
           <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoPick(event)">
           <div id="photoPreviewHolder">${it && it.photo ? `<img src="${it.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
-          <div style="text-align:left;font-size:12px;">
-            <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div>
-            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div>
-          </div>
+          <div style="text-align:left;font-size:12px;"><div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳照片</div><div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並同步顯示於 Google 試算表與 App</div></div>
         </label>
       </div>
     </div>
@@ -730,7 +632,6 @@ function onBrandSelectChange(val) {
   else { customBox.style.display = 'none'; }
 }
 
-/* ====== ② 所有收藏品總覽 ====== */
 function renderAllTab() {
   const countAll = items.length;
   const countShi = items.filter(x => x.buyer === '帥氣實實').length;
@@ -750,10 +651,7 @@ function renderAllTab() {
 
   return `
     <div class="header-row">
-      <div>
-        <h1 class="greet-title">📦 所有收藏品總覽</h1>
-        <p class="greet-sub">目前檢視共 ${filtered.length} 件 · 合計 $${subTotal.toLocaleString()}</p>
-      </div>
+      <div><h1 class="greet-title">📦 所有收藏品總覽</h1><p class="greet-sub">目前檢視共 ${filtered.length} 件 · 合計 $${subTotal.toLocaleString()}</p></div>
       <div class="header-icons">
         <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()">${SYNC_SVG}</div>
         <div class="bell-btn" onclick="openCloudModal()">☁️</div>
@@ -797,50 +695,30 @@ function renderAllTab() {
   `;
 }
 
-/* ====== ④ 互動式日曆頁面 (參考 月歷參考.jpg + 月曆下方ui參考.png) ====== */
 function renderCalendarTab() {
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const weekNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-  // 統計哪些日期有日記紀錄
   const diaryDateMap = {};
-  diaries.forEach(d => {
-    const dt = String(d.date || '').trim();
-    if (dt) diaryDateMap[dt] = (diaryDateMap[dt] || 0) + 1;
-  });
+  diaries.forEach(d => { const dt = String(d.date || '').trim(); if (dt) diaryDateMap[dt] = (diaryDateMap[dt] || 0) + 1; });
 
   const firstDayObj = new Date(calYear, calMonth - 1, 1);
-  // 轉為週一為第一欄 (Mo Tu We Th Fr Sa Su)
   const startOffset = (firstDayObj.getDay() + 6) % 7;
   const daysInMonth = new Date(calYear, calMonth, 0).getDate();
   const prevMonthDays = new Date(calYear, calMonth - 1, 0).getDate();
   const todayStr = new Date().toISOString().slice(0,10).replace(/-/g,'/');
 
   const cellsHtml = [];
-  // 上個月尾端淡化日期
-  for (let i = startOffset - 1; i >= 0; i--) {
-    cellsHtml.push(`<div class="cal-day-cell muted">${prevMonthDays - i}</div>`);
-  }
-  // 本月每一天
+  for (let i = startOffset - 1; i >= 0; i--) cellsHtml.push(`<div class="cal-day-cell muted">${prevMonthDays - i}</div>`);
   for (let d = 1; d <= daysInMonth; d++) {
     const fullStr = `${calYear}/${String(calMonth).padStart(2,'0')}/${String(d).padStart(2,'0')}`;
     const hasDiary = !!diaryDateMap[fullStr];
     const isSel = fullStr === selectedCalDate;
     const isToday = fullStr === todayStr;
-    const cls = [
-      'cal-day-cell',
-      hasDiary ? 'has-diary' : '',
-      isToday && !isSel ? 'today-ring' : '',
-      isSel ? 'selected' : ''
-    ].join(' ');
+    const cls = ['cal-day-cell', hasDiary ? 'has-diary' : '', isToday && !isSel ? 'today-ring' : '', isSel ? 'selected' : ''].join(' ');
     cellsHtml.push(`<div class="${cls}" onclick="selectCalendarDate('${fullStr}')">${d}</div>`);
   }
-  // 補齊下個月初淡化日期
-  const totalCells = startOffset + daysInMonth;
-  const remain = (7 - (totalCells % 7)) % 7;
-  for (let n = 1; n <= remain; n++) {
-    cellsHtml.push(`<div class="cal-day-cell muted">${n}</div>`);
-  }
+  const remain = (7 - ((startOffset + daysInMonth) % 7)) % 7;
+  for (let n = 1; n <= remain; n++) cellsHtml.push(`<div class="cal-day-cell muted">${n}</div>`);
 
   const selParts = selectedCalDate.split('/');
   const selDayNum = selParts[2] || '01';
@@ -856,23 +734,15 @@ function renderCalendarTab() {
         <span class="cal-month-arrow" onclick="changeCalMonth(1)">›</span>
       </div>
       <div class="header-icons">
-        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="同步日記與收藏">${SYNC_SVG}</div>
+        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()">${SYNC_SVG}</div>
         <div class="bell-btn" onclick="openCloudModal()">☁️</div>
-        <div class="bell-btn" onclick="openNewDiaryForDate('${selectedCalDate}')" title="新增當日日記">＋</div>
+        <div class="bell-btn" onclick="openNewDiaryForDate('${selectedCalDate}')">＋</div>
       </div>
     </div>
-
-    <!-- 互動月曆面板 (參考 月歷參考.jpg) -->
     <div class="cal-board-card">
-      <div class="cal-weekdays">
-        <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
-      </div>
-      <div class="cal-days-grid">
-        ${cellsHtml.join('')}
-      </div>
+      <div class="cal-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+      <div class="cal-days-grid">${cellsHtml.join('')}</div>
     </div>
-
-    <!-- 選中日期標題列 -->
     <div class="cal-today-summary">
       <div>
         <div style="font-size:10px;font-weight:800;color:var(--brushed-pewter);letter-spacing:0.5px;">SELECTED DATE</div>
@@ -882,16 +752,12 @@ function renderCalendarTab() {
       <div class="cal-count-text">${dayDiaries.length} 篇日記紀錄</div>
       <div class="cal-viewall-pill" onclick="openNewDiaryForDate('${selectedCalDate}')">＋ 寫日記</div>
     </div>
-
-    <!-- 當日日記卡片清單 (100% 參考 月曆下方ui參考.png Banff 卡片設計) -->
     ${dayDiaries.length === 0 ? `
       <div class="banff-diary-card" style="text-align:center;padding:28px 16px;">
         <div style="font-size:32px;margin-bottom:8px;">📖</div>
         <div style="font-size:14px;font-weight:800;color:var(--plum-noir-dark);margin-bottom:4px;">${selectedCalDate} 尚無日記紀錄</div>
         <div style="font-size:11px;color:var(--brushed-pewter);margin-bottom:14px;">點擊下方按鈕，紀錄實實與寶寶今天去哪裡、做了什麼吧！</div>
-        <button class="banff-action-btn" style="margin:0 auto;" onclick="openNewDiaryForDate('${selectedCalDate}')">
-          <span>立即新增當日日記</span><span class="arr-cir">↗</span>
-        </button>
+        <button class="banff-action-btn" style="margin:0 auto;" onclick="openNewDiaryForDate('${selectedCalDate}')"><span>立即新增當日日記</span><span class="arr-cir">↗</span></button>
       </div>
     ` : dayDiaries.map(d => `
       <div class="banff-diary-card">
@@ -906,7 +772,6 @@ function renderCalendarTab() {
           ${d.photo ? `<img src="${d.photo}" alt="diary">` : `<span style="font-size:52px;">📸</span>`}
           <div class="banff-dots"><span class="on"></span><span></span><span></span><span></span></div>
         </div>
-
         <div class="banff-body">
           <div class="banff-title-row">
             <h3 class="banff-title">${d.location || '美好回憶'}</h3>
@@ -916,10 +781,7 @@ function renderCalendarTab() {
           <p class="banff-desc">${d.content || '（尚未填寫詳細內容）'}</p>
           <div class="banff-footer">
             <div class="banff-foot-left">${d.timePoint || 'Memory'} <small>/ ${d.date.slice(5)}</small></div>
-            <button class="banff-action-btn" onclick="openEditDiary('${d.id}')">
-              <span>編輯日記</span>
-              <span class="arr-cir">↗</span>
-            </button>
+            <button class="banff-action-btn" onclick="openEditDiary('${d.id}')"><span>編輯日記</span><span class="arr-cir">↗</span></button>
           </div>
         </div>
       </div>
@@ -933,49 +795,23 @@ function changeCalMonth(delta) {
   if (calMonth < 1) { calMonth = 12; calYear--; }
   renderScreen();
 }
+function selectCalendarDate(dateStr) { selectedCalDate = dateStr; renderScreen(); }
+function openNewDiaryForDate(dateStr) { selectedCalDate = dateStr; editingDiaryId = null; tempDiaryPhotoBase64 = ''; switchTab('diary'); }
+function openEditDiary(id) { editingDiaryId = id; tempDiaryPhotoBase64 = ''; switchTab('diary'); }
 
-function selectCalendarDate(dateStr) {
-  selectedCalDate = dateStr;
-  renderScreen();
-}
-
-function openNewDiaryForDate(dateStr) {
-  selectedCalDate = dateStr;
-  editingDiaryId = null;
-  tempDiaryPhotoBase64 = '';
-  switchTab('diary');
-}
-
-function openEditDiary(id) {
-  editingDiaryId = id;
-  tempDiaryPhotoBase64 = '';
-  switchTab('diary');
-}
-
-/* ====== ⑤ 導覽列最右方：寫日記介面 (與誰、去哪裡、時間點、做什麼、附上一張照片) ====== */
 function renderDiaryTab() {
   const d = editingDiaryId ? diaries.find(x => String(x.id) === String(editingDiaryId)) : null;
   const defaultDate = d ? d.date : selectedCalDate;
 
   return `
     <div class="header-row">
-      <div>
-        <h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1>
-        <p class="greet-sub">紀錄與誰、去哪裡、時間點與美好照片（雙機雲端同步）</p>
-      </div>
+      <div><h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1><p class="greet-sub">紀錄與誰、去哪裡、時間點與美好照片（雙機雲端同步）</p></div>
       <div class="bell-btn" onclick="switchTab('calendar')">✕</div>
     </div>
-
     <div class="form-card">
       <div class="f-grid-2">
-        <div class="f-group">
-          <label class="f-label">📅 日記日期</label>
-          <input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}">
-        </div>
-        <div class="f-group">
-          <label class="f-label">🕒 時間點</label>
-          <input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '14:00'}">
-        </div>
+        <div class="f-group"><label class="f-label">📅 日記日期</label><input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}"></div>
+        <div class="f-group"><label class="f-label">🕒 時間點</label><input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '14:00'}"></div>
       </div>
       <div class="chip-row" style="margin-bottom:10px;">
         <span class="mini-chip" onclick="document.getElementById('d_time').value='早上 10:00'">早上 10:00</span>
@@ -984,10 +820,9 @@ function renderDiaryTab() {
         <span class="mini-chip" onclick="document.getElementById('d_time').value='晚上 19:00'">晚上 19:00</span>
         <span class="mini-chip" onclick="document.getElementById('d_time').value='全天約會'">全天約會</span>
       </div>
-
       <div class="f-group">
         <label class="f-label">👥 與誰 (With Whom)</label>
-        <input type="text" class="f-input" id="d_who" placeholder="例如：實實 & 寶寶" value="${d ? d.withWho : '實實 & 寶寶'}">
+        <input type="text" class="f-input" id="d_who" value="${d ? d.withWho : '實實 & 寶寶'}">
         <div class="chip-row">
           <span class="mini-chip" onclick="document.getElementById('d_who').value='實實 & 寶寶'">👩‍❤️‍👨 實實 & 寶寶</span>
           <span class="mini-chip" onclick="document.getElementById('d_who').value='帥氣實實'">😎 帥氣實實</span>
@@ -995,36 +830,20 @@ function renderDiaryTab() {
           <span class="mini-chip" onclick="document.getElementById('d_who').value='與朋友們'">🎉 與朋友們</span>
         </div>
       </div>
-
-      <div class="f-group" style="margin-bottom:0;">
-        <label class="f-label">📍 去哪裡 (Location / 地點)</label>
-        <input type="text" class="f-input" id="d_location" placeholder="例如：桃園楊梅 / 台北信義區 / 水族館" value="${d ? d.location : ''}">
-      </div>
+      <div class="f-group" style="margin-bottom:0;"><label class="f-label">📍 去哪裡 (Location / 地點)</label><input type="text" class="f-input" id="d_location" placeholder="例如：桃園楊梅 / 台北信義區 / 水族館" value="${d ? d.location : ''}"></div>
     </div>
-
     <div class="form-card dark-part">
-      <div class="f-group">
-        <label class="f-label">📝 做什麼 / 日記內容</label>
-        <textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、吃了什麼好料、或是買了哪台新車車與娃娃...">${d ? d.content : ''}</textarea>
-      </div>
-
+      <div class="f-group"><label class="f-label">📝 做什麼 / 日記內容</label><textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、吃了什麼好料...">${d ? d.content : ''}</textarea></div>
       <div class="f-group" style="margin-bottom:0;">
         <label class="f-label">📸 附上一張照片 (點擊開啟 S25U/S26U 相簿或相機)</label>
         <label class="photo-upload-box">
           <input type="file" accept="image/*" style="display:none;" onchange="handleDiaryPhotoPick(event)">
           <div id="diaryPhotoPreviewHolder">${d && d.photo ? `<img src="${d.photo}">` : '<span style="font-size:24px;">📸</span>'}</div>
-          <div style="text-align:left;font-size:12px;">
-            <div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳回憶照片</div>
-            <div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並存進您的 Google 雲端硬碟雙機同步</div>
-          </div>
+          <div style="text-align:left;font-size:12px;"><div style="font-weight:800;color:var(--frosted-blue);">點擊拍攝或上傳回憶照片</div><div style="color:var(--cloud-cream);opacity:0.75;font-size:10px;">自動壓縮並存進您的 Google 雲端硬碟雙機同步</div></div>
         </label>
       </div>
     </div>
-
-    <button class="submit-pill-btn" onclick="saveDiaryEntry()">
-      <span>✓ ${d ? '儲存日記修改並同步雲端' : '儲存日記並同步至雲端'}</span>
-    </button>
-
+    <button class="submit-pill-btn" onclick="saveDiaryEntry()"><span>✓ ${d ? '儲存日記修改並同步雲端' : '儲存日記並同步至雲端'}</span></button>
     ${d ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeDiaryEntry('${d.id}')">🗑️ 刪除此篇日記</span></div>` : ''}
   `;
 }
@@ -1051,49 +870,33 @@ async function saveDiaryEntry() {
   const id = editingDiaryId || ('diary_' + Date.now());
   const old = diaries.find(x => String(x.id) === String(id));
   const dateVal = document.getElementById('d_date').value.trim() || selectedCalDate;
-
   const newDiary = {
-    id,
-    date: dateVal,
+    id, date: dateVal,
     timePoint: document.getElementById('d_time').value.trim() || '全天',
     withWho: document.getElementById('d_who').value.trim() || '實實 & 寶寶',
     location: document.getElementById('d_location').value.trim() || '美好回憶',
     content: document.getElementById('d_content').value.trim(),
     photo: tempDiaryPhotoBase64 || (old ? old.photo : '')
   };
-
   const idx = diaries.findIndex(x => String(x.id) === String(id));
   if (idx > -1) diaries[idx] = newDiary; else diaries.push(newDiary);
-
   saveLocal();
   const uploadImg = tempDiaryPhotoBase64;
-  editingDiaryId = null;
-  tempDiaryPhotoBase64 = '';
-  selectedCalDate = dateVal;
+  editingDiaryId = null; tempDiaryPhotoBase64 = ''; selectedCalDate = dateVal;
   const parts = dateVal.split('/');
-  if (parts.length >= 2) {
-    calYear = Number(parts[0]) || calYear;
-    calMonth = Number(parts[1]) || calMonth;
-  }
+  if (parts.length >= 2) { calYear = Number(parts[0]) || calYear; calMonth = Number(parts[1]) || calMonth; }
   switchTab('calendar');
 
   if (gasUrl) {
     showAutoPopup('🔄', '正在同步日記...', '上傳至 Google 雲端硬碟中', 0);
     try {
-      const res = await fetch(gasUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'saveDiary', diary: newDiary, photoBase64: uploadImg || null })
-      });
+      const res = await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveDiary', diary: newDiary, photoBase64: uploadImg || null }) });
       const data = await res.json();
       if (data.status === 'success') {
         if (Array.isArray(data.diaries)) diaries = data.diaries;
-        saveLocal(); renderScreen();
-        showAutoPopup('✅', '日記同步完成', `${newDiary.date} · ${newDiary.location}`, 1500);
+        saveLocal(); renderScreen(); showAutoPopup('✅', '日記同步完成', `${newDiary.date} · ${newDiary.location}`, 1500);
       }
-    } catch (e) {
-      showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600);
-    }
+    } catch (e) { showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600); }
   } else {
     showAutoPopup('✅', '日記已儲存', `${newDiary.date} · ${newDiary.location}`, 1500);
   }
@@ -1102,9 +905,7 @@ async function saveDiaryEntry() {
 function removeDiaryEntry(id) {
   diaries = diaries.filter(x => String(x.id) !== String(id));
   saveLocal(); editingDiaryId = null; switchTab('calendar');
-  if (gasUrl) {
-    fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
-  }
+  if (gasUrl) fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
 }
 
 function renderScreen() {
@@ -1177,7 +978,8 @@ async function saveCollectible() {
       const res = await fetch(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveItem', item: newItem, photoBase64: uploadImg || null }) });
       const data = await res.json();
       if (data.status === 'success' && data.items) {
-        items = data.items; if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
+        items = data.items;
+        if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
         if (Array.isArray(data.diaries)) diaries = data.diaries;
         saveLocal(); renderScreen(); showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
       }
@@ -1227,4 +1029,14 @@ async function silentStartupSync() {
 }
 
 async function saveAndPullCloud() {
-  gasUrl = document.getElementById('gasUrlInput').value.
+  gasUrl = document.getElementById('gasUrlInput').value.trim();
+  localStorage.setItem('my_gas_url', gasUrl);
+  closeCloudModal();
+  await triggerDirectSync();
+}
+
+renderScreen();
+silentStartupSync();
+</script>
+</body>
+</html>
