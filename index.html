@@ -227,13 +227,16 @@
   .photo-upload-box img { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; }
   .submit-pill-btn { width: 100%; height: 52px; border-radius: 28px; background: var(--plum-noir-dark); color: var(--cloud-cream); border: none; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 18px; box-shadow: 0 8px 20px rgba(13,27,42,0.25); }
 
-  .owner-tabs-box { background: var(--frosted-blue); padding: 6px; border-radius: 22px; display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 5px; margin-bottom: 12px; }
+  .owner-tabs-box { background: var(--frosted-blue); padding: 6px; border-radius: 22px; display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; }
   .owner-tab { padding: 9px 6px; border-radius: 17px; text-align: center; font-size: 11px; font-weight: 800; color: var(--plum-noir-dark); cursor: pointer; transition: all 0.2s; }
   .owner-tab.active { background: var(--plum-noir-dark); color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(13,27,42,0.2); }
-  .filter-pills-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-  .filter-pills-bar::-webkit-scrollbar { display: none; }
-  .f-pill { white-space: nowrap; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13,27,42,0.12); cursor: pointer; }
-  .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); }
+
+  /* 所有收藏頁：雙排不超框篩選標籤（狀態排 ＋ 分類排） */
+  .filter-status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 7px; }
+  .filter-cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+  .f-pill { white-space: nowrap; padding: 7px 6px; border-radius: 15px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1.2px solid rgba(13,27,42,0.12); cursor: pointer; text-align: center; transition: all 0.18s; }
+  .f-pill.active { background: var(--muted-jade); color: var(--cloud-cream); border-color: var(--muted-jade); box-shadow: 0 3px 8px rgba(119,141,122,0.3); }
+  .f-pill.status-pill.active { background: var(--plum-noir-dark); color: var(--cloud-cream); border-color: var(--plum-noir-dark); box-shadow: 0 3px 8px rgba(13,27,42,0.22); }
 
   .trantor-dock-container { position: absolute; bottom: 14px; left: 14px; right: 14px; z-index: 100; display: flex; justify-content: center; pointer-events: none; }
   body.fullscreen-mode .trantor-dock-container { position: fixed; max-width: 452px; margin: 0 auto; }
@@ -268,7 +271,7 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 彩色品牌膠囊選單 ＋ 模型車/娃娃品牌分流</span>
+  <span>🎨 Holst 配色 ＋ 現有收藏篩選標籤 ＋ 雲端忙碌自動重試</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -321,7 +324,6 @@
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
-// Google 試算表風格：各品牌專屬高辨識度彩色膠囊配色表
 const BRAND_COLOR_MAP = {
   "BBR":             { bg: "#FDE8E8", text: "#9B1C1C", border: "#F8B4B4", dot: "#E02424" },
   "MINI GT":         { bg: "#E1EFFE", text: "#1E429F", border: "#A4CAFE", dot: "#1C64F2" },
@@ -371,7 +373,6 @@ function renderBrandChipHtml(brandName) {
   return `<span class="brand-color-chip" style="background:${st.bg};color:${st.text};border-color:${st.border};"><i class="chip-dot" style="background:${st.dot};"></i>${brandName}</span>`;
 }
 
-// 點擊空白處自動收起所有開啟的懸浮選單
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.holst-select-wrap')) {
     document.querySelectorAll('.holst-select-wrap.open').forEach(el => el.classList.remove('open'));
@@ -474,7 +475,6 @@ function closeFullLightbox() {
   document.getElementById('fullPhotoLightbox').classList.remove('open');
 }
 
-// 取得「娃娃 / 公仔」專屬品牌清單（與模型車完全分開）
 function getDollBrandOptions() {
   const set = new Set(dollBrands.filter(Boolean));
   items.forEach(it => {
@@ -486,7 +486,6 @@ function getDollBrandOptions() {
   return Array.from(set);
 }
 
-// 取得「模型車 / 周邊」專屬品牌清單
 function getCarBrandOptions() {
   const dollSet = new Set(getDollBrandOptions());
   const set = new Set();
@@ -541,6 +540,30 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 25000) {
   } catch (err) {
     clearTimeout(id);
     throw err;
+  }
+}
+
+// 智慧型雲端通訊（若遇到試算表瞬間忙碌「無法正常運作」，自動等待 1.2 秒後重試）
+async function fetchCloudJsonWithRetry(url, options = {}, timeoutMs = 25000, maxRetries = 2) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetchWithTimeout(url, options, timeoutMs);
+      const data = await res.json();
+      if (data && data.status === 'error' && attempt < maxRetries) {
+        const msg = String(data.message || '');
+        if (msg.includes('無法正常運作') || msg.includes('Service Spreadsheets') || msg.includes('Timed out')) {
+          await new Promise(r => setTimeout(r, 1200));
+          continue;
+        }
+      }
+      return data;
+    } catch (err) {
+      if (attempt < maxRetries) {
+        await new Promise(r => setTimeout(r, 1200));
+        continue;
+      }
+      throw err;
+    }
   }
 }
 
@@ -774,12 +797,11 @@ async function toggleDetailStatus(id) {
     try {
       const isB64 = it.photo && String(it.photo).startsWith('data:image');
       const payloadItem = { ...it, rating: starsToSheetNum(it.rating), photo: isB64 ? '' : (it.photo || '') };
-      const res = await fetchWithTimeout(gasUrl, {
+      const data = await fetchCloudJsonWithRetry(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'saveItem', item: payloadItem, photoBase64: isB64 ? it.photo : null })
       });
-      const data = await res.json();
       if (data.status !== 'success') {
         showAutoPopup('⚠️', '狀態已改 (雲端異常)', data.message || '雲端寫入異常', 0);
       }
@@ -823,7 +845,6 @@ function setAddMode(mode) {
   }
 }
 
-// 渲染品牌下拉選單內部 HTML（含 Google 試算表彩色膠囊 + 手動輸入新品牌）
 function buildBrandMenuItemsHtml(brandList, selectedVal) {
   const itemsHtml = brandList.map(b => {
     const isSel = (b === selectedVal);
@@ -851,7 +872,6 @@ function buildBrandMenuItemsHtml(brandList, selectedVal) {
   `;
 }
 
-// 選擇「收藏分類」時：動態切換比例欄位 ＋ 切換「模型車品牌」或「娃娃專屬品牌」選單
 function selectHolstCategory(catVal, labelHtml) {
   document.getElementById('f_category').value = catVal;
   document.getElementById('catTriggerLabel').innerHTML = labelHtml;
@@ -894,7 +914,6 @@ function selectHolstBrand(brandVal, skipClose) {
     if (wrap) wrap.classList.remove('open');
   }
 
-  // 更新選單內部打勾狀態
   const catVal = document.getElementById('f_category') ? document.getElementById('f_category').value : '模型車';
   const list = (catVal === '娃娃/公仔') ? getDollBrandOptions() : getCarBrandOptions();
   if (brandVal !== '__CUSTOM__' && !list.includes(brandVal)) list.unshift(brandVal);
@@ -1041,7 +1060,7 @@ function renderAddTab() {
 
       <div class="f-group" id="customBrandBox" style="display: ${isCustomBrand ? 'block' : 'none'};">
         <label class="f-label">✏️ 輸入新品牌名稱（儲存後將自動加入專屬彩色選單）</label>
-        <input type="text" class="f-input" id="f_brand_custom" placeholder="例如：POP MART / 三麗鷗 / 新車模品牌">
+        <input type="text" class="f-input" id="f_brand_custom" placeholder="例如：T1 / POP MART / 三麗鷗">
       </div>
 
       <div class="f-grid-2" id="priceRatingGrid" style="grid-template-columns: ${isGotMode ? '1fr 1fr' : '1fr'};">
@@ -1111,6 +1130,15 @@ function renderAllTab() {
   const countShi = items.filter(x => x.buyer === '帥氣實實').length;
   const countBao = items.filter(x => x.buyer === '可愛寶寶').length;
 
+  // 依據目前選擇的購買人與分類，計算「全部 / 預購中 / 現有收藏」各自的數量
+  const baseForStatusCount = items.filter(it => {
+    if (ownerFilter !== 'ALL' && it.buyer !== ownerFilter) return false;
+    if (catFilter !== 'ALL' && (it.category || '模型車') !== catFilter) return false;
+    return true;
+  });
+  const waitCnt = baseForStatusCount.filter(x => x.status === '等待中').length;
+  const gotCnt = baseForStatusCount.filter(x => x.status === '拿到了').length;
+
   const filtered = items.filter(it => {
     if (ownerFilter !== 'ALL' && it.buyer !== ownerFilter) return false;
     if (catFilter !== 'ALL' && (it.category || '模型車') !== catFilter) return false;
@@ -1137,14 +1165,22 @@ function renderAllTab() {
       <div class="owner-tab ${ownerFilter==='帥氣實實'?'active':''}" onclick="setOwnerFilter('帥氣實實')">😎 帥氣實實 (${countShi})</div>
       <div class="owner-tab ${ownerFilter==='可愛寶寶'?'active':''}" onclick="setOwnerFilter('可愛寶寶')">🥰 可愛寶寶 (${countBao})</div>
     </div>
-    <div class="filter-pills-bar">
+
+    <!-- 第一排：狀態篩選（全部狀態 / 預購中 / 現有收藏，100% 完整顯示於畫面內） -->
+    <div class="filter-status-grid">
+      <span class="f-pill status-pill ${statusFilter==='ALL'?'active':''}" onclick="setStat('ALL')">📦 全部狀態 (${baseForStatusCount.length})</span>
+      <span class="f-pill status-pill ${statusFilter==='等待中'?'active':''}" onclick="setStat('等待中')">⏳ 預購中 (${waitCnt})</span>
+      <span class="f-pill status-pill ${statusFilter==='拿到了'?'active':''}" onclick="setStat('拿到了')">✅ 現有收藏 (${gotCnt})</span>
+    </div>
+
+    <!-- 第二排：類型篩選（全部類型 / 模型車 / 娃娃公仔 / 周邊，100% 完整顯示於畫面內） -->
+    <div class="filter-cat-grid">
       <span class="f-pill ${catFilter==='ALL'?'active':''}" onclick="setCat('ALL')">全部類型</span>
       <span class="f-pill ${catFilter==='模型車'?'active':''}" onclick="setCat('模型車')">🚗 模型車</span>
       <span class="f-pill ${catFilter==='娃娃/公仔'?'active':''}" onclick="setCat('娃娃/公仔')">🧸 娃娃/公仔</span>
       <span class="f-pill ${catFilter==='周邊/其他'?'active':''}" onclick="setCat('周邊/其他')">🏞️ 周邊</span>
-      <span class="f-pill ${statusFilter==='等待中'?'active':''}" onclick="setStat('等待中')">⏳ 預購中</span>
-      <span class="f-pill ${statusFilter==='拿到了'?'active':''}" onclick="setStat('拿到了')">✅ 已拿到</span>
     </div>
+
     <input type="text" class="f-input" style="margin-bottom:12px;" placeholder="🔍 搜尋車名、品牌、店家或預計到貨日 (如 2027/Q1)..." value="${searchKeyword}" oninput="handleAllSearch(this.value)">
     <div class="dark-Showcase-box">
       ${filtered.length === 0 ? `<div style="text-align:center;padding:24px 10px;font-size:12px;color:var(--frosted-blue);">尚無符合條件的收藏品</div>` : ''}
@@ -1162,7 +1198,7 @@ function renderAllTab() {
             </div>
             <div class="dark-row-right">
               <div class="dark-row-price">$${Number(it.price).toLocaleString()}</div>
-              <div class="dark-row-tag" style="color:${isGot ? '#A8C9B4' : 'var(--frosted-blue)'}">${isGot ? '✓ 拿到了' : '⏳ ' + (it.estDate || '等待中')}</div>
+              <div class="dark-row-tag" style="color:${isGot ? '#A8C9B4' : 'var(--frosted-blue)'}">${isGot ? '✓ 現有已拿到' : '⏳ ' + (it.estDate || '等待中')}</div>
             </div>
           </div>`;
       }).join('')}
@@ -1476,7 +1512,7 @@ async function saveDiaryEntry() {
     showAutoPopup('🔄', '正在同步日記...', `上傳 ${photosCopy.length} 張照片至雲端`, 0);
     try {
       const cleanDiary = { ...newDiary, photos: [], photo: '' };
-      const res = await fetchWithTimeout(gasUrl, {
+      const data = await fetchCloudJsonWithRetry(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
@@ -1485,7 +1521,6 @@ async function saveDiaryEntry() {
           photosList: photosCopy
         })
       }, 35000);
-      const data = await res.json();
       if (data.status === 'success') {
         if (Array.isArray(data.diaries)) diaries = data.diaries;
         saveLocal(); renderScreen(); showAutoPopup('✅', '日記同步完成', `${newDiary.date} · ${newDiary.location}`, 1500);
@@ -1501,7 +1536,7 @@ async function saveDiaryEntry() {
 function removeDiaryEntry(id) {
   diaries = diaries.filter(x => String(x.id) !== String(id));
   saveLocal(); editingDiaryId = null; switchTab('calendar');
-  if (gasUrl) fetchWithTimeout(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
+  if (gasUrl) fetchCloudJsonWithRetry(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
 }
 
 function renderScreen() {
@@ -1518,8 +1553,8 @@ function showBarDetail(dateStr, cnt, sum) { selectedBarInfo = `📅 ${dateStr.le
 function setChartMode(m) { chartMode = m; selectedBarInfo = ''; renderScreen(); }
 function setHomeRecentMode(m) { homeRecentMode = m; renderScreen(); }
 function setOwnerFilter(o) { ownerFilter = o; renderScreen(); }
-function setCat(c) { catFilter = (catFilter === c) ? 'ALL' : c; renderScreen(); }
-function setStat(s) { statusFilter = (statusFilter === s) ? 'ALL' : s; renderScreen(); }
+function setCat(c) { catFilter = (catFilter === c && c !== 'ALL') ? 'ALL' : c; renderScreen(); }
+function setStat(s) { statusFilter = (statusFilter === s && s !== 'ALL') ? 'ALL' : s; renderScreen(); }
 function handleAllSearch(v) { searchKeyword = v; renderScreen(); }
 function jumpToAllWithStatus(st) { statusFilter = st; switchTab('all'); }
 function openEditItem(id) { editingId = id; tempPhotoBase64 = ''; switchTab('add'); }
@@ -1556,7 +1591,6 @@ async function saveCollectible() {
   const brandSel = document.getElementById('f_brand_select').value;
   const finalBrand = brandSel === '__CUSTOM__' ? (document.getElementById('f_brand_custom').value.trim() || '其他') : brandSel;
 
-  // 根據「娃娃/公仔」或「模型車/周邊」分別儲存至各自的專屬品牌庫
   if (finalBrand) {
     if (isDoll) {
       if (!dollBrands.includes(finalBrand)) dollBrands.push(finalBrand);
@@ -1604,12 +1638,11 @@ async function saveCollectible() {
         rating: starsToSheetNum(newItem.rating),
         photo: (localPhoto && localPhoto.startsWith('http')) ? localPhoto : ''
       };
-      const res = await fetchWithTimeout(gasUrl, {
+      const data = await fetchCloudJsonWithRetry(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'saveItem', item: cloudItemPayload, photoBase64: uploadImg || null })
       }, 25000);
-      const data = await res.json();
       if (data.status === 'success' && Array.isArray(data.items)) {
         items = normalizeServerItems(data.items);
         if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
@@ -1633,7 +1666,7 @@ async function saveCollectible() {
 function removeCollectible(id) {
   items = items.filter(x => String(x.id) !== String(id));
   saveLocal(); editingId = null; switchTab('all');
-  if (gasUrl) fetchWithTimeout(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteItem', id }) }).catch(() => {});
+  if (gasUrl) fetchCloudJsonWithRetry(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteItem', id }) }).catch(() => {});
 }
 
 function openCloudModal() { document.getElementById('gasUrlInput').value = gasUrl; document.getElementById('cloudModal').classList.add('open'); }
@@ -1644,8 +1677,7 @@ async function triggerDirectSync() {
   const syncBtn = document.getElementById('topSyncBtn'); if (syncBtn) syncBtn.classList.add('spinning');
   showAutoPopup('🔄', '資料更新中...', '正在同步收藏與日記', 0);
   try {
-    const res = await fetchWithTimeout(gasUrl + '?t=' + Date.now(), {}, 25000);
-    const data = await res.json();
+    const data = await fetchCloudJsonWithRetry(gasUrl + '?t=' + Date.now(), {}, 25000);
     if (data.status === 'success' && Array.isArray(data.items)) {
       items = normalizeServerItems(data.items);
       if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
@@ -1660,8 +1692,7 @@ async function triggerDirectSync() {
 async function silentStartupSync() {
   if (!gasUrl) return;
   try {
-    const res = await fetchWithTimeout(gasUrl + '?t=' + Date.now(), {}, 20000);
-    const data = await res.json();
+    const data = await fetchCloudJsonWithRetry(gasUrl + '?t=' + Date.now(), {}, 20000, 1);
     if (data.status === 'success' && Array.isArray(data.items)) {
       items = normalizeServerItems(data.items);
       if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
