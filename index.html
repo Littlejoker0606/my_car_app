@@ -80,12 +80,14 @@
     box-shadow: none;
   }
 
-  /* 加大底部留白至 150px，避免送出按鈕被底部導覽列遮住 */
   .screen-scroll {
     flex: 1;
     overflow-y: auto;
     padding: 20px 18px 150px;
     scrollbar-width: none;
+  }
+  .screen-scroll.no-top-pad {
+    padding-top: 0;
   }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
@@ -117,19 +119,44 @@
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
-  .auto-popup-hud .hud-icon {
-    font-size: 30px;
+  .auto-popup-hud .hud-icon { font-size: 30px; line-height: 1; }
+  .auto-popup-hud .hud-title { font-size: 15px; font-weight: 800; letter-spacing: 0.4px; }
+  .auto-popup-hud .hud-sub { font-size: 11px; color: var(--frosted-blue); font-weight: 600; }
+
+  /* ====== 首頁頂部：參考 image.png 的背景圖片 + 漸層過渡設計 ====== */
+  .home-hero-banner {
+    margin: 0 -18px 8px;
+    min-height: 295px;
+    background-image:
+      linear-gradient(180deg,
+        rgba(243, 239, 231, 0.05) 0%,
+        rgba(243, 239, 231, 0.18) 38%,
+        rgba(243, 239, 231, 0.82) 76%,
+        #F3EFE7 100%),
+      url('DSC00224.jpg');
+    background-size: cover;
+    background-position: center 25%;
+    padding: 20px 18px 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .home-hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hero-quote-mark {
+    font-size: 34px;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1;
+    text-shadow: 0 2px 10px rgba(73, 51, 66, 0.35);
+    user-select: none;
   }
-  .auto-popup-hud .hud-title {
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: 0.4px;
-  }
-  .auto-popup-hud .hud-sub {
-    font-size: 11px;
-    color: var(--frosted-blue);
-    font-weight: 600;
+  .home-hero-bottom {
+    margin-top: 115px;
   }
 
   .header-row {
@@ -139,16 +166,18 @@
     margin-bottom: 14px;
   }
   .greet-title {
-    font-size: 19px;
-    font-weight: 800;
+    font-size: 22px;
+    font-weight: 900;
     color: var(--plum-noir);
     margin: 0;
+    letter-spacing: -0.3px;
+    text-shadow: 0 2px 12px rgba(243, 239, 231, 0.9);
   }
   .greet-sub {
     font-size: 12px;
-    color: var(--brushed-pewter);
-    font-weight: 600;
-    margin: 2px 0 0;
+    color: var(--plum-noir-soft);
+    font-weight: 700;
+    margin: 2px 0 6px;
   }
   .header-icons {
     display: flex;
@@ -159,8 +188,10 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: var(--cloud-cream-pure);
-    border: 1.5px solid rgba(73,51,66,0.12);
+    background: rgba(250, 248, 245, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(73,51,66,0.14);
     color: var(--plum-noir);
     display: flex;
     align-items: center;
@@ -169,6 +200,7 @@
     font-size: 15px;
     flex-shrink: 0;
     transition: transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
   .bell-btn:active { transform: scale(0.92); }
   @keyframes spinSync {
@@ -182,7 +214,8 @@
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: var(--frosted-blue);
+    background: rgba(200, 220, 226, 0.9);
+    backdrop-filter: blur(8px);
     border: 2px solid var(--plum-noir);
     display: flex;
     align-items: center;
@@ -191,22 +224,26 @@
     font-size: 15px;
     cursor: pointer;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
 
   .val-label {
     font-size: 11px;
-    color: var(--brushed-pewter);
-    font-weight: 700;
+    color: var(--plum-noir-soft);
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
   }
   .val-row {
     display: flex;
     align-items: baseline;
+    flex-wrap: wrap;
     gap: 8px;
-    margin: 2px 0 14px;
+    margin: 2px 0 10px;
   }
   .val-main {
-    font-size: 32px;
-    font-weight: 800;
+    font-size: 34px;
+    font-weight: 900;
     color: var(--plum-noir);
     letter-spacing: -0.8px;
   }
@@ -217,7 +254,7 @@
   }
   .val-badge {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--muted-jade);
   }
 
@@ -420,11 +457,7 @@
     font-size: 9px;
     line-height: 1;
   }
-  .hist-val {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: -0.3px;
-  }
+  .hist-val { font-size: 9px; font-weight: 800; letter-spacing: -0.3px; }
   .hist-date {
     position: absolute;
     bottom: -19px;
@@ -520,17 +553,8 @@
     text-overflow: ellipsis;
   }
   .dark-row-right { text-align: right; flex-shrink: 0; }
-  .dark-row-price {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--cloud-cream);
-  }
-  .dark-row-tag {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted-jade);
-    margin-top: 2px;
-  }
+  .dark-row-price { font-size: 13px; font-weight: 800; color: var(--cloud-cream); }
+  .dark-row-tag { font-size: 10px; font-weight: 700; color: var(--muted-jade); margin-top: 2px; }
   .view-all-row {
     text-align: right;
     padding: 2px 8px 0;
@@ -540,6 +564,228 @@
     cursor: pointer;
   }
 
+  /* ====== 全新「物品詳細頁面」(100% 參考 參考01.png 設計) ====== */
+  .detail-page-wrap {
+    margin: 0 -18px -40px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 90px);
+  }
+  .detail-top-photo {
+    width: 100%;
+    height: 330px;
+    background: #E8E3DA;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .detail-top-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .detail-top-photo .fallback-emoji {
+    font-size: 84px;
+  }
+  .detail-floating-nav {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    right: 18px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .detail-glass-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+    background: rgba(73, 51, 66, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+
+  /* 下半部磨砂質感大圓角資訊卡 (對應參考01.png的Living Room下半部) */
+  .detail-sheet-card {
+    flex: 1;
+    margin-top: -34px;
+    border-radius: 34px 34px 0 0;
+    background: linear-gradient(165deg, rgba(94, 68, 84, 0.94) 0%, rgba(55, 37, 49, 0.98) 60%, #2E1F29 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1.5px solid rgba(243, 239, 231, 0.22);
+    padding: 26px 22px 60px;
+    color: var(--cloud-cream);
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 -12px 32px rgba(55, 37, 49, 0.28);
+  }
+  .detail-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .detail-car-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    line-height: 1.25;
+  }
+  /* 復刻參考01.png右上角的膠囊開關 (一鍵切換 等待中 / 拿到了) */
+  .status-switch-pill {
+    width: 52px;
+    height: 28px;
+    border-radius: 20px;
+    background: rgba(243, 239, 231, 0.25);
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.25s;
+  }
+  .status-switch-pill.got {
+    background: var(--cloud-cream);
+    justify-content: flex-end;
+  }
+  .status-switch-knob {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--frosted-blue);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  .status-switch-pill.got .status-switch-knob {
+    background: var(--muted-jade);
+  }
+
+  .detail-desc-text {
+    font-size: 13px;
+    color: rgba(243, 239, 231, 0.78);
+    line-height: 1.55;
+    margin: 0 0 16px;
+  }
+  .detail-desc-text u {
+    color: #fff;
+    font-weight: 700;
+    text-underline-offset: 3px;
+  }
+
+  /* 復刻參考01.png的 27° 大字區 -> 展示模型價格與星級評分 */
+  .detail-hero-metric {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(243, 239, 231, 0.14);
+    margin-bottom: 18px;
+  }
+  .detail-big-price {
+    font-size: 30px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .detail-big-price small {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--frosted-blue);
+    margin-left: 4px;
+  }
+  .detail-stars {
+    font-size: 16px;
+    color: #FBBF24;
+    letter-spacing: 2px;
+  }
+
+  .detail-sec-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+
+  /* 復刻參考01.png底部的 4 根直立式圓頭膠囊卡 (WiFi / Light / Temp / Fan) */
+  .detail-capsules-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .spec-capsule {
+    background: rgba(243, 239, 231, 0.12);
+    border: 1px solid rgba(243, 239, 231, 0.16);
+    border-radius: 42px;
+    padding: 10px 6px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  .spec-cap-circle {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--cloud-cream);
+    color: var(--plum-noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  .spec-cap-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 3px;
+  }
+  .spec-cap-val {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(243, 239, 231, 0.72);
+    word-break: break-word;
+    padding: 0 4px;
+  }
+
+  .detail-extra-box {
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(243, 239, 231, 0.1);
+    border-radius: 22px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .detail-extra-row {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(243, 239, 231, 0.75);
+  }
+  .detail-extra-row strong {
+    color: #fff;
+  }
+
+  /* ====== 表單與所有收藏品樣式 ====== */
   .form-card {
     background: var(--frosted-blue);
     border-radius: 28px;
@@ -808,12 +1054,12 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 圖一左機 UI ＋ 圖二莫蘭迪色票</span>
+  <span>🎨 首頁漸層背景 ＋ 參考01.png 物品詳細頁</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
 <div class="phone-frame">
-  <div class="screen-scroll" id="screenContent"></div>
+  <div class="screen-scroll no-top-pad" id="screenContent"></div>
 
   <div class="trantor-dock-container">
     <div class="trantor-dock-bg">
@@ -852,10 +1098,9 @@
 </div>
 
 <script>
-// 💡 您可以把 https://script.google.com/.../exec 網址貼在下方雙引號內：
+// 💡 您可以直接把 https://script.google.com/.../exec 網址貼在下方雙引號內：
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
 
-// 預設與您 Google 表格完全一致的模型品牌清單
 const DEFAULT_BRANDS = [
   "BBR", "MINI GT", "POPRACE", "KAIDO HOUSE", "LOOKSMART",
   "π MODEL", "INNO 64", "CM MODEL", "HKM", "GLAMCRAFT",
@@ -918,7 +1163,10 @@ let items = loadSavedItems();
 let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
 let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
-let activeTab = 'home';
+let activeTab = 'home'; // 'home' | 'add' | 'all' | 'detail'
+let previousTab = 'all';
+let viewingDetailId = null;
+
 let chartMode = 'recent';
 let homeRecentMode = 'preorder';
 let selectedBarInfo = '';
@@ -934,7 +1182,6 @@ let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
 
-// 自動彙整「Google表格下拉選單品牌」＋「所有現有收藏出現過的品牌」
 function getAllBrandOptions() {
   const set = new Set(cloudBrands);
   DEFAULT_BRANDS.forEach(b => set.add(b));
@@ -966,18 +1213,31 @@ function saveLocal() {
 }
 
 function switchTab(tab) {
-  if (tab === 'add' && activeTab !== 'add') {
+  if (tab === 'add' && activeTab !== 'add' && activeTab !== 'detail') {
     editingId = null;
     tempPhotoBase64 = '';
   }
   activeTab = tab;
   document.getElementById('dockLeft').classList.toggle('active', tab === 'home');
   document.getElementById('dockCenter').classList.toggle('active', tab === 'add');
-  document.getElementById('dockRight').classList.toggle('active', tab === 'all');
+  document.getElementById('dockRight').classList.toggle('active', tab === 'all' || tab === 'detail');
+
+  const scrollBox = document.getElementById('screenContent');
+  scrollBox.classList.toggle('no-top-pad', tab === 'home' || tab === 'detail');
   renderScreen();
-  document.getElementById('screenContent').scrollTop = 0;
+  scrollBox.scrollTop = 0;
 }
 
+// 點擊任何清單物品時，進入「參考01.png 風格物品詳細頁」！
+function openDetailView(id) {
+  if (activeTab === 'home' || activeTab === 'all') {
+    previousTab = activeTab;
+  }
+  viewingDetailId = id;
+  switchTab('detail');
+}
+
+/* ====== 1. 首頁 (整合 image.png 風格背景圖 DSC00224.jpg + 漸層過渡) ====== */
 function renderHomeTab() {
   const totalVal = items.reduce((s, x) => s + (Number(x.price) || 0), 0);
   const waitCnt = items.filter(x => x.status === '等待中').length;
@@ -1010,22 +1270,26 @@ function renderHomeTab() {
   }
 
   return `
-    <div class="header-row">
-      <div>
-        <h1 class="greet-title">Hey, 實實 & 寶寶!</h1>
-        <p class="greet-sub">Good morning! 👋</p>
+    <!-- 首頁頂部：DSC00224.jpg 滿版背景 + 柔和漸層過渡 (參考 image.png) -->
+    <div class="home-hero-banner">
+      <div class="home-hero-top">
+        <div class="hero-quote-mark">“</div>
+        <div class="header-icons">
+          <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
+          <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端網址設定">☁️</div>
+          <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
+        </div>
       </div>
-      <div class="header-icons">
-        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
-        <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端網址設定">☁️</div>
-        <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
-      </div>
-    </div>
 
-    <div class="val-label">Current Collection Value</div>
-    <div class="val-row">
-      <div class="val-main">$${totalVal.toLocaleString()}<small>.00</small></div>
-      <div class="val-badge">+ ${items.length} 件總收藏 (預購 ${waitCnt} / 現有 ${gotCnt})</div>
+      <div class="home-hero-bottom">
+        <h1 class="greet-title">Hey, 實實 & 寶寶!</h1>
+        <p class="greet-sub">— KEEP BUILDING YOUR DREAM GARAGE.</p>
+        <div class="val-label">Current Collection Value</div>
+        <div class="val-row">
+          <div class="val-main">$${totalVal.toLocaleString()}<small>.00</small></div>
+          <div class="val-badge">+ ${items.length} 件總收藏 (預購 ${waitCnt} / 現有 ${gotCnt})</div>
+        </div>
+      </div>
     </div>
 
     <div class="dual-pill-wrap">
@@ -1106,7 +1370,7 @@ function renderHomeTab() {
       ${recentList.map(it => {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         return `
-          <div class="dark-row-card" onclick="openEditItem('${it.id}')">
+          <div class="dark-row-card" onclick="openDetailView('${it.id}')">
             <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
@@ -1125,6 +1389,125 @@ function renderHomeTab() {
   `;
 }
 
+/* ====== 2. 物品詳細頁面 (100% 參考 參考01.png 設計：上圖下磨砂資訊卡+4膠囊) ====== */
+function renderDetailTab() {
+  const it = items.find(x => String(x.id) === String(viewingDetailId)) || items[0];
+  if (!it) return '';
+  const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
+  const isGot = it.status === '拿到了';
+
+  return `
+    <div class="detail-page-wrap">
+      <!-- 最上方：滿版展示模型車圖片 (參考01.png 上半部) -->
+      <div class="detail-top-photo">
+        <div class="detail-floating-nav">
+          <div class="detail-glass-btn" onclick="switchTab('${previousTab}')" title="返回">‹</div>
+          <div class="detail-glass-btn" onclick="openEditItem('${it.id}')" title="編輯此收藏">⚙️</div>
+        </div>
+        ${it.photo
+          ? `<img src="${it.photo}" alt="${it.name}">`
+          : `<span class="fallback-emoji">${icon}</span>`
+        }
+      </div>
+
+      <!-- 下方磨砂深色圓角卡片 (參考01.png 下半部 Living Room 結構) -->
+      <div class="detail-sheet-card">
+        <div class="detail-title-row">
+          <h2 class="detail-car-title">${it.name}</h2>
+          <div class="status-switch-pill ${isGot ? 'got' : ''}" onclick="toggleDetailStatus('${it.id}')" title="點擊切換：等待中 / 拿到了">
+            <div class="status-switch-knob"></div>
+          </div>
+        </div>
+
+        <p class="detail-desc-text">
+          此收藏由 <u>${it.buyer}</u> 於 ${it.orderDate || '近期'} 向 <u>${it.store || '特約店家'}</u> 購買，目前狀態為 <u>${it.status}</u>。
+        </p>
+
+        <div class="detail-hero-metric">
+          <div class="detail-big-price">$${Number(it.price || 0).toLocaleString()}<small>TWD</small></div>
+          <div class="detail-stars">${it.rating || '☆☆☆☆☆'}</div>
+        </div>
+
+        <div class="detail-sec-head" onclick="openEditItem('${it.id}')" style="cursor:pointer;">
+          <span>車輛規格資訊 (Specifications)</span>
+          <span style="font-size:18px;opacity:0.7;">›</span>
+        </div>
+
+        <!-- 4 根直立式圓頭膠囊卡 (復刻參考01.png底部的 WiFi / Light / Temp / Fan) -->
+        <div class="detail-capsules-grid">
+          <div class="spec-capsule">
+            <div class="spec-cap-circle">🏷️</div>
+            <div class="spec-cap-label">品牌</div>
+            <div class="spec-cap-val">${it.brand || '-'}</div>
+          </div>
+          <div class="spec-capsule">
+            <div class="spec-cap-circle">📐</div>
+            <div class="spec-cap-label">比例</div>
+            <div class="spec-cap-val">${it.scale || '1/64'}</div>
+          </div>
+          <div class="spec-capsule">
+            <div class="spec-cap-circle">📅</div>
+            <div class="spec-cap-label">預計到貨</div>
+            <div class="spec-cap-val">${it.estDate || '待定'}</div>
+          </div>
+          <div class="spec-capsule">
+            <div class="spec-cap-circle">${it.buyer === '可愛寶寶' ? '🥰' : '😎'}</div>
+            <div class="spec-cap-label">購買人</div>
+            <div class="spec-cap-val">${it.buyer}</div>
+          </div>
+        </div>
+
+        <div class="detail-extra-box">
+          <div class="detail-extra-row">
+            <span>🏪 預購 / 購買店家</span>
+            <strong>${it.store || '未填寫'}</strong>
+          </div>
+          <div class="detail-extra-row">
+            <span>🗓️ 預購下單日期</span>
+            <strong>${it.orderDate || '-'}</strong>
+          </div>
+          <div class="detail-extra-row">
+            <span>📦 實際到貨日期</span>
+            <strong>${it.actDate || (isGot ? '已入庫' : '尚未到貨')}</strong>
+          </div>
+          <div class="detail-extra-row">
+            <span>🗂️ 收藏品分類</span>
+            <strong>${it.category || '模型車'}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// 在詳細頁面撥動右上角開關時，直接切換「等待中 / 拿到了」並同步雲端
+async function toggleDetailStatus(id) {
+  const it = items.find(x => String(x.id) === String(id));
+  if (!it) return;
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  if (it.status === '拿到了') {
+    it.status = '等待中';
+    it.actDate = '';
+  } else {
+    it.status = '拿到了';
+    if (!it.actDate) it.actDate = today;
+  }
+  saveLocal();
+  renderScreen();
+  showAutoPopup('✅', `已切換為：${it.status}`, it.name, 1400);
+
+  if (gasUrl) {
+    try {
+      await fetch(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveItem', item: it })
+      });
+    } catch (e) {}
+  }
+}
+
+/* ====== 3. 新增 / 編輯收藏品介面 ====== */
 function renderAddTab() {
   const it = editingId ? items.find(x => String(x.id) === String(editingId)) : null;
   const today = new Date().toISOString().slice(0,10).replace(/-/g,'/');
@@ -1140,7 +1523,7 @@ function renderAddTab() {
         <h1 class="greet-title">${it ? '✏️ 編輯收藏品' : '➕ 新增收藏品'}</h1>
         <p class="greet-sub">完整對應您的 Google 雲端試算表欄位</p>
       </div>
-      <div class="bell-btn" onclick="switchTab('home')">✕</div>
+      <div class="bell-btn" onclick="switchTab('${it ? 'detail' : 'home'}')">✕</div>
     </div>
 
     <div class="form-card">
@@ -1181,7 +1564,6 @@ function renderAddTab() {
         </div>
       </div>
 
-      <!-- 當選擇「手動輸入新品牌」時自動展開的輸入欄 -->
       <div class="f-group" id="customBrandBox" style="display:none;">
         <label class="f-label">輸入新品牌名稱（儲存後將自動同步加入選單）</label>
         <input type="text" class="f-input" id="f_brand_custom" placeholder="請輸入新模型品牌或娃娃系列名稱">
@@ -1279,6 +1661,7 @@ function onBrandSelectChange(val) {
   }
 }
 
+/* ====== 4. 所有收藏品總覽 (點擊任意項目進入詳細頁面) ====== */
 function renderAllTab() {
   const countAll = items.length;
   const countShi = items.filter(x => x.buyer === '帥氣實實').length;
@@ -1338,7 +1721,7 @@ function renderAllTab() {
         const icon = it.category === '娃娃/公仔' ? '🧸' : (it.category === '周邊/其他' ? '🏞️' : '🏎️');
         const isGot = it.status === '拿到了';
         return `
-          <div class="dark-row-card" onclick="openEditItem('${it.id}')">
+          <div class="dark-row-card" onclick="openDetailView('${it.id}')">
             <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
@@ -1361,6 +1744,7 @@ function renderAllTab() {
 function renderScreen() {
   const container = document.getElementById('screenContent');
   if (activeTab === 'home') container.innerHTML = renderHomeTab();
+  else if (activeTab === 'detail') container.innerHTML = renderDetailTab();
   else if (activeTab === 'add') container.innerHTML = renderAddTab();
   else container.innerHTML = renderAllTab();
 }
@@ -1451,7 +1835,8 @@ async function saveCollectible() {
   const uploadImg = tempPhotoBase64;
   editingId = null;
   tempPhotoBase64 = '';
-  switchTab('all');
+  viewingDetailId = id;
+  switchTab('detail');
 
   if (gasUrl) {
     showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中', 0);
