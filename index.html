@@ -88,20 +88,47 @@
   }
   .screen-scroll::-webkit-scrollbar { display: none; }
 
-  .sync-toast {
+  /* 1.5~2秒自動消失的中央提示小視窗 (免手動關閉) */
+  .auto-popup-hud {
     position: fixed;
-    top: 14px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    background: var(--plum-noir);
+    transform: translate(-50%, -50%) scale(0.88);
+    background: rgba(55, 37, 49, 0.95);
     color: var(--cloud-cream);
-    padding: 7px 16px;
-    border-radius: 20px;
-    font-size: 12px;
+    padding: 20px 28px;
+    border-radius: 26px;
+    border: 1.5px solid rgba(200, 220, 226, 0.3);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.38);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 190px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none; /* 不阻擋手指操作，時間到自動消失 */
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .auto-popup-hud.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .auto-popup-hud .hud-icon {
+    font-size: 30px;
+    line-height: 1;
+  }
+  .auto-popup-hud .hud-title {
+    font-size: 15px;
     font-weight: 800;
-    z-index: 1000;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-    display: none;
+    letter-spacing: 0.4px;
+  }
+  .auto-popup-hud .hud-sub {
+    font-size: 11px;
+    color: var(--frosted-blue);
+    font-weight: 600;
   }
 
   .header-row {
@@ -772,7 +799,12 @@
 </head>
 <body>
 
-<div class="sync-toast" id="syncToast">🔄 正在與 Google 表格同步...</div>
+<!-- 自動在 1.5 秒後消失的中央狀態小視窗 (免手動關閉) -->
+<div class="auto-popup-hud" id="autoPopupHud">
+  <div class="hud-icon" id="hudIcon">✅</div>
+  <div class="hud-title" id="hudTitle">資料更新完成</div>
+  <div class="hud-sub" id="hudSub">已與雲端試算表同步</div>
+</div>
 
 <div class="top-preview-bar">
   <span>🎨 圖一左機 UI ＋ 圖二莫蘭迪色票</span>
@@ -803,23 +835,25 @@
   </div>
 </div>
 
-<!-- 雲端硬碟同步設定視窗 -->
+<!-- 雲端網址設定視窗 (只有點選 ☁️ 圖示時才會開啟) -->
 <div class="modal-overlay" id="cloudModal">
   <div class="modal-panel">
-    <h3 style="margin:0 0 8px;font-size:16px;">☁️ Google 雲端試算表同步</h3>
+    <h3 style="margin:0 0 8px;font-size:16px;">☁️ 雲端伺服器網址設定</h3>
     <p style="font-size:11px;color:var(--brushed-pewter);margin:0 0 10px;line-height:1.4;">
-      貼上您的 Google Apps Script 網址（設定後可直接點首頁右上角的獨立同步按鈕更新）：
+      請貼上一次您的 Google Apps Script 網址並儲存，之後直接點首頁右上角的「🔄」即可一鍵更新：
     </p>
     <input type="text" class="f-input" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" style="margin-bottom:12px;">
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button class="submit-pill-btn" style="height:42px;font-size:13px;" onclick="saveAndPullCloud()">🔄 立即從 Google 表格抓取最新資料</button>
-      <button class="submit-pill-btn" style="height:42px;font-size:13px;background:var(--muted-jade);" onclick="pushAllToCloud()">⬆️ 將手機目前資料覆蓋寫入雲端表格</button>
+      <button class="submit-pill-btn" style="height:42px;font-size:13px;" onclick="saveAndPullCloud()">💾 儲存網址並立即同步</button>
       <button class="submit-pill-btn" style="height:38px;font-size:12px;background:var(--brushed-pewter);" onclick="closeCloudModal()">關閉視窗</button>
     </div>
   </div>
 </div>
 
 <script>
+// 💡 您也可以直接把您的 https://script.google.com/.../exec 網址貼在下方雙引號內，這樣兩支手機就永遠不用手動貼網址了！
+const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
+
 const INITIAL_DATA = [
   {id:"1",name:"Alfa Romeo 33",brand:"BBR",status:"等待中",scale:"1/64",price:580,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
   {id:"2",name:"Ferrari 296 Special",brand:"BBR",status:"等待中",scale:"1/64",price:820,orderDate:"2026/09/07",estDate:"2027/03",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"},
@@ -863,7 +897,6 @@ const INITIAL_DATA = [
   {id:"40",name:"PEUGEOT 406 Taxi",brand:"π MODEL",status:"等待中",scale:"1/64",price:800,orderDate:"2026/11/06",estDate:"2026/11",actDate:"",photo:"",store:"TSAI模型車販賣鋪-楊梅實體店",rating:"☆☆☆☆☆",buyer:"帥氣實實",category:"模型車"}
 ];
 
-// 優先讀取原本已經有 40 張照片的 trantor_left_items 快取！
 function loadSavedItems() {
   const v1 = JSON.parse(localStorage.getItem('trantor_left_items') || 'null');
   const v2 = JSON.parse(localStorage.getItem('trantor_left_items_v2') || 'null');
@@ -873,7 +906,7 @@ function loadSavedItems() {
 }
 
 let items = loadSavedItems();
-let gasUrl = localStorage.getItem('my_gas_url') || '';
+let gasUrl = localStorage.getItem('my_gas_url') || DEFAULT_GAS_URL;
 
 let activeTab = 'home';
 let chartMode = 'recent';
@@ -887,14 +920,23 @@ let searchKeyword = '';
 
 let editingId = null;
 let tempPhotoBase64 = '';
+let hudTimer = null;
 
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
 
-function showToast(msg, duration = 2200) {
-  const t = document.getElementById('syncToast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, duration);
+// 顯示 1.5 秒後自動消失的中央提示小視窗 (免手動關閉)
+function showAutoPopup(icon, title, sub, duration = 1600) {
+  const hud = document.getElementById('autoPopupHud');
+  document.getElementById('hudIcon').textContent = icon;
+  document.getElementById('hudTitle').textContent = title;
+  document.getElementById('hudSub').textContent = sub || '';
+  hud.classList.add('show');
+  if (hudTimer) clearTimeout(hudTimer);
+  if (duration > 0) {
+    hudTimer = setTimeout(() => {
+      hud.classList.remove('show');
+    }, duration);
+  }
 }
 
 function saveLocal() {
@@ -953,8 +995,9 @@ function renderHomeTab() {
         <p class="greet-sub">Good morning! 👋</p>
       </div>
       <div class="header-icons">
-        <div class="bell-btn" id="topSyncBtn" onclick="autoPullFromCloud(true)" title="立即同步最新資料">${SYNC_SVG}</div>
-        <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端硬碟設定">☁️</div>
+        <!-- 獨立更新按鈕：按下直接執行同步並跳出自動消失小視窗，絕不跳出二級菜單 -->
+        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
+        <div class="bell-btn" onclick="openCloudModal()" title="Google 雲端網址設定">☁️</div>
         <div class="user-avatar" onclick="switchTab('all')" title="查看兩人收藏">🏎️</div>
       </div>
     </div>
@@ -1224,8 +1267,8 @@ function renderAllTab() {
         <p class="greet-sub">目前檢視共 ${filtered.length} 件 · 合計 $${subTotal.toLocaleString()}</p>
       </div>
       <div class="header-icons">
-        <div class="bell-btn" id="topSyncBtn" onclick="autoPullFromCloud(true)" title="立即同步最新資料">${SYNC_SVG}</div>
-        <div class="bell-btn" onclick="openCloudModal()" title="雲端設定">☁️</div>
+        <div class="bell-btn" id="topSyncBtn" onclick="triggerDirectSync()" title="立即更新資料">${SYNC_SVG}</div>
+        <div class="bell-btn" onclick="openCloudModal()" title="雲端網址設定">☁️</div>
         <div class="bell-btn" onclick="switchTab('add')" title="新增收藏">＋</div>
       </div>
     </div>
@@ -1365,7 +1408,7 @@ async function saveCollectible() {
   switchTab('all');
 
   if (gasUrl) {
-    showToast('☁️ 正在同步寫入 Google 表格...');
+    showAutoPopup('🔄', '正在同步至雲端...', '寫入 Google 試算表中', 0);
     try {
       const res = await fetch(gasUrl, {
         method: 'POST',
@@ -1377,10 +1420,10 @@ async function saveCollectible() {
         items = data.items;
         saveLocal();
         renderScreen();
-        showToast('✅ 已同步至 Google 表格！');
+        showAutoPopup('✅', '資料更新完成', `已儲存並同步 (${items.length} 筆)`, 1500);
       }
     } catch (e) {
-      showToast('⚠️ 離線儲存成功');
+      showAutoPopup('⚠️', '已儲存於手機', '雲端同步失敗', 1600);
     }
   }
 }
@@ -1407,14 +1450,16 @@ function closeCloudModal() {
   document.getElementById('cloudModal').classList.remove('open');
 }
 
-async function autoPullFromCloud(showMsg = false) {
+// 點擊右上角獨立「🔄」按鈕時直接執行，絕不跳出二級菜單！
+async function triggerDirectSync() {
   if (!gasUrl) {
-    if (showMsg) openCloudModal();
+    showAutoPopup('❌', '資料更新失敗', '請先點選隔壁 ☁️ 貼上雲端網址', 1800);
     return;
   }
   const syncBtn = document.getElementById('topSyncBtn');
   if (syncBtn) syncBtn.classList.add('spinning');
-  if (showMsg) showToast('🔄 正在從 Google 表格同步最新資料...');
+  showAutoPopup('🔄', '資料更新中...', '正在讀取 Google 試算表', 0);
+
   try {
     const res = await fetch(gasUrl + '?t=' + Date.now());
     const data = await res.json();
@@ -1422,46 +1467,41 @@ async function autoPullFromCloud(showMsg = false) {
       items = data.items;
       saveLocal();
       renderScreen();
-      if (showMsg) showToast(`✅ 同步成功！目前共 ${items.length} 筆收藏`);
+      showAutoPopup('✅', '資料更新完成', `共 ${items.length} 筆收藏已同步`, 1500);
+    } else {
+      showAutoPopup('❌', '資料更新失敗', '雲端回傳格式異常', 1600);
     }
   } catch (e) {
-    if (showMsg) showToast('⚠️ 同步失敗，請檢查雲端網址設定');
+    showAutoPopup('❌', '資料更新失敗', '請檢查網路或雲端部署權限', 1600);
   } finally {
     const btnAfter = document.getElementById('topSyncBtn');
     if (btnAfter) btnAfter.classList.remove('spinning');
   }
 }
 
+// 啟動時背景靜默更新
+async function silentStartupSync() {
+  if (!gasUrl) return;
+  try {
+    const res = await fetch(gasUrl + '?t=' + Date.now());
+    const data = await res.json();
+    if (data.status === 'success' && Array.isArray(data.items) && data.items.length > 0) {
+      items = data.items;
+      saveLocal();
+      renderScreen();
+    }
+  } catch (e) {}
+}
+
 async function saveAndPullCloud() {
   gasUrl = document.getElementById('gasUrlInput').value.trim();
   localStorage.setItem('my_gas_url', gasUrl);
   closeCloudModal();
-  await autoPullFromCloud(true);
-}
-
-async function pushAllToCloud() {
-  gasUrl = document.getElementById('gasUrlInput').value.trim();
-  localStorage.setItem('my_gas_url', gasUrl);
-  closeCloudModal();
-  if (!gasUrl) return;
-  showToast('⬆️ 正在將資料寫入 Google 表格...');
-  try {
-    const res = await fetch(gasUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'syncAll', items: items })
-    });
-    const data = await res.json();
-    if (data.status === 'success') {
-      showToast('✅ 成功寫入 Google 試算表！');
-    }
-  } catch (e) {
-    showToast('⚠️ 上傳失敗，請檢查部署設定');
-  }
+  await triggerDirectSync();
 }
 
 renderScreen();
-autoPullFromCloud(false);
+silentStartupSync();
 </script>
 </body>
 </html>
