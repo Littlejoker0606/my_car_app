@@ -12,7 +12,10 @@
     --muted-jade: #778D7A; --muted-jade-soft: #E1E7E2;
     --brushed-pewter: #415A77; --plum-noir: #1B263B;
     --plum-noir-dark: #0D1B2A; --plum-noir-soft: #415A77;
-    --unread-coral: #E11D48; --unread-coral-soft: #FFE4E6;
+    /* Holst 低飽和復古磚紅 / 赤陶色（與鼠尾草綠、暖沙金同明度同彩度） */
+    --unread-terra: #B85248;
+    --unread-terra-deep: #843830;
+    --unread-terra-soft: #EAD9D2;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; background: #D4C4A8; color: var(--plum-noir-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
@@ -149,7 +152,7 @@
   .detail-extra-row { display: flex; justify-content: space-between; color: rgba(244,241,222,0.75); }
   .detail-extra-row strong { color: #fff; }
 
-  /* ====== 日曆與雙人日記未讀標示系統 ====== */
+  /* ====== 日曆與雙人日記未讀標示系統（Holst 低飽和復古磚紅版） ====== */
   .cal-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .cal-month-pill { background: rgba(65,90,119,0.14); padding: 7px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--plum-noir-dark); }
   .cal-month-arrow { cursor: pointer; padding: 0 4px; font-size: 15px; user-select: none; }
@@ -162,28 +165,25 @@
   .cal-day-cell.has-diary { background: var(--muted-jade); color: var(--cloud-cream); font-weight: 800; }
   .cal-day-cell.has-diary::after { content: '✦'; position: absolute; top: -3px; right: -2px; font-size: 10px; color: var(--plum-noir-dark); background: var(--frosted-blue); width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
 
-  /* 未讀日記專屬高亮標記（珊瑚紅呼吸燈 ＋ 右上角「未」徽章） */
-  @keyframes pulseUnread {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.45); }
-    50% { box-shadow: 0 0 0 5px rgba(225, 29, 72, 0); }
-  }
-  .cal-day-cell.has-unread-diary { background: var(--unread-coral-soft); color: var(--unread-coral); border: 2px solid var(--unread-coral); font-weight: 900; animation: pulseUnread 2s infinite; }
-  .cal-day-cell.has-unread-diary::after { content: '未'; position: absolute; top: -5px; right: -4px; font-size: 9px; font-weight: 900; color: #fff; background: var(--unread-coral); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); box-shadow: 0 2px 6px rgba(225,29,72,0.45); }
+  /* 未讀日記專屬溫潤赤陶標記（不刺眼、與鼠尾草綠及暖沙金和諧共融） */
+  .cal-day-cell.has-unread-diary { background: var(--unread-terra-soft); color: var(--unread-terra-deep); border: 1.8px solid var(--unread-terra); font-weight: 800; }
+  .cal-day-cell.has-unread-diary::after { content: '未'; position: absolute; top: -4px; right: -4px; font-size: 9px; font-weight: 800; color: var(--cloud-cream-pure); background: var(--unread-terra); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); box-shadow: 0 2px 5px rgba(132, 56, 48, 0.28); }
   .cal-day-cell.selected { background: var(--plum-noir-dark) !important; color: var(--cloud-cream) !important; transform: scale(1.06); box-shadow: 0 4px 10px rgba(13,27,42,0.25); }
-  .cal-day-cell.selected.has-unread-diary { border: 2px solid var(--unread-coral) !important; }
-  .cal-day-cell.selected.has-unread-diary::after { content: '未'; background: var(--unread-coral); color: #fff; }
+  .cal-day-cell.selected.has-unread-diary { border: 1.8px solid var(--unread-terra) !important; }
+  .cal-day-cell.selected.has-unread-diary::after { content: '未'; background: var(--unread-terra); color: var(--cloud-cream-pure); }
 
   .cal-legend-row { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(13,27,42,0.1); font-size: 10px; font-weight: 800; color: var(--brushed-pewter); }
   .cal-legend-item { display: flex; align-items: center; gap: 5px; }
   .cal-legend-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; }
 
-  /* 跨月份未讀日記提醒橫幅 */
-  .unread-alert-banner { background: linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border: 1.5px solid rgba(225,29,72,0.35); border-radius: 22px; padding: 11px 14px; margin-bottom: 14px; box-shadow: 0 6px 18px rgba(225,29,72,0.1); }
-  .unread-alert-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 7px; }
-  .unread-alert-title { font-size: 12px; font-weight: 900; color: #9F1239; display: flex; align-items: center; gap: 6px; }
-  .unread-markall-btn { background: #fff; color: #9F1239; border: 1px solid rgba(225,29,72,0.35); padding: 4px 10px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; flex-shrink: 0; }
+  /* 跨月份未讀日記提醒橫幅（暖沙米杏漸層＋低飽和復古磚紅標籤） */
+  .unread-alert-banner { background: linear-gradient(135deg, #F5EFE2 0%, #E7DCC8 100%); border: 1.5px solid rgba(184, 82, 72, 0.28); border-radius: 22px; padding: 11px 14px; margin-bottom: 14px; box-shadow: 0 6px 16px rgba(13, 27, 42, 0.06); }
+  .unread-alert-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .unread-alert-title { font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); display: flex; align-items: center; gap: 6px; }
+  .unread-alert-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--unread-terra); display: inline-block; flex-shrink: 0; }
+  .unread-markall-btn { background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13, 27, 42, 0.16); padding: 4px 11px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; flex-shrink: 0; }
   .unread-date-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-  .unread-date-chip { background: var(--unread-coral); color: #fff; font-size: 10.5px; font-weight: 800; padding: 4px 10px; border-radius: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(225,29,72,0.28); }
+  .unread-date-chip { background: var(--unread-terra); color: var(--cloud-cream-pure); font-size: 10.5px; font-weight: 800; padding: 4px 11px; border-radius: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 3px 8px rgba(132, 56, 48, 0.22); }
 
   .cal-today-summary { display: flex; justify-content: space-between; align-items: center; padding: 0 6px 12px; border-left: 3px solid rgba(65,90,119,0.25); margin-left: 4px; padding-left: 12px; margin-bottom: 14px; }
   .cal-big-day { font-size: 28px; font-weight: 900; color: var(--plum-noir-dark); line-height: 1; }
@@ -192,7 +192,7 @@
   .cal-viewall-pill { background: var(--plum-noir); color: var(--cloud-cream); padding: 6px 13px; border-radius: 16px; font-size: 11px; font-weight: 800; cursor: pointer; }
 
   .banff-diary-card { background: var(--cloud-cream-pure); border-radius: 26px; padding: 11px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(13,27,42,0.1); border: 1.5px solid rgba(13,27,42,0.07); transition: border-color 0.2s, box-shadow 0.2s; }
-  .banff-diary-card.is-unread { border: 2px solid var(--unread-coral); box-shadow: 0 12px 28px rgba(225,29,72,0.16); }
+  .banff-diary-card.is-unread { border: 1.8px solid rgba(184, 82, 72, 0.55); box-shadow: 0 10px 26px rgba(132, 56, 48, 0.12); }
   .banff-photo-box { width: 100%; height: 215px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .diary-carousel-track { width: 100%; height: 100%; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .diary-carousel-track::-webkit-scrollbar { display: none; }
@@ -208,8 +208,8 @@
   .banff-body { padding: 14px 8px 6px; cursor: pointer; }
   .banff-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
   .banff-title { font-size: 18px; font-weight: 800; color: var(--plum-noir-dark); margin: 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .diary-read-badge { font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 12px; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
-  .diary-read-badge.unread { background: var(--unread-coral); color: #fff; box-shadow: 0 2px 6px rgba(225,29,72,0.3); }
+  .diary-read-badge { font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .diary-read-badge.unread { background: var(--unread-terra); color: var(--cloud-cream-pure); box-shadow: 0 2px 5px rgba(132, 56, 48, 0.24); }
   .diary-read-badge.read { background: var(--muted-jade-soft); color: var(--muted-jade); }
   .banff-outlined-badge { border: 1.5px solid rgba(13,27,42,0.3); color: var(--plum-noir-dark); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 16px; white-space: nowrap; }
   .banff-meta { font-size: 11px; font-weight: 700; color: var(--brushed-pewter); margin-bottom: 8px; }
@@ -275,7 +275,8 @@
   .pill-tab-btn .tab-label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: 800; letter-spacing: 0.3px; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
   .pill-tab-btn.active { background: var(--plum-noir-dark); color: var(--cloud-cream); padding: 0 16px; gap: 8px; box-shadow: 0 4px 14px rgba(13, 27, 42, 0.25); }
   .pill-tab-btn.active .tab-label { max-width: 80px; opacity: 1; }
-  .dock-unread-badge { position: absolute; top: 3px; right: 5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 99px; background: var(--unread-coral); color: #fff; font-size: 10px; font-weight: 900; display: none; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); box-shadow: 0 2px 6px rgba(225,29,72,0.45); pointer-events: none; }
+  /* 參照 Alerts(2) 風格：低飽和復古磚紅圓章＋柔和立體陰影 */
+  .dock-unread-badge { position: absolute; top: 2px; right: 4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 99px; background: var(--unread-terra); color: var(--cloud-cream-pure); font-size: 10.5px; font-weight: 800; display: none; align-items: center; justify-content: center; box-shadow: 0 3px 7px rgba(132, 56, 48, 0.38); pointer-events: none; }
 
   .modal-overlay { position: fixed; inset: 0; background: rgba(13,27,42,0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 950; padding: 18px; }
   .modal-overlay.open { display: flex; }
@@ -301,7 +302,7 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 雙人日記未讀標示系統 ＋ 雲端忙碌自動重試</span>
+  <span>🎨 Holst 配色 ＋ 低飽和磚紅未讀標籤 ＋ 雲端忙碌自動重試</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -511,7 +512,7 @@ function markDiaryAsUnread(id) {
   saveReadDiaryMap();
   closeDiaryViewModal();
   renderScreen();
-  showAutoPopup('🔴', '已標記為未讀', '月曆將保留未讀紅點提醒', 1300);
+  showAutoPopup('📌', '已標記為未讀', '月曆將保留未讀標記提醒', 1300);
 }
 
 function markAllDiariesAsRead() {
@@ -1373,7 +1374,7 @@ function renderCalendarTab() {
     ${unreadList.length > 0 ? `
       <div class="unread-alert-banner">
         <div class="unread-alert-top">
-          <div class="unread-alert-title">🔔 尚有 ${unreadList.length} 篇未讀日記（點擊日期立即查看）</div>
+          <div class="unread-alert-title"><span class="unread-alert-dot"></span><span>尚有 ${unreadList.length} 篇未讀日記（點擊日期立即查看）</span></div>
           <button type="button" class="unread-markall-btn" onclick="markAllDiariesAsRead()">✓ 全部已讀</button>
         </div>
         <div class="unread-date-chips">
@@ -1389,7 +1390,7 @@ function renderCalendarTab() {
       <div class="cal-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
       <div class="cal-days-grid">${cellsHtml.join('')}</div>
       <div class="cal-legend-row">
-        <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--unread-coral);color:#fff;">未</i> 有未讀日記</span>
+        <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--unread-terra);color:var(--cloud-cream-pure);">未</i> 有未讀日記</span>
         <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--muted-jade);color:var(--cloud-cream);">✦</i> 已讀日記</span>
         <span class="cal-legend-item"><i class="cal-legend-dot" style="border:1.8px solid var(--plum-noir-dark);"></i> 今日</span>
       </div>
@@ -1404,7 +1405,7 @@ function renderCalendarTab() {
       <div class="cal-count-text">
         <div>${dayDiaries.length} 篇日記紀錄</div>
         ${dayUnreadCount > 0
-          ? `<div style="font-size:11px;font-weight:900;color:var(--unread-coral);margin-top:2px;">🔴 ${dayUnreadCount} 篇未讀</div>`
+          ? `<div style="font-size:11px;font-weight:800;color:var(--unread-terra);margin-top:2px;">● ${dayUnreadCount} 篇未讀</div>`
           : (dayDiaries.length > 0 ? `<div style="font-size:10px;font-weight:800;color:var(--muted-jade);margin-top:2px;">✓ 當日已讀完畢</div>` : '')
         }
       </div>
@@ -1446,7 +1447,7 @@ function renderCalendarTab() {
             <h3 class="banff-title">
               <span>${d.location || '美好回憶'}</span>
               ${!isRead
-                ? `<span class="diary-read-badge unread">🔴 未讀</span>`
+                ? `<span class="diary-read-badge unread">● 未讀</span>`
                 : `<span class="diary-read-badge read">✓ 已讀</span>`
               }
             </h3>
@@ -1458,7 +1459,7 @@ function renderCalendarTab() {
         <div class="banff-footer">
           <div class="banff-foot-left" onclick="openDiaryViewModal('${d.id}')">
             ${!isRead
-              ? `<span style="color:var(--unread-coral);">👆 點此閱讀全文</span> <small>(自動標為已讀)</small>`
+              ? `<span style="color:var(--unread-terra);">● 點此閱讀全文</span> <small>(自動標為已讀)</small>`
               : `${d.timePoint || 'Memory'} <small>/ 點擊檢視全文</small>`
             }
           </div>
@@ -1486,7 +1487,6 @@ function openDiaryViewModal(id) {
   const d = diaries.find(x => String(x.id) === String(id));
   if (!d) return;
 
-  // 點開檢視日記時，自動將此篇日記標記為「已讀」並更新月曆狀態
   markDiaryAsRead(d, true);
 
   const photos = getDiaryPhotos(d);
@@ -1517,7 +1517,7 @@ function openDiaryViewModal(id) {
       </div>
       <div class="banff-meta" style="margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
         <span>📅 ${d.date} ｜ 🕒 ${d.timePoint || '全天'}</span>
-        <span style="color:var(--unread-coral);cursor:pointer;text-decoration:underline;font-weight:800;" onclick="markDiaryAsUnread('${d.id}')">🔴 標回未讀</span>
+        <span style="color:var(--unread-terra);cursor:pointer;text-decoration:underline;font-weight:800;" onclick="markDiaryAsUnread('${d.id}')">● 標回未讀</span>
       </div>
 
       <div class="diary-modal-fulltext">${d.content || '（無文字內容）'}</div>
@@ -1672,7 +1672,6 @@ async function saveDiaryEntry() {
     photo: photosCopy[0] || ''
   };
 
-  // 自己手機新增或修改的日記，在自己手機上自動標記為「已讀」（對方手機同步後則會顯示為「未讀」）
   markDiaryAsRead(newDiary, false);
 
   const idx = diaries.findIndex(x => String(x.id) === String(id));
@@ -1867,7 +1866,7 @@ async function triggerDirectSync() {
       saveLocal(); renderScreen();
       const unreadCnt = getUnreadDiaries().length;
       const subMsg = unreadCnt > 0
-        ? `已同步 ${items.length} 筆收藏 · 🔔 有 ${unreadCnt} 篇未讀日記！`
+        ? `已同步 ${items.length} 筆收藏 · 尚有 ${unreadCnt} 篇未讀日記`
         : `已同步 ${items.length} 筆收藏 · ${diaries.length} 篇日記`;
       showAutoPopup('✅', '資料更新完成', subMsg, 1800);
     } else { showAutoPopup('❌', '資料更新失敗', data.message || '雲端回傳格式異常', 0); }
