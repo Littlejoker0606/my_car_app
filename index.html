@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>實實與寶寶收藏與日記庫</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="DSC00224.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root {
     --cloud-cream: #F4F1DE; --cloud-cream-pure: #FAF9F0;
@@ -12,10 +13,11 @@
     --muted-jade: #778D7A; --muted-jade-soft: #E1E7E2;
     --brushed-pewter: #415A77; --plum-noir: #1B263B;
     --plum-noir-dark: #0D1B2A; --plum-noir-soft: #415A77;
-    /* Holst 低飽和復古磚紅 / 赤陶色（與鼠尾草綠、暖沙金同明度同彩度） */
+    /* Holst 低飽和復古磚紅 / 赤陶色 */
     --unread-terra: #B85248;
     --unread-terra-deep: #843830;
     --unread-terra-soft: #EAD9D2;
+    --hero-bg-img: url('DSC00224.jpg');
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { margin: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif; background: #D4C4A8; color: var(--plum-noir-dark); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
@@ -23,8 +25,14 @@
   .top-preview-bar button { background: var(--frosted-blue); color: var(--plum-noir-dark); border: none; padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; cursor: pointer; }
   .phone-frame { width: 390px; height: 820px; background: var(--cloud-cream); border-radius: 50px; border: 11px solid var(--plum-noir-dark); box-shadow: 0 28px 60px rgba(13,27,42,0.3), inset 0 0 0 2px #fff; margin: 24px auto; position: relative; overflow: hidden; display: flex; flex-direction: column; }
   body.fullscreen-mode { background: var(--cloud-cream); }
-  body.fullscreen-mode .top-preview-bar { display: none; }
+  body.fullscreen-mode .top-preview-bar { display: none !important; }
   body.fullscreen-mode .phone-frame { width: 100%; max-width: 480px; height: 100vh; margin: 0; border: none; border-radius: 0; box-shadow: none; }
+  @media (max-width: 600px) {
+    body { background: var(--cloud-cream); }
+    .top-preview-bar { display: none !important; }
+    .phone-frame { width: 100%; max-width: 480px; height: 100vh; margin: 0; border: none; border-radius: 0; box-shadow: none; }
+    .trantor-dock-container { position: fixed !important; max-width: 452px; margin: 0 auto; }
+  }
   .screen-scroll { flex: 1; overflow-y: auto; padding: 46px 18px 140px; scrollbar-width: none; background: var(--cloud-cream); }
   .screen-scroll.home-mode { padding-top: 0; background: var(--cloud-cream); }
   .screen-scroll.detail-mode { padding-top: 0; padding-bottom: 0; background: var(--plum-noir-dark); }
@@ -59,7 +67,7 @@
   .brand-color-chip .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .custom-brand-option { border-top: 1px dashed rgba(13,27,42,0.18); margin-top: 2px; padding-top: 8px; color: var(--brushed-pewter); }
 
-  .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), url('DSC00224.jpg'); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+  .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-color: #D4C4A8; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), var(--hero-bg-img); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
   .hero-quote-mark { font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; text-shadow: 0 2px 10px rgba(13,27,42,0.4); user-select: none; }
   .home-hero-bottom { margin-top: 118px; }
@@ -152,7 +160,7 @@
   .detail-extra-row { display: flex; justify-content: space-between; color: rgba(244,241,222,0.75); }
   .detail-extra-row strong { color: #fff; }
 
-  /* ====== 日曆與雙人日記未讀標示系統（Holst 低飽和復古磚紅版） ====== */
+  /* ====== 日曆與雙人日記未讀＋本機草稿系統 ====== */
   .cal-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .cal-month-pill { background: rgba(65,90,119,0.14); padding: 7px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--plum-noir-dark); }
   .cal-month-arrow { cursor: pointer; padding: 0 4px; font-size: 15px; user-select: none; }
@@ -165,18 +173,21 @@
   .cal-day-cell.has-diary { background: var(--muted-jade); color: var(--cloud-cream); font-weight: 800; }
   .cal-day-cell.has-diary::after { content: '✦'; position: absolute; top: -3px; right: -2px; font-size: 10px; color: var(--plum-noir-dark); background: var(--frosted-blue); width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
 
-  /* 未讀日記專屬溫潤赤陶標記（不刺眼、與鼠尾草綠及暖沙金和諧共融） */
+  /* 有本機草稿的日期標記 */
+  .cal-day-cell.has-draft-diary { background: rgba(212, 196, 168, 0.55); color: var(--plum-noir-dark); border: 1.5px dashed var(--brushed-pewter); font-weight: 800; }
+  .cal-day-cell.has-draft-diary::after { content: '稿'; position: absolute; top: -4px; right: -4px; font-size: 8.5px; font-weight: 800; color: var(--cloud-cream-pure); background: var(--brushed-pewter); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
+
+  /* 未讀日記專屬溫潤赤陶標記 */
   .cal-day-cell.has-unread-diary { background: var(--unread-terra-soft); color: var(--unread-terra-deep); border: 1.8px solid var(--unread-terra); font-weight: 800; }
   .cal-day-cell.has-unread-diary::after { content: '未'; position: absolute; top: -4px; right: -4px; font-size: 9px; font-weight: 800; color: var(--cloud-cream-pure); background: var(--unread-terra); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); box-shadow: 0 2px 5px rgba(132, 56, 48, 0.28); }
   .cal-day-cell.selected { background: var(--plum-noir-dark) !important; color: var(--cloud-cream) !important; transform: scale(1.06); box-shadow: 0 4px 10px rgba(13,27,42,0.25); }
   .cal-day-cell.selected.has-unread-diary { border: 1.8px solid var(--unread-terra) !important; }
   .cal-day-cell.selected.has-unread-diary::after { content: '未'; background: var(--unread-terra); color: var(--cloud-cream-pure); }
 
-  .cal-legend-row { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(13,27,42,0.1); font-size: 10px; font-weight: 800; color: var(--brushed-pewter); }
-  .cal-legend-item { display: flex; align-items: center; gap: 5px; }
+  .cal-legend-row { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(13,27,42,0.1); font-size: 10px; font-weight: 800; color: var(--brushed-pewter); }
+  .cal-legend-item { display: flex; align-items: center; gap: 4px; }
   .cal-legend-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; }
 
-  /* 跨月份未讀日記提醒橫幅（暖沙米杏漸層＋低飽和復古磚紅標籤） */
   .unread-alert-banner { background: linear-gradient(135deg, #F5EFE2 0%, #E7DCC8 100%); border: 1.5px solid rgba(184, 82, 72, 0.28); border-radius: 22px; padding: 11px 14px; margin-bottom: 14px; box-shadow: 0 6px 16px rgba(13, 27, 42, 0.06); }
   .unread-alert-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
   .unread-alert-title { font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); display: flex; align-items: center; gap: 6px; }
@@ -184,6 +195,19 @@
   .unread-markall-btn { background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1px solid rgba(13, 27, 42, 0.16); padding: 4px 11px; border-radius: 14px; font-size: 10px; font-weight: 800; cursor: pointer; flex-shrink: 0; }
   .unread-date-chips { display: flex; gap: 6px; flex-wrap: wrap; }
   .unread-date-chip { background: var(--unread-terra); color: var(--cloud-cream-pure); font-size: 10.5px; font-weight: 800; padding: 4px 11px; border-radius: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 3px 8px rgba(132, 56, 48, 0.22); }
+
+  /* 本機草稿箱專屬卡片樣式 */
+  .draft-box-panel { background: linear-gradient(135deg, #FAF9F0 0%, #EDE4D3 100%); border: 1.5px dashed var(--brushed-pewter); border-radius: 24px; padding: 12px 14px; margin-bottom: 14px; box-shadow: 0 6px 16px rgba(13,27,42,0.06); }
+  .draft-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); }
+  .draft-item-row { background: var(--cloud-cream-pure); border: 1px solid rgba(13,27,42,0.1); border-radius: 16px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; }
+  .draft-item-row:last-child { margin-bottom: 0; }
+  .draft-item-info { flex: 1; min-width: 0; }
+  .draft-item-title { font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .draft-item-sub { font-size: 10px; font-weight: 700; color: var(--brushed-pewter); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .draft-resume-btn { background: var(--brushed-pewter); color: var(--cloud-cream-pure); border: none; border-radius: 12px; padding: 5px 10px; font-size: 10.5px; font-weight: 800; cursor: pointer; flex-shrink: 0; }
+  .draft-del-btn { background: rgba(184,82,72,0.14); color: var(--unread-terra-deep); border: none; border-radius: 10px; width: 26px; height: 26px; font-size: 11px; font-weight: 900; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+
+  .draft-save-pill-btn { width: 100%; height: 46px; border-radius: 24px; background: var(--frosted-blue); color: var(--plum-noir-dark); border: 1.8px solid var(--plum-noir-dark); font-size: 13.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(13,27,42,0.1); }
 
   .cal-today-summary { display: flex; justify-content: space-between; align-items: center; padding: 0 6px 12px; border-left: 3px solid rgba(65,90,119,0.25); margin-left: 4px; padding-left: 12px; margin-bottom: 14px; }
   .cal-big-day { font-size: 28px; font-weight: 900; color: var(--plum-noir-dark); line-height: 1; }
@@ -193,6 +217,7 @@
 
   .banff-diary-card { background: var(--cloud-cream-pure); border-radius: 26px; padding: 11px; margin-bottom: 16px; box-shadow: 0 10px 28px rgba(13,27,42,0.1); border: 1.5px solid rgba(13,27,42,0.07); transition: border-color 0.2s, box-shadow 0.2s; }
   .banff-diary-card.is-unread { border: 1.8px solid rgba(184, 82, 72, 0.55); box-shadow: 0 10px 26px rgba(132, 56, 48, 0.12); }
+  .banff-diary-card.is-draft { border: 2px dashed var(--brushed-pewter); background: #FAF7EC; }
   .banff-photo-box { width: 100%; height: 215px; border-radius: 20px; background: linear-gradient(135deg, var(--brushed-pewter), var(--plum-noir-dark)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .diary-carousel-track { width: 100%; height: 100%; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .diary-carousel-track::-webkit-scrollbar { display: none; }
@@ -211,6 +236,7 @@
   .diary-read-badge { font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
   .diary-read-badge.unread { background: var(--unread-terra); color: var(--cloud-cream-pure); box-shadow: 0 2px 5px rgba(132, 56, 48, 0.24); }
   .diary-read-badge.read { background: var(--muted-jade-soft); color: var(--muted-jade); }
+  .diary-read-badge.draft { background: var(--brushed-pewter); color: var(--cloud-cream-pure); }
   .banff-outlined-badge { border: 1.5px solid rgba(13,27,42,0.3); color: var(--plum-noir-dark); font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 16px; white-space: nowrap; }
   .banff-meta { font-size: 11px; font-weight: 700; color: var(--brushed-pewter); margin-bottom: 8px; }
   .banff-desc { font-size: 12px; color: rgba(13,27,42,0.78); line-height: 1.55; margin: 0 0 14px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -260,7 +286,6 @@
   .owner-tab { padding: 9px 6px; border-radius: 17px; text-align: center; font-size: 11px; font-weight: 800; color: var(--plum-noir-dark); cursor: pointer; transition: all 0.2s; }
   .owner-tab.active { background: var(--plum-noir-dark); color: var(--cloud-cream); box-shadow: 0 4px 10px rgba(13,27,42,0.2); }
 
-  /* 所有收藏頁：雙排不超框篩選標籤（狀態排 ＋ 分類排） */
   .filter-status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 7px; }
   .filter-cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
   .f-pill { white-space: nowrap; padding: 7px 6px; border-radius: 15px; font-size: 11px; font-weight: 800; background: var(--cloud-cream-pure); color: var(--plum-noir-dark); border: 1.2px solid rgba(13,27,42,0.12); cursor: pointer; text-align: center; transition: all 0.18s; }
@@ -275,7 +300,6 @@
   .pill-tab-btn .tab-label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; font-size: 12px; font-weight: 800; letter-spacing: 0.3px; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
   .pill-tab-btn.active { background: var(--plum-noir-dark); color: var(--cloud-cream); padding: 0 16px; gap: 8px; box-shadow: 0 4px 14px rgba(13, 27, 42, 0.25); }
   .pill-tab-btn.active .tab-label { max-width: 80px; opacity: 1; }
-  /* 參照 Alerts(2) 風格：低飽和復古磚紅圓章＋柔和立體陰影 */
   .dock-unread-badge { position: absolute; top: 2px; right: 4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 99px; background: var(--unread-terra); color: var(--cloud-cream-pure); font-size: 10.5px; font-weight: 800; display: none; align-items: center; justify-content: center; box-shadow: 0 3px 7px rgba(132, 56, 48, 0.38); pointer-events: none; }
 
   .modal-overlay { position: fixed; inset: 0; background: rgba(13,27,42,0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 950; padding: 18px; }
@@ -283,7 +307,7 @@
   .modal-panel { background: var(--cloud-cream); border: 2px solid var(--plum-noir-dark); border-radius: 28px; padding: 20px; width: 100%; max-width: 360px; box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
 </style>
 </head>
-<body>
+<body class="fullscreen-mode">
 
 <div class="auto-popup-hud" id="autoPopupHud" onclick="hideAutoPopup()">
   <div class="hud-icon" id="hudIcon">✅</div>
@@ -302,7 +326,7 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 低飽和磚紅未讀標籤 ＋ 雲端忙碌自動重試</span>
+  <span>🎨 Holst 配色 ＋ 極速全螢幕啟動 ＋ 日記本機草稿箱</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -353,6 +377,33 @@
 </div>
 
 <script>
+// ====== 極速首頁背景圖本機快取引擎（將相機大圖壓縮存入本機，第 2 次起 0.01 秒瞬開） ======
+(function initFastHeroBannerCache() {
+  try {
+    const cachedHero = localStorage.getItem('hero_banner_cache_v1');
+    if (cachedHero && cachedHero.startsWith('data:image')) {
+      document.documentElement.style.setProperty('--hero-bg-img', `url('${cachedHero}')`);
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() {
+      try {
+        const canvas = document.createElement('canvas');
+        const targetW = 780;
+        const scale = img.width > targetW ? targetW / img.width : 1;
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        localStorage.setItem('hero_banner_cache_v1', compressedDataUrl);
+        document.documentElement.style.setProperty('--hero-bg-img', `url('${compressedDataUrl}')`);
+      } catch (e) {}
+    };
+    img.src = 'DSC00224.jpg';
+  } catch (e) {}
+})();
+
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwFhnIbM-fnjl4XNdLjmVf-_sB24c0Fokop1kDGz_a-ALIB57HDTOFo1XAnN6-YrCTfqg/exec";
 const DEFAULT_BRANDS = ["BBR","MINI GT","POPRACE","KAIDO HOUSE","LOOKSMART","π MODEL","INNO 64","CM MODEL","HKM","GLAMCRAFT","ZINCIT MODEL","DM MODEL","TRANDS HABBY","COOL CAR","DEMON KING AUTO","RHINO MODEL","FNRC"];
 
@@ -441,6 +492,7 @@ function loadSavedItems() {
 
 let items = loadSavedItems();
 let diaries = JSON.parse(localStorage.getItem('my_couple_diaries') || '[]');
+let diaryDrafts = JSON.parse(localStorage.getItem('my_diary_drafts_v1') || '[]');
 let readDiaryMap = JSON.parse(localStorage.getItem('my_read_diary_map_v1') || '{}');
 let cloudBrands = JSON.parse(localStorage.getItem('my_cloud_brands') || 'null') || DEFAULT_BRANDS;
 let dollBrands = JSON.parse(localStorage.getItem('my_doll_brands') || '[]');
@@ -465,6 +517,7 @@ let calYear = nowDate.getFullYear();
 let calMonth = nowDate.getMonth() + 1;
 let selectedCalDate = nowDate.toISOString().slice(0,10).replace(/-/g,'/');
 let editingDiaryId = null;
+let editingDraftId = null;
 let tempDiaryPhotos = [];
 let currentLightboxPhotos = [];
 let hudTimer = null;
@@ -482,7 +535,7 @@ function getDiaryPhotos(d) {
   return [];
 }
 
-// ====== 雙人日記「已讀 / 未讀」智慧追蹤核心 ======
+// ====== 雙人日記「已讀 / 未讀」與「本機草稿箱」核心 ======
 function getDiarySignature(d) {
   if (!d) return '';
   const photos = getDiaryPhotos(d);
@@ -497,6 +550,12 @@ function isDiaryRead(d) {
 function saveReadDiaryMap() {
   localStorage.setItem('my_read_diary_map_v1', JSON.stringify(readDiaryMap));
   updateDockUnreadBadge();
+}
+
+function saveDiaryDraftsLocal() {
+  try {
+    localStorage.setItem('my_diary_drafts_v1', JSON.stringify(diaryDrafts));
+  } catch (e) {}
 }
 
 function markDiaryAsRead(d, shouldRender = false) {
@@ -549,6 +608,121 @@ function jumpToCalendarDate(dateStr) {
     calMonth = Number(parts[1]) || calMonth;
   }
   renderScreen();
+}
+
+// 即時自動備份正在輸入的日記內容（防止誤關 App 遺失文字）
+function autoBackupTypingDiary() {
+  const dateEl = document.getElementById('d_date');
+  const locEl = document.getElementById('d_location');
+  const contEl = document.getElementById('d_content');
+  if (!dateEl || !locEl || !contEl) return;
+  const loc = locEl.value.trim();
+  const cont = contEl.value.trim();
+  if (!loc && !cont && tempDiaryPhotos.length === 0) return;
+  try {
+    const backup = {
+      draftId: editingDraftId || '',
+      origDiaryId: editingDiaryId || '',
+      date: dateEl.value.trim() || selectedCalDate,
+      timePoint: document.getElementById('d_time') ? document.getElementById('d_time').value.trim() : '',
+      withWho: document.getElementById('d_who') ? document.getElementById('d_who').value.trim() : '',
+      location: loc,
+      content: cont,
+      savedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    localStorage.setItem('my_diary_autosave_v1', JSON.stringify(backup));
+  } catch (e) {}
+}
+
+function saveDiaryAsDraft() {
+  const dateVal = (document.getElementById('d_date').value || '').trim() || selectedCalDate;
+  const timeVal = (document.getElementById('d_time').value || '').trim() || '全天';
+  const whoVal = (document.getElementById('d_who').value || '').trim() || '實實 & 寶寶';
+  const locVal = (document.getElementById('d_location').value || '').trim();
+  const contentVal = (document.getElementById('d_content').value || '').trim();
+  const photosCopy = tempDiaryPhotos.slice();
+
+  if (!locVal && !contentVal && photosCopy.length === 0) {
+    showAutoPopup('⚠️', '草稿內容為空', '請至少輸入地點、內容或選取照片再暫存', 1600);
+    return;
+  }
+
+  const draftId = editingDraftId || ('draft_' + Date.now());
+  const draftObj = {
+    draftId: draftId,
+    origDiaryId: editingDiaryId || '',
+    date: dateVal,
+    timePoint: timeVal,
+    withWho: whoVal,
+    location: locVal || '（未填地點草稿）',
+    content: contentVal,
+    photos: photosCopy,
+    photo: photosCopy[0] || '',
+    updatedAt: new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  };
+
+  const idx = diaryDrafts.findIndex(x => String(x.draftId) === String(draftId));
+  if (idx > -1) diaryDrafts[idx] = draftObj;
+  else diaryDrafts.unshift(draftObj);
+
+  saveDiaryDraftsLocal();
+  localStorage.removeItem('my_diary_autosave_v1');
+
+  editingDraftId = null;
+  editingDiaryId = null;
+  tempDiaryPhotos = [];
+  selectedCalDate = dateVal;
+  const parts = dateVal.split('/');
+  if (parts.length >= 2) {
+    calYear = Number(parts[0]) || calYear;
+    calMonth = Number(parts[1]) || calMonth;
+  }
+  switchTab('calendar');
+  showAutoPopup('📝', '已暫存至本機草稿', '僅保存在您的手機，尚未同步至雲端', 1700);
+}
+
+function openDraftForContinue(draftId) {
+  const dr = diaryDrafts.find(x => String(x.draftId) === String(draftId));
+  if (!dr) return;
+  editingDraftId = dr.draftId;
+  editingDiaryId = dr.origDiaryId || null;
+  selectedCalDate = dr.date || selectedCalDate;
+  tempDiaryPhotos = Array.isArray(dr.photos) ? dr.photos.slice() : [];
+  activeTab = 'diary';
+  document.getElementById('dockHome').classList.remove('active');
+  document.getElementById('dockAll').classList.remove('active');
+  document.getElementById('dockAdd').classList.remove('active');
+  document.getElementById('dockCalendar').classList.remove('active');
+  document.getElementById('dockDiary').classList.add('active');
+  renderScreen();
+  document.getElementById('screenContent').scrollTop = 0;
+}
+
+function deleteDiaryDraft(draftId, evt) {
+  if (evt) evt.stopPropagation();
+  diaryDrafts = diaryDrafts.filter(x => String(x.draftId) !== String(draftId));
+  if (editingDraftId === draftId) {
+    editingDraftId = null;
+    tempDiaryPhotos = [];
+  }
+  saveDiaryDraftsLocal();
+  renderScreen();
+  showAutoPopup('🗑️', '已刪除本機草稿', '', 1200);
+}
+
+function restoreAutoSavedTyping() {
+  try {
+    const raw = localStorage.getItem('my_diary_autosave_v1');
+    if (!raw) return;
+    const b = JSON.parse(raw);
+    if (document.getElementById('d_date')) document.getElementById('d_date').value = b.date || selectedCalDate;
+    if (document.getElementById('d_time')) document.getElementById('d_time').value = b.timePoint || '';
+    if (document.getElementById('d_who')) document.getElementById('d_who').value = b.withWho || '';
+    if (document.getElementById('d_location')) document.getElementById('d_location').value = b.location || '';
+    if (document.getElementById('d_content')) document.getElementById('d_content').value = b.content || '';
+    localStorage.removeItem('my_diary_autosave_v1');
+    showAutoPopup('✅', '已恢復上次輸入內容', '', 1200);
+  } catch (e) {}
 }
 
 function openFullLightbox(photosArr, startIndex = 0) {
@@ -689,6 +863,7 @@ function switchTab(tab) {
   }
   if (tab === 'diary' && activeTab !== 'diary' && activeTab !== 'calendar') {
     editingDiaryId = null;
+    editingDraftId = null;
     tempDiaryPhotos = [];
   }
   activeTab = tab;
@@ -815,7 +990,7 @@ function renderHomeTab() {
         const stars = formatRatingStars(it.rating);
         return `
           <div class="dark-row-card" onclick="openDetailView('${it.id}')">
-            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}" loading="lazy" decoding="async">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
               <div class="dark-row-sub">${it.brand} · ${it.orderDate ? it.orderDate + ' ' : ''}(${it.buyer})</div>
@@ -1289,7 +1464,7 @@ function renderAllTab() {
         const isDoll = it.category === '娃娃/公仔';
         return `
           <div class="dark-row-card" onclick="openDetailView('${it.id}')">
-            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}">` : icon}</div>
+            <div class="dark-row-icon">${it.photo ? `<img src="${it.photo}" loading="lazy" decoding="async">` : icon}</div>
             <div class="dark-row-info">
               <div class="dark-row-name">${it.name}</div>
               <div class="dark-row-sub">${it.brand}${!isDoll && it.scale ? ` (${it.scale})` : ''}${it.store ? ` · ${it.store}` : ''}</div>
@@ -1310,6 +1485,7 @@ function renderCalendarTab() {
   const weekNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   const diaryDateMap = {};
   const unreadDateMap = {};
+  const draftDateMap = {};
 
   diaries.forEach(d => {
     const dt = String(d.date || '').trim();
@@ -1318,6 +1494,12 @@ function renderCalendarTab() {
     if (!isDiaryRead(d)) {
       unreadDateMap[dt] = (unreadDateMap[dt] || 0) + 1;
     }
+  });
+
+  diaryDrafts.forEach(dr => {
+    const dt = String(dr.date || '').trim();
+    if (!dt) return;
+    draftDateMap[dt] = (draftDateMap[dt] || 0) + 1;
   });
 
   const unreadList = getUnreadDiaries();
@@ -1335,12 +1517,18 @@ function renderCalendarTab() {
     const fullStr = `${calYear}/${String(calMonth).padStart(2,'0')}/${String(d).padStart(2,'0')}`;
     const hasDiary = !!diaryDateMap[fullStr];
     const hasUnread = !!unreadDateMap[fullStr];
+    const hasDraft = !!draftDateMap[fullStr];
     const isSel = fullStr === selectedCalDate;
     const isToday = fullStr === todayStr;
 
+    let stateCls = '';
+    if (hasUnread) stateCls = 'has-unread-diary';
+    else if (hasDiary) stateCls = 'has-diary';
+    else if (hasDraft) stateCls = 'has-draft-diary';
+
     const cls = [
       'cal-day-cell',
-      hasUnread ? 'has-unread-diary' : (hasDiary ? 'has-diary' : ''),
+      stateCls,
       isToday && !isSel && !hasUnread ? 'today-ring' : '',
       isSel ? 'selected' : ''
     ].filter(Boolean).join(' ');
@@ -1355,6 +1543,7 @@ function renderCalendarTab() {
   const selDateObj = new Date(Number(selParts[0]), Number(selParts[1]) - 1, Number(selParts[2]));
   const selWeekName = weekNames[selDateObj.getDay()] || '';
   const dayDiaries = diaries.filter(d => String(d.date || '').trim() === selectedCalDate);
+  const dayDrafts = diaryDrafts.filter(dr => String(dr.date || '').trim() === selectedCalDate);
   const dayUnreadCount = dayDiaries.filter(d => !isDiaryRead(d)).length;
 
   return `
@@ -1386,12 +1575,31 @@ function renderCalendarTab() {
       </div>
     ` : ''}
 
+    ${diaryDrafts.length > 0 ? `
+      <div class="draft-box-panel">
+        <div class="draft-box-header">
+          <span>📝 本機暫存草稿箱 (${diaryDrafts.length} 篇 · 僅存手機未同步雲端)</span>
+        </div>
+        ${diaryDrafts.map(dr => `
+          <div class="draft-item-row" onclick="openDraftForContinue('${dr.draftId}')">
+            <div class="draft-item-info">
+              <div class="draft-item-title">📅 ${dr.date} · 📍 ${dr.location}</div>
+              <div class="draft-item-sub">${dr.content ? dr.content : '（尚無內文）'} ${(dr.photos && dr.photos.length) ? `· 📷 ${dr.photos.length}張` : ''}</div>
+            </div>
+            <button type="button" class="draft-resume-btn">✏️ 繼續寫</button>
+            <button type="button" class="draft-del-btn" onclick="deleteDiaryDraft('${dr.draftId}', event)">✕</button>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+
     <div class="cal-board-card">
       <div class="cal-weekdays"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
       <div class="cal-days-grid">${cellsHtml.join('')}</div>
       <div class="cal-legend-row">
-        <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--unread-terra);color:var(--cloud-cream-pure);">未</i> 有未讀日記</span>
+        <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--unread-terra);color:var(--cloud-cream-pure);">未</i> 未讀日記</span>
         <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--muted-jade);color:var(--cloud-cream);">✦</i> 已讀日記</span>
+        <span class="cal-legend-item"><i class="cal-legend-dot" style="background:var(--brushed-pewter);color:var(--cloud-cream-pure);">稿</i> 本機草稿</span>
         <span class="cal-legend-item"><i class="cal-legend-dot" style="border:1.8px solid var(--plum-noir-dark);"></i> 今日</span>
       </div>
     </div>
@@ -1403,7 +1611,7 @@ function renderCalendarTab() {
         <div class="cal-day-sub">${selWeekName} · ${selectedCalDate}</div>
       </div>
       <div class="cal-count-text">
-        <div>${dayDiaries.length} 篇日記紀錄</div>
+        <div>${dayDiaries.length} 篇日記${dayDrafts.length > 0 ? ` · ${dayDrafts.length} 篇草稿` : ''}</div>
         ${dayUnreadCount > 0
           ? `<div style="font-size:11px;font-weight:800;color:var(--unread-terra);margin-top:2px;">● ${dayUnreadCount} 篇未讀</div>`
           : (dayDiaries.length > 0 ? `<div style="font-size:10px;font-weight:800;color:var(--muted-jade);margin-top:2px;">✓ 當日已讀完畢</div>` : '')
@@ -1412,7 +1620,32 @@ function renderCalendarTab() {
       <div class="cal-viewall-pill" onclick="openNewDiaryForDate('${selectedCalDate}')">＋ 寫日記</div>
     </div>
 
-    ${dayDiaries.length === 0 ? `
+    ${dayDrafts.map(dr => {
+      const photos = getDiaryPhotos(dr);
+      return `
+      <div class="banff-diary-card is-draft" onclick="openDraftForContinue('${dr.draftId}')">
+        <div class="banff-body" style="padding-top:6px;">
+          <div class="banff-title-row">
+            <h3 class="banff-title">
+              <span>${dr.location || '未命名草稿'}</span>
+              <span class="diary-read-badge draft">📝 本機草稿 (未同步雲端)</span>
+            </h3>
+            <span class="banff-outlined-badge">${dr.withWho || '實實 & 寶寶'}</span>
+          </div>
+          <div class="banff-meta">${dr.date} · ${dr.timePoint || '全天'} ${photos.length > 0 ? `· 📷 已選 ${photos.length} 張照片` : ''}</div>
+          <p class="banff-desc">${dr.content || '（草稿尚未填寫完畢，點擊繼續編寫...）'}</p>
+        </div>
+        <div class="banff-footer">
+          <div class="banff-foot-left"><span style="color:var(--brushed-pewter);">📝 僅存於本機</span> <small>/ 點擊繼續打字</small></div>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="banff-action-btn" style="background:var(--unread-terra);padding:6px 12px;" onclick="deleteDiaryDraft('${dr.draftId}', event)"><span>刪除草稿</span></button>
+            <button type="button" class="banff-action-btn" onclick="event.stopPropagation();openDraftForContinue('${dr.draftId}')"><span>繼續編寫</span><span class="arr-cir">↗</span></button>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+
+    ${dayDiaries.length === 0 && dayDrafts.length === 0 ? `
       <div class="banff-diary-card" style="text-align:center;padding:28px 16px;">
         <div style="font-size:32px;margin-bottom:8px;">📖</div>
         <div style="font-size:14px;font-weight:800;color:var(--plum-noir-dark);margin-bottom:4px;">${selectedCalDate} 尚無日記紀錄</div>
@@ -1435,7 +1668,7 @@ function renderCalendarTab() {
           </div>
           ${photos.length > 0 ? `
             <div class="diary-carousel-track" onscroll="updateCarouselDots(this)">
-              ${photos.map(url => `<div class="diary-carousel-slide" onclick="openDiaryViewModal('${d.id}')"><img src="${url}" alt="diary"></div>`).join('')}
+              ${photos.map(url => `<div class="diary-carousel-slide" onclick="openDiaryViewModal('${d.id}')"><img src="${url}" loading="lazy" decoding="async" alt="diary"></div>`).join('')}
             </div>
           ` : `<div class="diary-carousel-slide" onclick="openDiaryViewModal('${d.id}')"><span style="font-size:52px;">📸</span></div>`}
           <div class="banff-dots">
@@ -1542,9 +1775,16 @@ function changeCalMonth(delta) {
   renderScreen();
 }
 function selectCalendarDate(dateStr) { selectedCalDate = dateStr; renderScreen(); }
-function openNewDiaryForDate(dateStr) { selectedCalDate = dateStr; editingDiaryId = null; tempDiaryPhotos = []; switchTab('diary'); }
+function openNewDiaryForDate(dateStr) {
+  selectedCalDate = dateStr;
+  editingDiaryId = null;
+  editingDraftId = null;
+  tempDiaryPhotos = [];
+  switchTab('diary');
+}
 function openEditDiary(id) {
   editingDiaryId = id;
+  editingDraftId = null;
   const d = diaries.find(x => String(x.id) === String(id));
   if (d) markDiaryAsRead(d, false);
   tempDiaryPhotos = d ? getDiaryPhotos(d).slice() : [];
@@ -1552,40 +1792,88 @@ function openEditDiary(id) {
 }
 
 function renderDiaryTab() {
-  const d = editingDiaryId ? diaries.find(x => String(x.id) === String(editingDiaryId)) : null;
+  const dr = editingDraftId ? diaryDrafts.find(x => String(x.draftId) === String(editingDraftId)) : null;
+  const d = dr || (editingDiaryId ? diaries.find(x => String(x.id) === String(editingDiaryId)) : null);
   const defaultDate = d ? d.date : selectedCalDate;
+
+  let autoSaveBannerHtml = '';
+  if (!dr && !editingDiaryId) {
+    try {
+      const rawAuto = localStorage.getItem('my_diary_autosave_v1');
+      if (rawAuto) {
+        const autoObj = JSON.parse(rawAuto);
+        if (autoObj && (autoObj.location || autoObj.content)) {
+          autoSaveBannerHtml = `
+            <div class="draft-box-panel" style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <div style="font-size:11.5px;font-weight:800;color:var(--plum-noir-dark);">💡 偵測到上次未存檔的輸入內容（${autoObj.location || '無標題'}）</div>
+                <div style="display:flex;gap:6px;">
+                  <button type="button" class="draft-resume-btn" onclick="restoreAutoSavedTyping()">恢復內容</button>
+                  <button type="button" class="draft-del-btn" onclick="localStorage.removeItem('my_diary_autosave_v1');renderScreen();">✕</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    } catch (e) {}
+  }
 
   return `
     <div class="header-row">
-      <div><h1 class="greet-title">${d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記'}</h1><p class="greet-sub">支援一次勾選多張照片與雙機雲端同步</p></div>
+      <div>
+        <h1 class="greet-title">${dr ? '📝 繼續編寫日記草稿' : (d ? '✏️ 編輯日記回憶' : '📖 新增雙人日記')}</h1>
+        <p class="greet-sub">${dr ? '目前為本機草稿狀態 · 寫完後可按下方正式同步雲端' : '支援先暫存手機草稿，或完成後同步至雙機雲端'}</p>
+      </div>
       <div class="bell-btn" onclick="switchTab('calendar')">✕</div>
     </div>
+
+    ${autoSaveBannerHtml}
+
+    ${diaryDrafts.length > 0 && !dr ? `
+      <div class="draft-box-panel">
+        <div class="draft-box-header">
+          <span>📝 我的本機草稿箱 (${diaryDrafts.length} 篇 · 點擊可載入繼續寫)</span>
+        </div>
+        ${diaryDrafts.map(item => `
+          <div class="draft-item-row" onclick="openDraftForContinue('${item.draftId}')">
+            <div class="draft-item-info">
+              <div class="draft-item-title">📅 ${item.date} · 📍 ${item.location}</div>
+              <div class="draft-item-sub">${item.content || '（尚無內文）'} ${(item.photos && item.photos.length) ? `· 📷 ${item.photos.length}張` : ''}</div>
+            </div>
+            <button type="button" class="draft-resume-btn">載入</button>
+            <button type="button" class="draft-del-btn" onclick="deleteDiaryDraft('${item.draftId}', event)">✕</button>
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+
     <div class="form-card">
       <div class="f-grid-2">
-        <div class="f-group"><label class="f-label">📅 日記日期</label><input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}"></div>
-        <div class="f-group"><label class="f-label">🕒 時間點</label><input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '晚上 19:00'}"></div>
+        <div class="f-group"><label class="f-label">📅 日記日期</label><input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}" oninput="autoBackupTypingDiary()"></div>
+        <div class="f-group"><label class="f-label">🕒 時間點</label><input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '晚上 19:00'}" oninput="autoBackupTypingDiary()"></div>
       </div>
       <div class="chip-row" style="margin-bottom:10px;">
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='早上 10:00'">早上 10:00</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='中午 12:30'">中午 12:30</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='下午 15:30'">下午 15:30</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='晚上 19:00'">晚上 19:00</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='全天約會'">全天約會</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='早上 10:00';autoBackupTypingDiary();">早上 10:00</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='中午 12:30';autoBackupTypingDiary();">中午 12:30</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='下午 15:30';autoBackupTypingDiary();">下午 15:30</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='晚上 19:00';autoBackupTypingDiary();">晚上 19:00</span>
+        <span class="mini-chip" onclick="document.getElementById('d_time').value='全天約會';autoBackupTypingDiary();">全天約會</span>
       </div>
       <div class="f-group">
         <label class="f-label">👥 與誰 (With Whom)</label>
-        <input type="text" class="f-input" id="d_who" value="${d ? d.withWho : '可愛寶寶'}">
+        <input type="text" class="f-input" id="d_who" value="${d ? d.withWho : '可愛寶寶'}" oninput="autoBackupTypingDiary()">
         <div class="chip-row">
-          <span class="mini-chip" onclick="document.getElementById('d_who').value='實實 & 寶寶'">👩‍❤️‍👨 實實 & 寶寶</span>
-          <span class="mini-chip" onclick="document.getElementById('d_who').value='帥氣實實'">😎 帥氣實實</span>
-          <span class="mini-chip" onclick="document.getElementById('d_who').value='可愛寶寶'">🥰 可愛寶寶</span>
-          <span class="mini-chip" onclick="document.getElementById('d_who').value='與朋友們'">🎉 與朋友們</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='實實 & 寶寶';autoBackupTypingDiary();">👩‍❤️‍👨 實實 & 寶寶</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='帥氣實實';autoBackupTypingDiary();">😎 帥氣實實</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='可愛寶寶';autoBackupTypingDiary();">🥰 可愛寶寶</span>
+          <span class="mini-chip" onclick="document.getElementById('d_who').value='與朋友們';autoBackupTypingDiary();">🎉 與朋友們</span>
         </div>
       </div>
-      <div class="f-group" style="margin-bottom:0;"><label class="f-label">📍 去哪裡 (Location / 地點)</label><input type="text" class="f-input" id="d_location" placeholder="例如：實實心裡 / 桃園楊梅 / 台北約會" value="${d ? d.location : ''}"></div>
+      <div class="f-group" style="margin-bottom:0;"><label class="f-label">📍 去哪裡 (Location / 地點)</label><input type="text" class="f-input" id="d_location" placeholder="例如：實實心裡 / 桃園楊梅 / 台北約會" value="${d && d.location !== '（未填地點草稿）' ? d.location : ''}" oninput="autoBackupTypingDiary()"></div>
     </div>
     <div class="form-card dark-part">
-      <div class="f-group"><label class="f-label">📝 做什麼 / 今日心情日記</label><textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、心情、吃了什麼好料...">${d ? d.content : ''}</textarea></div>
+      <div class="f-group"><label class="f-label">📝 做什麼 / 今日心情日記</label><textarea class="f-textarea" id="d_content" placeholder="寫下今天發生的事情、心情、吃了什麼好料（可隨時按下方先暫存草稿）..." oninput="autoBackupTypingDiary()">${d ? d.content : ''}</textarea></div>
       <div class="f-group" style="margin-bottom:0;">
         <label class="f-label">📸 回憶照片（支援長按一次勾選多張，或重複點擊新增！）</label>
         <label class="photo-upload-box">
@@ -1601,8 +1889,19 @@ function renderDiaryTab() {
         </div>
       </div>
     </div>
-    <button class="submit-pill-btn" onclick="saveDiaryEntry()"><span>✓ ${d ? '儲存日記修改並同步雲端' : '儲存日記並同步至雲端'}</span></button>
-    ${d ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeDiaryEntry('${d.id}')">🗑️ 刪除此篇日記</span></div>` : ''}
+
+    <!-- 新增：先暫存為本機草稿按鈕（不同步雲端） -->
+    <button type="button" class="draft-save-pill-btn" onclick="saveDiaryAsDraft()">
+      <span>📝 ${dr ? '更新本機草稿（暫不同步雲端）' : '先暫存為草稿（僅存手機・不同步雲端）'}</span>
+    </button>
+
+    <!-- 正式儲存並同步雲端按鈕 -->
+    <button type="button" class="submit-pill-btn" onclick="saveDiaryEntry()">
+      <span>✓ ${editingDiaryId ? '正式儲存修改並同步雲端' : '正式完成日記並同步至雲端'}</span>
+    </button>
+
+    ${dr ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="deleteDiaryDraft('${dr.draftId}')">🗑️ 刪除此篇本機草稿</span></div>` : ''}
+    ${editingDiaryId && !dr ? `<div style="text-align:center;margin-bottom:20px;"><span style="font-size:12px;color:#b91c1c;font-weight:800;cursor:pointer;" onclick="removeDiaryEntry('${editingDiaryId}')">🗑️ 刪除此篇已發佈日記</span></div>` : ''}
   `;
 }
 
@@ -1672,12 +1971,19 @@ async function saveDiaryEntry() {
     photo: photosCopy[0] || ''
   };
 
+  // 若此日記原本是從本機草稿箱載入的，正式發佈時自動從草稿箱移除
+  if (editingDraftId) {
+    diaryDrafts = diaryDrafts.filter(x => String(x.draftId) !== String(editingDraftId));
+    saveDiaryDraftsLocal();
+  }
+  localStorage.removeItem('my_diary_autosave_v1');
+
   markDiaryAsRead(newDiary, false);
 
   const idx = diaries.findIndex(x => String(x.id) === String(id));
   if (idx > -1) diaries[idx] = newDiary; else diaries.push(newDiary);
   saveLocal();
-  editingDiaryId = null; tempDiaryPhotos = []; selectedCalDate = dateVal;
+  editingDiaryId = null; editingDraftId = null; tempDiaryPhotos = []; selectedCalDate = dateVal;
   const parts = dateVal.split('/');
   if (parts.length >= 2) { calYear = Number(parts[0]) || calYear; calMonth = Number(parts[1]) || calMonth; }
   switchTab('calendar');
@@ -1715,7 +2021,7 @@ function removeDiaryEntry(id) {
   diaries = diaries.filter(x => String(x.id) !== String(id));
   delete readDiaryMap[String(id)];
   saveReadDiaryMap();
-  saveLocal(); editingDiaryId = null; switchTab('calendar');
+  saveLocal(); editingDiaryId = null; editingDraftId = null; switchTab('calendar');
   if (gasUrl) fetchCloudJsonWithRetry(gasUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'deleteDiary', id }) }).catch(() => {});
 }
 
@@ -1877,12 +2183,19 @@ async function triggerDirectSync() {
 async function silentStartupSync() {
   if (!gasUrl) return;
   try {
+    const prevSnapshot = JSON.stringify({ itemsLen: items.length, diariesLen: diaries.length, lastItem: items[items.length - 1], lastDiary: diaries[diaries.length - 1] });
     const data = await fetchCloudJsonWithRetry(gasUrl + '?t=' + Date.now(), {}, 20000, 1);
     if (data.status === 'success' && Array.isArray(data.items)) {
-      items = normalizeServerItems(data.items);
+      const nextItems = normalizeServerItems(data.items);
+      const nextDiaries = Array.isArray(data.diaries) ? data.diaries : diaries;
       if (Array.isArray(data.brands) && data.brands.length > 0) cloudBrands = data.brands;
-      if (Array.isArray(data.diaries)) diaries = data.diaries;
-      saveLocal(); renderScreen();
+      items = nextItems;
+      diaries = nextDiaries;
+      saveLocal();
+      const nextSnapshot = JSON.stringify({ itemsLen: items.length, diariesLen: diaries.length, lastItem: items[items.length - 1], lastDiary: diaries[diaries.length - 1] });
+      if (prevSnapshot !== nextSnapshot && activeTab !== 'diary' && activeTab !== 'add') {
+        renderScreen();
+      }
     }
   } catch (e) {}
 }
@@ -1895,7 +2208,7 @@ async function saveAndPullCloud() {
 }
 
 renderScreen();
-silentStartupSync();
+setTimeout(silentStartupSync, 350);
 </script>
 </body>
 </html>
