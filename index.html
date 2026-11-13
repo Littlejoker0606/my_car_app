@@ -67,6 +67,195 @@
   .brand-color-chip .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .custom-brand-option { border-top: 1px dashed rgba(13,27,42,0.18); margin-top: 2px; padding-top: 8px; color: var(--brushed-pewter); }
 
+  /* ====== Holst 24小時制直立膠囊滾輪時間選擇器 (參照附圖設計) ====== */
+  .holst-time-picker-box {
+    background: var(--muted-jade);
+    border-radius: 24px;
+    padding: 14px 15px 12px;
+    margin-bottom: 12px;
+    color: var(--cloud-cream-pure);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 8px 20px rgba(13,27,42,0.12);
+    border: 1.5px solid rgba(13,27,42,0.1);
+  }
+  .tp-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .tp-header-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--cloud-cream-pure);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tp-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tp-live-time-text {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--cloud-cream-pure);
+    letter-spacing: 0.6px;
+    background: rgba(13, 27, 42, 0.26);
+    padding: 4px 12px;
+    border-radius: 99px;
+  }
+  .tp-wheels-stage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 2px 0 8px;
+    position: relative;
+  }
+  .tp-pill-wheel-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tp-wheel-cap-title {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: rgba(250, 249, 240, 0.8);
+    letter-spacing: 0.5px;
+  }
+  .tp-pill-wheel {
+    width: 60px;
+    height: 150px; /* 5 個項目 * 30px */
+    background: var(--cloud-cream-pure);
+    border-radius: 999px;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: relative;
+    box-shadow: 0 10px 22px rgba(13, 27, 42, 0.2), inset 0 0 0 1.5px rgba(13, 27, 42, 0.08);
+    user-select: none;
+  }
+  .tp-pill-wheel::-webkit-scrollbar { display: none; }
+  .tp-wheel-pad { height: 60px; flex-shrink: 0; } /* 上下各預留 2 格 (60px) 讓首尾可置中 */
+  .tp-wheel-item {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: rgba(65, 90, 119, 0.34);
+    transition: transform 0.14s ease, color 0.14s ease, font-size 0.14s ease;
+    cursor: pointer;
+  }
+  .tp-wheel-item.near {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(65, 90, 119, 0.68);
+  }
+  .tp-wheel-item.active {
+    font-size: 16.5px;
+    font-weight: 900;
+    color: var(--plum-noir-dark);
+    transform: scale(1.08);
+  }
+  .tp-colon {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--cloud-cream-pure);
+    margin-top: 14px;
+    opacity: 0.85;
+    user-select: none;
+  }
+  /* 附圖右側短膠囊切換器 (00-11 日間 / 12-23 夜間) */
+  .tp-period-pill {
+    width: 52px;
+    height: 98px;
+    background: var(--cloud-cream-pure);
+    border-radius: 999px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    box-shadow: 0 8px 18px rgba(13, 27, 42, 0.16), inset 0 0 0 1.5px rgba(13, 27, 42, 0.08);
+    user-select: none;
+  }
+  .tp-period-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--brushed-pewter);
+    font-size: 10.5px;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+  }
+  .tp-period-btn small {
+    font-size: 8px;
+    font-weight: 700;
+    opacity: 0.75;
+  }
+  .tp-period-btn.active {
+    background: var(--unread-terra-soft);
+    color: var(--unread-terra-deep);
+     border: 1.5px solid rgba(184, 82, 72, 0.45);
+    box-shadow: 0 3px 8px rgba(132, 56, 48, 0.2);
+  }
+  /* 附圖底部橫向快捷列 */
+  .tp-quick-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 9px;
+    margin-top: 6px;
+    border-top: 1px solid rgba(250, 249, 240, 0.22);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .tp-quick-label {
+    color: rgba(250, 249, 240, 0.85);
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .tp-quick-items {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tp-quick-items::-webkit-scrollbar { display: none; }
+  .tp-quick-link {
+    color: rgba(250, 249, 240, 0.78);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: all 0.15s;
+    font-weight: 700;
+  }
+  .tp-quick-link.active {
+    color: var(--frosted-blue);
+    background: rgba(13, 27, 42, 0.28);
+    font-weight: 900;
+  }
+
   .home-hero-banner { margin: 0 -18px 8px; min-height: 335px; background-color: #D4C4A8; background-image: linear-gradient(180deg, rgba(244,241,222,0.02) 0%, rgba(244,241,222,0.18) 44%, rgba(244,241,222,0.86) 79%, #F4F1DE 100%), var(--hero-bg-img); background-size: cover; background-position: center 22%; padding: 46px 18px 6px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
   .home-hero-top { display: flex; justify-content: space-between; align-items: center; }
   .hero-quote-mark { font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.9); line-height: 1; text-shadow: 0 2px 10px rgba(13,27,42,0.4); user-select: none; }
@@ -173,11 +362,9 @@
   .cal-day-cell.has-diary { background: var(--muted-jade); color: var(--cloud-cream); font-weight: 800; }
   .cal-day-cell.has-diary::after { content: '✦'; position: absolute; top: -3px; right: -2px; font-size: 10px; color: var(--plum-noir-dark); background: var(--frosted-blue); width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
 
-  /* 有本機草稿的日期標記 */
   .cal-day-cell.has-draft-diary { background: rgba(212, 196, 168, 0.55); color: var(--plum-noir-dark); border: 1.5px dashed var(--brushed-pewter); font-weight: 800; }
   .cal-day-cell.has-draft-diary::after { content: '稿'; position: absolute; top: -4px; right: -4px; font-size: 8.5px; font-weight: 800; color: var(--cloud-cream-pure); background: var(--brushed-pewter); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); }
 
-  /* 未讀日記專屬溫潤赤陶標記 */
   .cal-day-cell.has-unread-diary { background: var(--unread-terra-soft); color: var(--unread-terra-deep); border: 1.8px solid var(--unread-terra); font-weight: 800; }
   .cal-day-cell.has-unread-diary::after { content: '未'; position: absolute; top: -4px; right: -4px; font-size: 9px; font-weight: 800; color: var(--cloud-cream-pure); background: var(--unread-terra); width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--cloud-cream-pure); box-shadow: 0 2px 5px rgba(132, 56, 48, 0.28); }
   .cal-day-cell.selected { background: var(--plum-noir-dark) !important; color: var(--cloud-cream) !important; transform: scale(1.06); box-shadow: 0 4px 10px rgba(13,27,42,0.25); }
@@ -196,7 +383,6 @@
   .unread-date-chips { display: flex; gap: 6px; flex-wrap: wrap; }
   .unread-date-chip { background: var(--unread-terra); color: var(--cloud-cream-pure); font-size: 10.5px; font-weight: 800; padding: 4px 11px; border-radius: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 3px 8px rgba(132, 56, 48, 0.22); }
 
-  /* 本機草稿箱專屬卡片樣式 */
   .draft-box-panel { background: linear-gradient(135deg, #FAF9F0 0%, #EDE4D3 100%); border: 1.5px dashed var(--brushed-pewter); border-radius: 24px; padding: 12px 14px; margin-bottom: 14px; box-shadow: 0 6px 16px rgba(13,27,42,0.06); }
   .draft-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; font-weight: 800; color: var(--plum-noir-dark); }
   .draft-item-row { background: var(--cloud-cream-pure); border: 1px solid rgba(13,27,42,0.1); border-radius: 16px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; }
@@ -326,7 +512,7 @@
 </div>
 
 <div class="top-preview-bar">
-  <span>🎨 Holst 配色 ＋ 極速全螢幕啟動 ＋ 日記本機草稿箱</span>
+  <span>🎨 Holst 配色 ＋ 24H 膠囊滑動時間滾輪 ＋ 日記草稿箱</span>
   <button onclick="document.body.classList.toggle('fullscreen-mode')">📱 切換：預覽框 / 手機全螢幕</button>
 </div>
 
@@ -377,7 +563,7 @@
 </div>
 
 <script>
-// ====== 極速首頁背景圖本機快取引擎（將相機大圖壓縮存入本機，第 2 次起 0.01 秒瞬開） ======
+// ====== 極速首頁背景圖本機快取引擎 ======
 (function initFastHeroBannerCache() {
   try {
     const cachedHero = localStorage.getItem('hero_banner_cache_v1');
@@ -522,6 +708,13 @@ let tempDiaryPhotos = [];
 let currentLightboxPhotos = [];
 let hudTimer = null;
 
+// 24小時制直立膠囊滾輪狀態
+const TP_ITEM_HEIGHT = 30;
+let tpCurrentHour = 19;
+let tpCurrentMin = 0;
+let tpIsAllDay = false;
+let tpScrollLock = false;
+
 const SYNC_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>`;
 
 function getDiaryPhotos(d) {
@@ -533,6 +726,135 @@ function getDiaryPhotos(d) {
     return s.split(/\s*\|\|\s*|\s*,\s*(?=https?:)/).filter(Boolean);
   }
   return [];
+}
+
+// ====== 24 小時制直立膠囊滾輪核心邏輯 ======
+function parseTimeStrTo24H(rawStr) {
+  const s = String(rawStr || '').trim();
+  if (s.includes('全天')) {
+    return { h: 12, m: 0, isAllDay: true };
+  }
+  const m = s.match(/(\d{1,2})\s*:\s*(\d{1,2})/);
+  if (m) {
+    const hh = Math.min(23, Math.max(0, parseInt(m[1], 10) || 0));
+    const mm = Math.min(59, Math.max(0, parseInt(m[2], 10) || 0));
+    return { h: hh, m: mm, isAllDay: false };
+  }
+  return { h: 19, m: 0, isAllDay: false };
+}
+
+function updateWheelVisualHighlight(wheelEl, centerIdx) {
+  if (!wheelEl) return;
+  const itemsEls = wheelEl.querySelectorAll('.tp-wheel-item');
+  itemsEls.forEach((el, idx) => {
+    const diff = Math.abs(idx - centerIdx);
+    el.classList.toggle('active', diff === 0);
+    el.classList.toggle('near', diff === 1);
+  });
+}
+
+function syncTimePickerDisplayAndInput() {
+  const hhStr = String(tpCurrentHour).padStart(2, '0');
+  const mmStr = String(tpCurrentMin).padStart(2, '0');
+  const finalVal = tpIsAllDay ? '全天約會' : `${hhStr}:${mmStr}`;
+
+  const inp = document.getElementById('d_time');
+  if (inp) inp.value = finalVal;
+
+  const disp = document.getElementById('tpLiveDisplay');
+  if (disp) disp.textContent = finalVal;
+
+  const amBtn = document.getElementById('tpPeriodAm');
+  const pmBtn = document.getElementById('tpPeriodPm');
+  if (amBtn && pmBtn) {
+    amBtn.classList.toggle('active', !tpIsAllDay && tpCurrentHour < 12);
+    pmBtn.classList.toggle('active', !tpIsAllDay && tpCurrentHour >= 12);
+  }
+
+  document.querySelectorAll('.tp-quick-link').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('data- preset') === finalVal);
+  });
+}
+
+function onTpWheelScroll(which) {
+  if (tpScrollLock) return;
+  const hWheel = document.getElementById('tpHourWheel');
+  const mWheel = document.getElementById('tpMinWheel');
+  if (which === 'hour' && hWheel) {
+    const idx = Math.min(23, Math.max(0, Math.round(hWheel.scrollTop / TP_ITEM_HEIGHT)));
+    tpCurrentHour = idx;
+    tpIsAllDay = false;
+    updateWheelVisualHighlight(hWheel, idx);
+  } else if (which === 'min' && mWheel) {
+    const idx = Math.min(59, Math.max(0, Math.round(mWheel.scrollTop / TP_ITEM_HEIGHT)));
+    tpCurrentMin = idx;
+    tpIsAllDay = false;
+    updateWheelVisualHighlight(mWheel, idx);
+  }
+  syncTimePickerDisplayAndInput();
+  autoBackupTypingDiary();
+}
+
+function tapTpWheelItem(which, idx) {
+  const wheelEl = document.getElementById(which === 'hour' ? 'tpHourWheel' : 'tpMinWheel');
+  if (!wheelEl) return;
+  tpIsAllDay = false;
+  wheelEl.scrollTo({ top: idx * TP_ITEM_HEIGHT, behavior: 'smooth' });
+}
+
+function toggleTpPeriodHalf(targetHalf) {
+  tpIsAllDay = false;
+  if (targetHalf === 'AM' && tpCurrentHour >= 12) {
+    tpCurrentHour -= 12;
+  } else if (targetHalf === 'PM' && tpCurrentHour < 12) {
+    tpCurrentHour += 12;
+  }
+  const hWheel = document.getElementById('tpHourWheel');
+  if (hWheel) hWheel.scrollTo({ top: tpCurrentHour * TP_ITEM_HEIGHT, behavior: 'smooth' });
+  updateWheelVisualHighlight(hWheel, tpCurrentHour);
+  syncTimePickerDisplayAndInput();
+  autoBackupTypingDiary();
+}
+
+function applyTpQuickPreset(presetVal) {
+  const parsed = parseTimeStrTo24H(presetVal);
+  tpCurrentHour = parsed.h;
+  tpCurrentMin = parsed.m;
+  tpIsAllDay = parsed.isAllDay;
+
+  const hWheel = document.getElementById('tpHourWheel');
+  const mWheel = document.getElementById('tpMinWheel');
+  if (hWheel) {
+    hWheel.scrollTo({ top: tpCurrentHour * TP_ITEM_HEIGHT, behavior: 'smooth' });
+    updateWheelVisualHighlight(hWheel, tpCurrentHour);
+  }
+  if (mWheel) {
+    mWheel.scrollTo({ top: tpCurrentMin * TP_ITEM_HEIGHT, behavior: 'smooth' });
+    updateWheelVisualHighlight(mWheel, tpCurrentMin);
+  }
+  syncTimePickerDisplayAndInput();
+  autoBackupTypingDiary();
+}
+
+function initDiaryTimeWheelsFromValue(timeStr) {
+  const parsed = parseTimeStrTo24H(timeStr);
+  tpCurrentHour = parsed.h;
+  tpCurrentMin = parsed.m;
+  tpIsAllDay = parsed.isAllDay;
+
+  const hWheel = document.getElementById('tpHourWheel');
+  const mWheel = document.getElementById('tpMinWheel');
+  tpScrollLock = true;
+  if (hWheel) {
+    hWheel.scrollTop = tpCurrentHour * TP_ITEM_HEIGHT;
+    updateWheelVisualHighlight(hWheel, tpCurrentHour);
+  }
+  if (mWheel) {
+    mWheel.scrollTop = tpCurrentMin * TP_ITEM_HEIGHT;
+    updateWheelVisualHighlight(mWheel, tpCurrentMin);
+  }
+  syncTimePickerDisplayAndInput();
+  setTimeout(() => { tpScrollLock = false; }, 60);
 }
 
 // ====== 雙人日記「已讀 / 未讀」與「本機草稿箱」核心 ======
@@ -610,7 +932,6 @@ function jumpToCalendarDate(dateStr) {
   renderScreen();
 }
 
-// 即時自動備份正在輸入的日記內容（防止誤關 App 遺失文字）
 function autoBackupTypingDiary() {
   const dateEl = document.getElementById('d_date');
   const locEl = document.getElementById('d_location');
@@ -636,7 +957,7 @@ function autoBackupTypingDiary() {
 
 function saveDiaryAsDraft() {
   const dateVal = (document.getElementById('d_date').value || '').trim() || selectedCalDate;
-  const timeVal = (document.getElementById('d_time').value || '').trim() || '全天';
+  const timeVal = (document.getElementById('d_time').value || '').trim() || '19:00';
   const whoVal = (document.getElementById('d_who').value || '').trim() || '實實 & 寶寶';
   const locVal = (document.getElementById('d_location').value || '').trim();
   const contentVal = (document.getElementById('d_content').value || '').trim();
@@ -716,7 +1037,7 @@ function restoreAutoSavedTyping() {
     if (!raw) return;
     const b = JSON.parse(raw);
     if (document.getElementById('d_date')) document.getElementById('d_date').value = b.date || selectedCalDate;
-    if (document.getElementById('d_time')) document.getElementById('d_time').value = b.timePoint || '';
+    if (b.timePoint) initDiaryTimeWheelsFromValue(b.timePoint);
     if (document.getElementById('d_who')) document.getElementById('d_who').value = b.withWho || '';
     if (document.getElementById('d_location')) document.getElementById('d_location').value = b.location || '';
     if (document.getElementById('d_content')) document.getElementById('d_content').value = b.content || '';
@@ -1632,7 +1953,7 @@ function renderCalendarTab() {
             </h3>
             <span class="banff-outlined-badge">${dr.withWho || '實實 & 寶寶'}</span>
           </div>
-          <div class="banff-meta">${dr.date} · ${dr.timePoint || '全天'} ${photos.length > 0 ? `· 📷 已選 ${photos.length} 張照片` : ''}</div>
+          <div class="banff-meta">${dr.date} · ${dr.timePoint || '19:00'} ${photos.length > 0 ? `· 📷 已選 ${photos.length} 張照片` : ''}</div>
           <p class="banff-desc">${dr.content || '（草稿尚未填寫完畢，點擊繼續編寫...）'}</p>
         </div>
         <div class="banff-footer">
@@ -1795,6 +2116,17 @@ function renderDiaryTab() {
   const dr = editingDraftId ? diaryDrafts.find(x => String(x.draftId) === String(editingDraftId)) : null;
   const d = dr || (editingDiaryId ? diaries.find(x => String(x.id) === String(editingDiaryId)) : null);
   const defaultDate = d ? d.date : selectedCalDate;
+  const defaultTime = d && d.timePoint ? d.timePoint : '19:00';
+
+  const hoursHtml = Array.from({ length: 24 }, (_, h) => {
+    const s = String(h).padStart(2, '0');
+    return `<div class="tp-wheel-item" onclick="tapTpWheelItem('hour', ${h})">${s}</div>`;
+  }).join('');
+
+  const minsHtml = Array.from({ length: 60 }, (_, m) => {
+    const s = String(m).padStart(2, '0');
+    return `<div class="tp-wheel-item" onclick="tapTpWheelItem('min', ${m})">${s}</div>`;
+  }).join('');
 
   let autoSaveBannerHtml = '';
   if (!dr && !editingDiaryId) {
@@ -1849,17 +2181,66 @@ function renderDiaryTab() {
     ` : ''}
 
     <div class="form-card">
-      <div class="f-grid-2">
-        <div class="f-group"><label class="f-label">📅 日記日期</label><input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}" oninput="autoBackupTypingDiary()"></div>
-        <div class="f-group"><label class="f-label">🕒 時間點</label><input type="text" class="f-input" id="d_time" placeholder="例如：15:30 或 下午" value="${d ? d.timePoint : '晚上 19:00'}" oninput="autoBackupTypingDiary()"></div>
+      <div class="f-group">
+        <label class="f-label">📅 日記日期</label>
+        <input type="text" class="f-input" id="d_date" placeholder="YYYY/MM/DD" value="${defaultDate}" oninput="autoBackupTypingDiary()">
       </div>
-      <div class="chip-row" style="margin-bottom:10px;">
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='早上 10:00';autoBackupTypingDiary();">早上 10:00</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='中午 12:30';autoBackupTypingDiary();">中午 12:30</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='下午 15:30';autoBackupTypingDiary();">下午 15:30</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='晚上 19:00';autoBackupTypingDiary();">晚上 19:00</span>
-        <span class="mini-chip" onclick="document.getElementById('d_time').value='全天約會';autoBackupTypingDiary();">全天約會</span>
+
+      <!-- Holst 24小時制直立膠囊滾輪時間選擇器 -->
+      <input type="hidden" id="d_time" value="${defaultTime}">
+      <div class="holst-time-picker-box">
+        <div class="tp-header-row">
+          <span class="tp-header-label">🕒 時間點 (24H 滑動選擇)</span>
+          <div class="tp-header-right">
+            <span class="tp-live-time-text" id="tpLiveDisplay">${defaultTime}</span>
+          </div>
+        </div>
+
+        <div class="tp-wheels-stage">
+          <div class="tp-pill-wheel-wrap">
+            <span class="tp-wheel-cap-title">時 (00-23)</span>
+            <div class="tp-pill-wheel" id="tpHourWheel" onscroll="onTpWheelScroll('hour')">
+              <div class="tp-wheel-pad"></div>
+              ${hoursHtml}
+              <div class="tp-wheel-pad"></div>
+            </div>
+          </div>
+
+          <div class="tp-colon">:</div>
+
+          <div class="tp-pill-wheel-wrap">
+            <span class="tp-wheel-cap-title">分 (00-59)</span>
+            <div class="tp-pill-wheel" id="tpMinWheel" onscroll="onTpWheelScroll('min')">
+              <div class="tp-wheel-pad"></div>
+              ${minsHtml}
+              <div class="tp-wheel-pad"></div>
+            </div>
+          </div>
+
+          <div class="tp-period-pill">
+            <button type="button" class="tp-period-btn" id="tpPeriodAm" onclick="toggleTpPeriodHalf('AM')">
+              <span>上午</span><small>00-11</small>
+            </button>
+            <button type="button" class="tp-period-btn active" id="tpPeriodPm" onclick="toggleTpPeriodHalf('PM')">
+              <span>下午</span><small>12-23</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="tp-quick-bar">
+          <span class="tp-quick-label">快捷時段:</span>
+          <div class="tp-quick-items">
+            <span class="tp-quick-link" data-preset="08:00" onclick="applyTpQuickPreset('08:00')">08:00</span>
+            <span class="tp-quick-link" data-preset="10:00" onclick="applyTpQuickPreset('10:00')">10:00</span>
+            <span class="tp-quick-link" data-preset="12:30" onclick="applyTpQuickPreset('12:30')">12:30</span>
+            <span class="tp-quick-link" data-preset="15:30" onclick="applyTpQuickPreset('15:30')">15:30</span>
+            <span class="tp-quick-link" data-preset="19:00" onclick="applyTpQuickPreset('19:00')">19:00</span>
+            <span class="tp-quick-link" data-preset="21:00" onclick="applyTpQuickPreset('21:00')">21:00</span>
+            <span class="tp-quick-link" data-preset="全天約會" onclick="applyTpQuickPreset('全天約會')">全天約會</span>
+          </div>
+        </div>
       </div>
+
       <div class="f-group">
         <label class="f-label">👥 與誰 (With Whom)</label>
         <input type="text" class="f-input" id="d_who" value="${d ? d.withWho : '可愛寶寶'}" oninput="autoBackupTypingDiary()">
@@ -1890,12 +2271,10 @@ function renderDiaryTab() {
       </div>
     </div>
 
-    <!-- 新增：先暫存為本機草稿按鈕（不同步雲端） -->
     <button type="button" class="draft-save-pill-btn" onclick="saveDiaryAsDraft()">
       <span>📝 ${dr ? '更新本機草稿（暫不同步雲端）' : '先暫存為草稿（僅存手機・不同步雲端）'}</span>
     </button>
 
-    <!-- 正式儲存並同步雲端按鈕 -->
     <button type="button" class="submit-pill-btn" onclick="saveDiaryEntry()">
       <span>✓ ${editingDiaryId ? '正式儲存修改並同步雲端' : '正式完成日記並同步至雲端'}</span>
     </button>
@@ -1963,7 +2342,7 @@ async function saveDiaryEntry() {
 
   const newDiary = {
     id, date: dateVal,
-    timePoint: document.getElementById('d_time').value.trim() || '全天',
+    timePoint: document.getElementById('d_time').value.trim() || '19:00',
     withWho: document.getElementById('d_who').value.trim() || '實實 & 寶寶',
     location: document.getElementById('d_location').value.trim() || '美好回憶',
     content: document.getElementById('d_content').value.trim(),
@@ -1971,7 +2350,6 @@ async function saveDiaryEntry() {
     photo: photosCopy[0] || ''
   };
 
-  // 若此日記原本是從本機草稿箱載入的，正式發佈時自動從草稿箱移除
   if (editingDraftId) {
     diaryDrafts = diaryDrafts.filter(x => String(x.draftId) !== String(editingDraftId));
     saveDiaryDraftsLocal();
@@ -2031,7 +2409,11 @@ function renderScreen() {
   else if (activeTab === 'detail') container.innerHTML = renderDetailTab();
   else if (activeTab === 'add') container.innerHTML = renderAddTab();
   else if (activeTab === 'calendar') container.innerHTML = renderCalendarTab();
-  else if (activeTab === 'diary') container.innerHTML = renderDiaryTab();
+  else if (activeTab === 'diary') {
+    container.innerHTML = renderDiaryTab();
+    const initialTime = document.getElementById('d_time') ? document.getElementById('d_time').value : '19:00';
+    initDiaryTimeWheelsFromValue(initialTime);
+  }
   else container.innerHTML = renderAllTab();
   updateDockUnreadBadge();
 }
